@@ -1,0 +1,1 @@
+export { fetchGravatar } from './fetchGravatar'
