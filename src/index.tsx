@@ -1,5 +1,7 @@
 import { Hono } from 'hono'
 import { cache } from 'hono/cache'
+import { cors } from 'hono/cors'
+import { poweredBy } from 'hono/powered-by'
 import { secureHeaders } from 'hono/secure-headers'
 import { md5 } from 'hono/utils/crypto'
 import ApiDocs from './ApiDocs'
@@ -11,7 +13,18 @@ const DEFAULT_CAHE = 30 // 30 s
 
 const app = new Hono()
 
-app.use(secureHeaders())
+app.use(cors())
+app.use(poweredBy({ serverName: 'ZL Asica with Hono' }))
+app.use(
+  secureHeaders({
+    crossOriginEmbedderPolicy: false, // no COEP
+    crossOriginResourcePolicy: false, // no CORP
+    crossOriginOpenerPolicy: 'unsafe-none', // allow cross-origin opener
+    xContentTypeOptions: 'nosniff', // nosniff for content/type
+    xPermittedCrossDomainPolicies: false, // Turn off cross-domain policy
+  }),
+)
+
 app.use(renderer)
 
 app.get(

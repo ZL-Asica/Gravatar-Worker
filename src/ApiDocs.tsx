@@ -24,11 +24,11 @@ const ApiDocs = () => {
       <Section title="📌 Endpoints">
         <article className="endpoint" role="group" aria-label="Hash-based avatar endpoint">
           <code>GET /avatar/:hash</code>
-          <p>Fetch avatar via precomputed MD5 hash of an email address.</p>
+          <p>Fetch avatar via precomputed MD5 or SHA-256 hash of an email address.</p>
           <ul>
             <li>
               <strong>hash</strong>
-              : The MD5-hashed value of the email (lowercased and trimmed).
+              : The MD5 or SHA-256-hashed value of the email (lowercased and trimmed).
             </li>
           </ul>
         </article>

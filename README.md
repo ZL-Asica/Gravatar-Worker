@@ -8,7 +8,7 @@
 
 Supports:
 
-- MD5 hash or raw email lookups
+- MD5 / SHA-256 hash or raw email lookups
 - Smart caching (Edge + Browser)
 <!-- - Auto image format conversion to **AVIF** or **WebP** based on `Accept` header
 - Fallback handling and future customization -->
@@ -17,7 +17,7 @@ Supports:
 
 ### 🔹 `GET /avatar/:hash`
 
-Fetches the Gravatar avatar via precomputed MD5 hash.
+Fetches the Gravatar avatar via precomputed MD5 or SHA-256 hash.
 
 **Example:**
 
@@ -56,7 +56,7 @@ Based on the browser’s `Accept` header:
 Accept: image/avif,image/webp,image/*
 ``` -->
 
-## 🧠 Caching Strategy
+## 📦 Caching Strategy
 
 | Response | Browser TTL | Edge TTL | Notes                            |
 | -------- | ----------- | -------- | -------------------------------- |
@@ -69,9 +69,9 @@ Built-in Cloudflare CDN handles global delivery and bandwidth optimization.
 
 - **[Cloudflare Workers][Cloudflare-link]** – fast and global by design
 - **[Hono][Hono-link]** – lightweight routing framework (also Hono JSX for API doc)
-<!-- - **[@jsquash][jSquash-link]** – AVIF/WebP encoding via WASM -->
 - **TypeScript** – strong typing, strict mode
 - **Pure CSS** – custom theme 💮
+<!-- - **[@jsquash][jSquash-link]** – AVIF/WebP encoding via WASM -->
 
 ## 🧾 License
 
