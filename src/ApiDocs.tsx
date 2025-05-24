@@ -22,6 +22,11 @@ const ApiDocs = () => {
       </header>
 
       <Section title="📌 Endpoints">
+        <article className="endpoint" role="group" aria-label="CDN maintainer's avatar endpoint">
+          <code>GET /avatar/me</code>
+          <p>Fetch the maintainer's avatar with no param needed.</p>
+        </article>
+
         <article className="endpoint" role="group" aria-label="Hash-based avatar endpoint">
           <code>GET /avatar/:hash</code>
           <p>Fetch avatar via precomputed MD5 or SHA-256 hash of an email address.</p>

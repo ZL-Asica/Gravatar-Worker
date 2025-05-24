@@ -15,6 +15,16 @@ Supports:
 
 ## 🌐 Endpoints
 
+### 🔹 `GET /avatar/me`
+
+Fetches the maintainer's Gravatar avatar with no params needed.
+
+**Example:**
+
+```http
+GET /avatar/me
+```
+
 ### 🔹 `GET /avatar/:hash`
 
 Fetches the Gravatar avatar via precomputed MD5 or SHA-256 hash.

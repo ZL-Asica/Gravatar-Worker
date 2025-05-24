@@ -11,7 +11,12 @@ import { fetchGravatar } from './utils'
 
 const DEFAULT_CAHE = 30 // 30 s
 
-const app = new Hono()
+interface Bindings {
+  HASH: string
+  DEFAULT_SIZE: string
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
 
 app.use(cors())
 app.use(poweredBy({ serverName: 'ZL Asica with Hono' }))
@@ -36,6 +41,16 @@ app.get(
 )
 
 app.get('/', async c => c.render(ApiDocs()))
+
+// Your own gravatar link
+app.get('/avatar/me', async (c) => {
+  const hash = c.env.HASH
+  const defaultSize = c.env.DEFAULT_SIZE ?? 512
+  if (hash === undefined) {
+    return c.text('Set `HASH` in your Cloudflare Worker Settings Enviroment Variables to enbale this endpoint.')
+  }
+  return fetchGravatar(c, hash, defaultSize)
+})
 
 // Hash route
 app.get('/avatar/:hash', async (c) => {

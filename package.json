@@ -1,7 +1,7 @@
 {
   "name": "gravatar-worker",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "packageManager": "pnpm@10.11.0",
   "author": {
     "name": "ZL Asica",
@@ -19,7 +19,7 @@
     "dev": "vite",
     "build": "vite build && vite build --ssr",
     "preview": "$npm_execpath run build && wrangler dev dist-server/index.js",
-    "deploy": "$npm_execpath run build && wrangler deploy dist-server/index.js",
+    "deploy": "$npm_execpath run build && wrangler deploy dist-server/index.js --keep-vars true",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
