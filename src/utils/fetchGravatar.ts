@@ -1,12 +1,13 @@
 import type { Context } from 'hono'
 import { cacheHeaders } from './cacheHeader'
+import { imgProcessor } from './imgProcessor'
 
 const EDGE_TTL_OK = 60 * 60 * 24 * 2 // 2 day
 const EDGE_TTL_404 = 60 * 60 // 1 hour
 
 export const fetchGravatar = async (
   c: Context,
-  hash: string | null,
+  hash: string,
   fallbackSize: string = '200',
 ): Promise<Response> => {
   // Normalize query params
@@ -15,10 +16,10 @@ export const fetchGravatar = async (
   const initials = c.req.query('initials')
   const name = c.req.query('name')
 
-  // const acceptTypeString = c.req.header('Accept')
-  // const acceptTypes = acceptTypeString !== undefined
-  //   ? acceptTypeString.split(',').map(t => t.trim())
-  //   : ['image/webp']
+  const acceptTypeString = c.req.header('Accept')
+  const acceptTypes = acceptTypeString !== undefined
+    ? acceptTypeString.split(',').map(t => t.trim())
+    : ['image/webp']
 
   const params = new URLSearchParams({
     s: size,
@@ -50,10 +51,11 @@ export const fetchGravatar = async (
 
   const contentType = res.headers.get('Content-Type') ?? 'image/jpeg'
   const imageBuffer = await res.arrayBuffer()
-  return new Response(imageBuffer, {
+  const { data, mime } = await imgProcessor(imageBuffer, contentType, acceptTypes)
+  return new Response(data, {
     headers: {
-      ...cacheHeaders(res.ok),
-      'Content-Type': contentType,
+      ...cacheHeaders(res.ok, hash),
+      'Content-Type': mime,
     },
   })
 }

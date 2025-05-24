@@ -10,8 +10,8 @@ Supports:
 
 - MD5 / SHA-256 hash or raw email lookups
 - Smart caching (Edge + Browser)
-<!-- - Auto image format conversion to **AVIF** or **WebP** based on `Accept` header
-- Fallback handling and future customization -->
+- Auto image format conversion to **AVIF** or **WebP** based on `Accept` header
+<!-- - Fallback handling and future customization -->
 
 ## 🌐 Endpoints
 
@@ -42,7 +42,7 @@ GET /avatar?email=email@example.com&size=256
 | `s` or `size`    | Image size in pixels (square, e.g. 128x128)   | `200`   |
 | `d` or `default` | Default fall back option (e.g. a URL, or 404) | `404`   |
 
-<!-- ## 🎨 Format Negotiation
+## 🎨 Format Negotiation
 
 Automatically returns the most optimized format:
 
@@ -53,8 +53,8 @@ Automatically returns the most optimized format:
 Based on the browser’s `Accept` header:
 
 ```http
-Accept: image/avif,image/webp,image/*
-``` -->
+Accept: image/avif,image/webp,image/*,*/*
+```
 
 ## 📦 Caching Strategy
 
@@ -69,9 +69,9 @@ Built-in Cloudflare CDN handles global delivery and bandwidth optimization.
 
 - **[Cloudflare Workers][Cloudflare-link]** – fast and global by design
 - **[Hono][Hono-link]** – lightweight routing framework (also Hono JSX for API doc)
+- **[@jsquash][jSquash-link]** – AVIF/WebP encoding via WASM
 - **TypeScript** – strong typing, strict mode
 - **Pure CSS** – custom theme 💮
-<!-- - **[@jsquash][jSquash-link]** – AVIF/WebP encoding via WASM -->
 
 ## 🧾 License
 
@@ -81,6 +81,7 @@ This project is licensed under the [MIT License][license-link].
 [Cloudflare-link]: https://workers.cloudflare.com/
 [Hono-badge]: https://img.shields.io/badge/Hono-E36002?logo=hono&logoColor=fff
 [Hono-link]: https://hono.dev/
+[jSquash-link]: https://github.com/jamsinclair/jSquash
 [license-badge]: https://img.shields.io/github/license/ZL-Asica/Gravatar-Worker
 [license-link]: ./LICENSE
 [node-badge]: https://img.shields.io/badge/node%3E=18.18-339933?logo=node.js&logoColor=white

@@ -67,10 +67,24 @@ const ApiDocs = () => {
             <br />
             Default fallback image when the requested email do not have a image associated with. You can put URL, or any other options that gravatar support.
           </li>
+          <li>
+            <code>initials=</code>
+            {' '}
+            <b>(Only works when you set default to initials)</b>
+            <br />
+            Default fallback image with the given initials when the requested email do not have a image associated with. You need to put the initials you would like to have as a fallback.
+          </li>
+          <li>
+            <code>name=</code>
+            {' '}
+            <b>(Only works when you set default to initials)</b>
+            <br />
+            Default fallback image with the initials based on the given name when the requested email do not have a image associated with. You can put the full name you would like to have as a fallback. Initials will be auto extracted.
+          </li>
         </ul>
       </Section>
 
-      {/* <Section title="🎨 Format Negotiation">
+      <Section title="🎨 Format Negotiation">
         <p>
           Avatars are automatically converted to
           {' '}
@@ -87,11 +101,10 @@ const ApiDocs = () => {
         </p>
         <pre aria-label="Accept header example">
           <code>
-          // Add image/* and any type accpet examples here.
-            Accept: image/avif,image/webp
+            Accept: image/avif,image/webp, image/*, */*
           </code>
         </pre>
-      </Section> */}
+      </Section>
 
       <Section title="📦 Caching">
         <ul>

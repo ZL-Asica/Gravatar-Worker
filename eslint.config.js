@@ -13,4 +13,9 @@ export default antfu({
   rules: {
     'ts/promise-function-async': 'off',
   },
+}, {
+  files: ['src/utils/imgProcessor.ts'],
+  rules: {
+    'antfu/no-import-node-modules-by-path': 'off',
+  },
 })

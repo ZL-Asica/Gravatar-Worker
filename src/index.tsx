@@ -3,7 +3,7 @@ import { cache } from 'hono/cache'
 import { cors } from 'hono/cors'
 import { poweredBy } from 'hono/powered-by'
 import { secureHeaders } from 'hono/secure-headers'
-import { md5 } from 'hono/utils/crypto'
+import { sha256 } from 'hono/utils/crypto'
 import ApiDocs from './ApiDocs'
 import { renderer } from './renderer'
 import { emailSchema, hashSchema } from './schemas'
@@ -52,7 +52,10 @@ app.get('/avatar', async (c) => {
   if (!result.success || result.data === undefined) {
     return c.text('Invalid email address', 400)
   }
-  const hash = await md5(result.data)
+  const hash = await sha256(result.data)
+  if (hash === null) {
+    return c.text('Internal Server Error', 500)
+  }
   return fetchGravatar(c, hash)
 })
 
