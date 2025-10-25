@@ -1,8 +1,12 @@
 const Footer = () => {
+  const currentYear = new Date().getFullYear()
+
   return (
     <footer class="footer">
       <p class="footer-text">
-        © 2025
+        © 2025 -
+        {' '}
+        {currentYear}
         {' '}
         <a href="https://zla.pub/" target="_blank" rel="noopener noreferrer" class="footer-link">
           ZL Asica
