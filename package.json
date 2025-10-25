@@ -2,7 +2,7 @@
   "name": "gravatar-worker",
   "type": "module",
   "version": "0.2.0",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.19.0",
   "author": {
     "name": "ZL Asica",
     "email": "zl@zla.app",
@@ -27,7 +27,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@hono/zod-openapi": "^0.19.6",
+    "@hono/zod-openapi": "^1.1.4",
     "@jsquash/avif": "^2.1.1",
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/png": "^3.1.1",
@@ -35,25 +35,25 @@
     "hono": "^4.7.10"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.13.2",
-    "@changesets/cli": "^2.29.4",
+    "@antfu/eslint-config": "^6.0.0",
+    "@changesets/cli": "^2.29.7",
     "@cloudflare/vite-plugin": "0.1.21",
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
-    "@eslint-react/eslint-plugin": "^1.49.0",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@eslint-react/eslint-plugin": "^2.2.3",
     "@hono/vite-build": "^1.6.2",
-    "eslint": "^9.26.0",
-    "eslint-plugin-format": "^1.0.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint": "^9.38.0",
+    "eslint-plugin-format": "^1.0.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
     "husky": "^9.1.7",
-    "lint-staged": "^16.0.0",
-    "prettier": "^3.5.3",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2",
     "vite": "^6.1.1",
     "vite-plugin-ssr-hot-reload": "^0.5.0",
-    "vite-plugin-top-level-await": "^1.5.0",
-    "vite-plugin-wasm": "^3.4.1",
-    "wrangler": "^4.16.1"
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0",
+    "wrangler": "^4.45.0"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,yml,css,scss,less,styl,html,md,mdx}": [
