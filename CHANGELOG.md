@@ -1,13 +1,22 @@
 # gravatar-worker
 
+## 0.3.0
+
+### Minor Changes
+
+- Allow invalid hash or email value
+  - When the hash or email value is invalid, it used to return 400 error. Now it will try return if there is a custom default value fallback.
+  - Update caching strategy.
+  - Update README files accordingly.
+  - Added `ZH_CN` and `JA` localization for README.
+  - Bump up some dependencies.
+
 ## 0.2.0
 
 ### Minor Changes
 
 - Add image convert and compress ability and `/avatar/me` endpoint
-
   - Changes
-
     - Change default browser cache TTL to 3 days if reponse 200.
     - Change email endpoint hash from `md5` to `sha256`.
 
