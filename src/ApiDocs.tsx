@@ -124,15 +124,19 @@ const ApiDocs = () => {
         <ul>
           <li>
             <b>200 OK</b>
-            : Cached at the edge for 30 days, browser cache for 1 day.
+            : Cached at the edge for 7 days, browser cache for 3 days, with 7-day stale-while-revalidate for seamless background updates.
           </li>
           <li>
             <b>404 fallback</b>
-            : Cached for 1 hour to support retry on new accounts.
+            : Cached at the edge for 1 hour, browser cache for 5 minutes, with 1-hour stale-while-revalidate to support retry on new accounts.
           </li>
           <li>
-            <code>stale-while-revalidate</code>
-            : Enables background refreshing without delay to the user.
+            <code>Vary: Accept</code>
+            : Ensures proper caching per image format (AVIF/WebP/JPEG).
+          </li>
+          <li>
+            <code>ETag</code>
+            : Uses avatar hash for efficient cache validation and conditional requests.
           </li>
         </ul>
       </Section>

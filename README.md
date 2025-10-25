@@ -68,12 +68,17 @@ Accept: image/avif,image/webp,image/*,*/*
 
 ## 📦 Caching Strategy
 
-| Response | Browser TTL | Edge TTL | Notes                            |
-| -------- | ----------- | -------- | -------------------------------- |
-| `200 OK` | 1 day       | 30 days  | `stale-while-revalidate` enabled |
-| `404`    | 5 minutes   | 1 hour   | Allows retry for new users       |
+| Response | Browser TTL | Edge TTL | Stale-While-Revalidate | Notes                                     |
+| -------- | ----------- | -------- | ---------------------- | ----------------------------------------- |
+| `200 OK` | 3 days      | 7 days   | 7 days                 | Long-term caching with background refresh |
+| `404`    | 5 minutes   | 1 hour   | 1 hour                 | Allows retry for new users                |
 
-Built-in Cloudflare CDN handles global delivery and bandwidth optimization.
+Built-in Cloudflare CDN handles global delivery and bandwidth optimization. The cache strategy uses:
+
+- **`Cache-Control`** for browser caching
+- **`CDN-Cache-Control`** for edge caching (longer TTL)
+- **`Vary: Accept`** for proper content negotiation
+- **`ETag`** for efficient cache validation
 
 ## 🧪 Tech Stack
 
