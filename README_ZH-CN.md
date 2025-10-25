@@ -1,6 +1,6 @@
 # Gravatar Worker
 
-[English](./README.md) | **简体中文** | [日本語](./README_JA.md)
+[English](./README.md) | **简体中文** | [日本語](./README_JP.md)
 
 > 一个**快速、现代、对缓存友好**的 Gravatar CDN 代理 —— 基于 **Cloudflare Workers** 与 **Hono** 构建。
 

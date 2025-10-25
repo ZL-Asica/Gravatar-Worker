@@ -1,6 +1,6 @@
 # Gravatar Worker
 
-**English** | [简体中文](./README_ZH-CN.md) | [日本語](./README_JA.md)
+**English** | [简体中文](./README_ZH-CN.md) | [日本語](./README_JP.md)
 
 > A fast, modern, and cache-friendly Gravatar CDN proxy — built with **Cloudflare Workers** and **Hono**.
 
