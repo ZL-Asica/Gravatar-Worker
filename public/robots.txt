@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /
+Allow: /$
+Disallow: /avatar
+
+Sitemap: https://gravatar.zla.app/sitemap.xml
