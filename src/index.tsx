@@ -55,19 +55,26 @@ app.get('/avatar/me', async (c) => {
 // Hash route
 app.get('/avatar/:hash', async (c) => {
   const result = hashSchema.safeParse(c.req.param('hash'))
-  if (!result.success || result.data === undefined) {
-    return c.text('Invalid hash value', 400)
+  let hashValue = result.data
+
+  if (!result.success || hashValue === undefined) {
+    hashValue = c.req.param('hash')?.trim() ?? ''
   }
-  return fetchGravatar(c, result.data)
+
+  return fetchGravatar(c, hashValue)
 })
 
 // Email as query
 app.get('/avatar', async (c) => {
   const result = emailSchema.safeParse(c.req.query('email'))
-  if (!result.success || result.data === undefined) {
-    return c.text('Invalid email address', 400)
+  let emailValue = result.data
+
+  if (!result.success || emailValue === undefined) {
+    emailValue = c.req.query('email')?.trim() ?? 'email@example.com'
   }
-  const hash = await sha256(result.data)
+
+  const hash = await sha256(emailValue)
+
   if (hash === null) {
     return c.text('Internal Server Error', 500)
   }

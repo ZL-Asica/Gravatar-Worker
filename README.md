@@ -37,7 +37,7 @@ GET /avatar/205e460b479e2e5b48aec07710c08d50?s=128
 
 ### 🔹 `GET /avatar?email=<email>`
 
-Fetches the avatar by raw email (safely hashed server-side).
+Fetches the avatar by raw email (safely hashed server-side). If the email is invalid, it falls back to `email@example.com`.
 
 **Example:**
 

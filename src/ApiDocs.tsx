@@ -22,12 +22,18 @@ const ApiDocs = () => {
       </header>
 
       <Section title="📌 Endpoints">
-        <article className="endpoint" role="group" aria-label="CDN maintainer's avatar endpoint">
+        <article
+          className="endpoint"
+          aria-label="CDN maintainer's avatar endpoint"
+        >
           <code>GET /avatar/me</code>
           <p>Fetch the maintainer's avatar with no param needed.</p>
         </article>
 
-        <article className="endpoint" role="group" aria-label="Hash-based avatar endpoint">
+        <article
+          className="endpoint"
+          aria-label="Hash-based avatar endpoint"
+        >
           <code>GET /avatar/:hash</code>
           <p>Fetch avatar via precomputed MD5 or SHA-256 hash of an email address.</p>
           <ul>
@@ -38,13 +44,16 @@ const ApiDocs = () => {
           </ul>
         </article>
 
-        <article className="endpoint" role="group" aria-label="Email-based avatar endpoint">
+        <article
+          className="endpoint"
+          aria-label="Email-based avatar endpoint"
+        >
           <code>GET /avatar?email=&lt;email&gt;</code>
           <p>Fetch avatar via raw email (securely hashed on the server).</p>
           <ul>
             <li>
               <strong>&lt;email&gt;</strong>
-              : The plain email address to resolve a Gravatar.
+              : The plain email address to resolve a Gravatar (if the email is invalid, we will use `email@example.com` as fallback).
             </li>
           </ul>
         </article>
