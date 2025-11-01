@@ -53,7 +53,7 @@
     "vite-plugin-ssr-hot-reload": "^0.5.0",
     "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.45.0"
+    "wrangler": "^4.45.3"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,yml,css,scss,less,styl,html,md,mdx}": [
