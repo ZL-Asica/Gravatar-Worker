@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@hono/zod-openapi':
         specifier: ^1.1.4
-        version: 1.1.4(hono@4.7.10)(zod@4.1.12)
+        version: 1.1.4(hono@4.10.4)(zod@4.1.12)
       '@jsquash/avif':
         specifier: ^2.1.1
         version: 2.1.1
@@ -24,8 +24,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0
       hono:
-        specifier: ^4.7.10
-        version: 4.7.10
+        specifier: ^4.10.4
+        version: 4.10.4
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^6.0.0
@@ -47,7 +47,7 @@ importers:
         version: 2.2.3(eslint@9.38.0(jiti@2.6.1))(typescript@5.8.3)
       '@hono/vite-build':
         specifier: ^1.6.2
-        version: 1.6.2(hono@4.7.10)
+        version: 1.6.2(hono@4.10.4)
       eslint:
         specifier: ^9.38.0
         version: 9.38.0(jiti@2.6.1)
@@ -2104,8 +2104,8 @@ packages:
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
-  hono@4.7.10:
-    resolution: {integrity: sha512-QkACju9MiN59CKSY5JsGZCYmPZkA6sIW6OFCUp7qDjZu6S6KHtJHhAc9Uy9mV9F8PJ1/HQ3ybZF2yjCa/73fvQ==}
+  hono@4.10.4:
+    resolution: {integrity: sha512-YG/fo7zlU3KwrBL5vDpWKisLYiM+nVstBQqfr7gCPbSYURnNEP9BDxEMz8KfsDR9JX0lJWDRNc6nXX31v7ZEyg==}
     engines: {node: '>=16.9.0'}
 
   human-id@4.1.2:
@@ -4020,21 +4020,21 @@ snapshots:
       cac: 6.7.14
       mime-types: 2.1.35
 
-  '@hono/vite-build@1.6.2(hono@4.7.10)':
+  '@hono/vite-build@1.6.2(hono@4.10.4)':
     dependencies:
-      hono: 4.7.10
+      hono: 4.10.4
 
-  '@hono/zod-openapi@1.1.4(hono@4.7.10)(zod@4.1.12)':
+  '@hono/zod-openapi@1.1.4(hono@4.10.4)(zod@4.1.12)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 8.1.0(zod@4.1.12)
-      '@hono/zod-validator': 0.7.4(hono@4.7.10)(zod@4.1.12)
-      hono: 4.7.10
+      '@hono/zod-validator': 0.7.4(hono@4.10.4)(zod@4.1.12)
+      hono: 4.10.4
       openapi3-ts: 4.5.0
       zod: 4.1.12
 
-  '@hono/zod-validator@0.7.4(hono@4.7.10)(zod@4.1.12)':
+  '@hono/zod-validator@0.7.4(hono@4.10.4)(zod@4.1.12)':
     dependencies:
-      hono: 4.7.10
+      hono: 4.10.4
       zod: 4.1.12
 
   '@humanfs/core@0.19.1': {}
@@ -5428,7 +5428,7 @@ snapshots:
     dependencies:
       hermes-estree: 0.25.1
 
-  hono@4.7.10: {}
+  hono@4.10.4: {}
 
   human-id@4.1.2: {}
 

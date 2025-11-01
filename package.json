@@ -32,7 +32,7 @@
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/png": "^3.1.1",
     "@jsquash/webp": "^1.5.0",
-    "hono": "^4.7.10"
+    "hono": "^4.10.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
