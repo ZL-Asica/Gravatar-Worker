@@ -4,27 +4,15 @@ import decodePng, { init as initPngDecode } from '@jsquash/png/decode'
 import encodeWebp, { init as initWebpEncode } from '@jsquash/webp/encode'
 
 // ================
-// ! DEVELOPMENT
+// @ts-expect-error WASM not support directly yet
+import AVIF_ENC_WASM from '../../node_modules/@jsquash/avif/codec/enc/avif_enc.wasm'
+// @ts-expect-error WASM not support directly yet
+import JPEG_DEC_WASM from '../../node_modules/@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm'
+// @ts-expect-error WASM not support directly yet
+import PNG_DEC_WASM from '../../node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'
+// @ts-expect-error WASM not support directly yet
+import WEBP_ENC_WASM from '../../node_modules/@jsquash/webp/codec/enc/webp_enc_simd.wasm'
 // ================
-// // @ts-expect-error WASM not support directly yet
-// import AVIF_ENC_WASM from '../../node_modules/@jsquash/avif/codec/enc/avif_enc.wasm'
-// // @ts-expect-error WASM not support directly yet
-// import JPEG_DEC_WASM from '../../node_modules/@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm'
-// // @ts-expect-error WASM not support directly yet
-// import PNG_DEC_WASM from '../../node_modules/@jsquash/png/codec/pkg/squoosh_png_bg.wasm'
-// // @ts-expect-error WASM not support directly yet
-// import WEBP_ENC_WASM from '../../node_modules/@jsquash/webp/codec/enc/webp_enc_simd.wasm'
-// ================
-// ! PRODUCTION
-// ================
-// @ts-expect-error WASM not support directly yet
-import AVIF_ENC_WASM from '/wasm/avif_enc.wasm'
-// @ts-expect-error WASM not support directly yet
-import JPEG_DEC_WASM from '/wasm/mozjpeg_dec.wasm'
-// @ts-expect-error WASM not support directly yet
-import PNG_DEC_WASM from '/wasm/squoosh_png_bg.wasm'
-// @ts-expect-error WASM not support directly yet
-import WEBP_ENC_WASM from '/wasm/webp_enc_simd.wasm'
 
 interface ImageData {
   readonly width: number

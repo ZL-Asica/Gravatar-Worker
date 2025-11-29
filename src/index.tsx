@@ -4,12 +4,11 @@ import { cors } from 'hono/cors'
 import { poweredBy } from 'hono/powered-by'
 import { secureHeaders } from 'hono/secure-headers'
 import { sha256 } from 'hono/utils/crypto'
-import ApiDocs from './ApiDocs'
+import ApiDocs from './components/api-docs'
 import { renderer } from './renderer'
-import { emailSchema, hashSchema } from './schemas'
 import { fetchGravatar } from './utils'
 
-const DEFAULT_CAHE = 30 // 30 s
+const DEFAULT_CACHE = 5 * 60 // 5 minutes
 
 interface Bindings {
   HASH: string
@@ -36,43 +35,32 @@ app.get(
   '*',
   cache({
     cacheName: 'zla-gravatar',
-    cacheControl: `max-age=${DEFAULT_CAHE}`,
+    cacheControl: `max-age=${DEFAULT_CACHE}`,
   }),
 )
 
-app.get('/', async c => c.render(ApiDocs()))
+app.get('/', c => c.render(<ApiDocs />))
 
 // Your own gravatar link
 app.get('/avatar/me', async (c) => {
   const hash = c.env.HASH
   const defaultSize = c.env.DEFAULT_SIZE ?? 512
   if (hash === undefined) {
-    return c.text('Set `HASH` in your Cloudflare Worker Settings Enviroment Variables to enbale this endpoint.')
+    return c.text('Set `HASH` in your Cloudflare Worker Settings Environment Variables to enable this endpoint.')
   }
   return fetchGravatar(c, hash, defaultSize)
 })
 
 // Hash route
 app.get('/avatar/:hash', async (c) => {
-  const result = hashSchema.safeParse(c.req.param('hash'))
-  let hashValue = result.data
-
-  if (!result.success || hashValue === undefined) {
-    hashValue = c.req.param('hash')?.trim() ?? ''
-  }
+  const hashValue = c.req.param('hash')
 
   return fetchGravatar(c, hashValue)
 })
 
 // Email as query
 app.get('/avatar', async (c) => {
-  const result = emailSchema.safeParse(c.req.query('email'))
-  let emailValue = result.data
-
-  if (!result.success || emailValue === undefined) {
-    emailValue = c.req.query('email')?.trim() ?? 'email@example.com'
-  }
-
+  const emailValue = c.req.query('email') ?? 'email@example.com'
   const hash = await sha256(emailValue)
 
   if (hash === null) {

@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'hono/jsx'
-import { Footer } from './layout'
+import Footer from './footer'
 
 const Section = ({ title, children }: PropsWithChildren<{ title: string }>) => {
   const sectionId = title.toLowerCase().replace(/\W+/g, '-')

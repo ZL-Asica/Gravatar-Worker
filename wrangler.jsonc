@@ -1,11 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "gravatar",
-  "compatibility_date": "2024-04-01",
+  "compatibility_date": "2025-08-03",
   "main": "./src/index.tsx",
-  "assets": {
-    "directory": "./dist"
-  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1

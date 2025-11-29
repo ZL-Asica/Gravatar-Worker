@@ -33,7 +33,7 @@ body {
 
 .api-docs {
   max-width: 800px;
-  margin: 4rem auto;
+  margin: 2rem auto;
   padding: 2rem;
   background: var(--bg-surface);
   border-radius: 12px;

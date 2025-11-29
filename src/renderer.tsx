@@ -1,5 +1,5 @@
 import { jsxRenderer } from 'hono/jsx-renderer'
-import { Head } from './layout'
+import Head from './components/head'
 
 export const renderer = jsxRenderer(({ children }) => {
   return (

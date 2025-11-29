@@ -2,12 +2,13 @@
   "name": "gravatar-worker",
   "type": "module",
   "version": "0.3.0",
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.24.0",
   "author": {
     "name": "ZL Asica",
     "email": "zl@zla.app",
     "url": "https://github.com/ZL-Asica/"
   },
+  "license": "MIT",
   "funding": "https://github.com/sponsors/ZL-Asica",
   "homepage": "https://github.com/ZL-Asica/Gravatar-Worker",
   "repository": {
@@ -17,54 +18,42 @@
   "bugs": "https://github.com/ZL-Asica/Gravatar-Worker/issues",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --ssr",
-    "preview": "$npm_execpath run build && wrangler dev dist-server/index.js",
-    "deploy": "$npm_execpath run build && wrangler deploy dist-server/index.js --keep-vars true",
+    "build": "vite build",
+    "preview": "$npm_execpath run build && vite preview",
+    "deploy": "$npm_execpath run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "commitlint": "commitlint --edit",
-    "prepare": "husky"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "postinstall": "husky || true"
   },
   "dependencies": {
-    "@hono/zod-openapi": "^1.1.4",
     "@jsquash/avif": "^2.1.1",
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/png": "^3.1.1",
     "@jsquash/webp": "^1.5.0",
-    "hono": "^4.7.10"
+    "hono": "^4.10.7"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
-    "@changesets/cli": "^2.29.7",
-    "@cloudflare/vite-plugin": "0.1.21",
+    "@cloudflare/vite-plugin": "^1.2.3",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@commitlint/types": "^20.0.0",
     "@eslint-react/eslint-plugin": "^2.2.3",
-    "@hono/vite-build": "^1.6.2",
+    "bumpp": "^10.3.2",
     "eslint": "^9.38.0",
     "eslint-plugin-format": "^1.0.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
-    "prettier": "^3.6.2",
-    "vite": "^6.1.1",
-    "vite-plugin-ssr-hot-reload": "^0.5.0",
-    "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0",
-    "wrangler": "^4.45.0"
+    "vite": "^6.3.5",
+    "vite-ssr-components": "^0.5.1",
+    "wrangler": "^4.17.0"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,yml,css,scss,less,styl,html,md,mdx}": [
       "eslint --fix"
-    ],
-    "**/*.{md,mdx}": [
-      "prettier --write"
     ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true
   }
 }

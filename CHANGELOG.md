@@ -1,5 +1,14 @@
 # gravatar-worker
 
+## 0.4.0
+
+### Minor Changes
+
+- Refactored with latest Hono and vite-ssr-components
+  - Remove wasm files in public.
+  - Direclty register wasm in both dev and prod (no need to switch between two modes).
+  - Remove zod validation to mimic Gravatar's behavior.
+
 ## 0.3.0
 
 ### Minor Changes
