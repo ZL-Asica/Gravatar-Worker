@@ -34,7 +34,7 @@
     "hono": "^4.10.7"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.0.0",
+    "@antfu/eslint-config": "^6.7.3",
     "@cloudflare/vite-plugin": "^1.2.3",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
