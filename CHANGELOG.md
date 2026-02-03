@@ -1,5 +1,12 @@
 # gravatar-worker
 
+## 1.0.0
+
+- Customization improvements
+  - Add `CUSTOMIZATION.md` with detailed instructions and a checklist for setting up the user's own instance after forking.
+  - Added new environment variables for giving more control over site branding and behavior.
+  - Improved documentation for endpoints and query parameters in `README.md`.
+
 ## 0.4.0
 
 ### Minor Changes

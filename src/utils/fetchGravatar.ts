@@ -2,16 +2,22 @@ import type { Context } from 'hono'
 import { cacheHeaders } from './cacheHeader'
 import { imgProcessor } from './imgProcessor'
 
-const EDGE_TTL_OK = 60 * 60 * 24 * 2 // 2 day
-const EDGE_TTL_404 = 60 * 60 // 1 hour
+const ALLOWED_MIMES = ['image/avif', 'image/webp', 'image/jpeg', 'image/png']
 
 export const fetchGravatar = async (
   c: Context,
   hash: string,
-  fallbackSize: string = '200',
+  config: SiteConfig,
+  fallbackSize?: number,
 ): Promise<Response> => {
   // Normalize query params
-  const size = c.req.query('s') ?? c.req.query('size') ?? fallbackSize
+  const sizeParam = c.req.query('s') ?? c.req.query('size')
+  const rawSize = sizeParam !== undefined
+    ? Number.parseInt(sizeParam, 10)
+    : (fallbackSize ?? config.api.defaultSize)
+  const size = Number.isFinite(rawSize)
+    ? Math.max(16, Math.min(rawSize, config.api.maxSize))
+    : config.api.defaultSize
   const fallback = c.req.query('d') ?? c.req.query('default') ?? '404'
   const initials = c.req.query('initials')
   const name = c.req.query('name')
@@ -20,9 +26,10 @@ export const fetchGravatar = async (
   const acceptTypes = acceptTypeString !== undefined
     ? acceptTypeString.split(',').map(t => t.trim())
     : ['image/webp']
+  const normalizedAccept = acceptTypes.filter(type => ALLOWED_MIMES.includes(type))
 
   const params = new URLSearchParams({
-    s: size,
+    s: `${size}`,
     d: fallback,
   })
 
@@ -39,8 +46,8 @@ export const fetchGravatar = async (
     cf: {
       cacheEverything: true,
       cacheTtlByStatus: {
-        '200-299': EDGE_TTL_OK,
-        '404': EDGE_TTL_404,
+        '200-299': config.cache.edgeTtlOk,
+        '404': config.cache.edgeTtl404,
       },
     },
   })
@@ -51,10 +58,10 @@ export const fetchGravatar = async (
 
   const contentType = res.headers.get('Content-Type') ?? 'image/jpeg'
   const imageBuffer = await res.arrayBuffer()
-  const { data, mime } = await imgProcessor(imageBuffer, contentType, acceptTypes)
+  const { data, mime } = await imgProcessor(imageBuffer, contentType, normalizedAccept)
   return new Response(data, {
     headers: {
-      ...cacheHeaders(res.ok, hash),
+      ...cacheHeaders(res.ok, hash, config),
       'Content-Type': mime,
     },
   })
