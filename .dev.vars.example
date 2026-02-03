@@ -1,0 +1,28 @@
+# Branding / SEO
+SITE_NAME="ZLA Gravatar CDN"
+SITE_TAGLINE="Serve avatars from Gravatar with modern WebP/AVIF support, intelligent caching, and graceful fallback handling."
+SITE_DESCRIPTION="A fast, modern, and cache-friendly Gravatar CDN proxy built with Cloudflare Workers. Supports WebP/AVIF conversion, intelligent caching, and MD5/SHA-256 hash lookups."
+SITE_URL="https://gravatar.zla.app"
+
+# (Recommend) Replace these 2 images inside public directly.
+# Only edit this when you want to rename or use remote files.
+OG_IMAGE_URL="/og.png"
+FAVICON_PATH="/favicon.ico"
+
+# Set this to `false` to prevent from crawling
+ROBOTS_ALLOW="true"
+
+# author information in the footer
+FOOTER_TEXT="ZL Asica"
+CONTACT_URL="https://zla.pub/"
+
+# API behavior
+ME_EMAIL=""
+ME_HASH=""
+ALLOW_RAW_EMAIL="true"
+DEFAULT_SIZE="200"
+MAX_SIZE="2048"
+
+# No need to change unless for special usecase
+CACHE_TTL_BROWSER="259200"
+CACHE_TTL_EDGE="604800"

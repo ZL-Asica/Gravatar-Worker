@@ -4,7 +4,7 @@
 
 > A fast, modern, and cache-friendly Gravatar CDN proxy — built with **Cloudflare Workers** and **Hono**.
 
-[![GitHub License][license-badge]][license-link] [![Latest Release][release-badge]][release-link]
+[![GitHub License][license-badge]][license-link] [![Latest Release][release-badge]][release-link][<img src="https://devin.ai/assets/deepwiki-badge.png" alt="DeepWiki" height="20"/>](https://deepwiki.com/ZL-Asica/Gravatar-Worker)
 
 [![Node.js][node-badge]][node-link] [![pnpm Version][pnpm-badge]][pnpm-link] | [![Hono][Hono-badge]][Hono-link] [![Vite][Vite-badge]][Vite-link] [![Cloudflare Worker][Cloudflare-badge]][Cloudflare-link]
 
@@ -13,7 +13,34 @@ Supports:
 - MD5 / SHA-256 hash or raw email lookups
 - Smart caching (Edge + Browser)
 - Auto image format conversion to **AVIF** or **WebP** based on `Accept` header
-<!-- - Fallback handling and future customization -->
+- Customizable via environment variables
+- Lightweight and fast (powered by Cloudflare Workers + Hono)
+
+## 🧩 Customization
+
+See [`CUSTOMIZATION.md`](./CUSTOMIZATION.md) for a 5-minute after-fork checklist and detailed guidance.
+
+### Environment Variables
+
+| Name                | Purpose                                          | Default                    |
+| ------------------- | ------------------------------------------------ | -------------------------- |
+| `SITE_NAME`         | Site/brand name shown in titles and UI           | `ZLA Gravatar CDN`         |
+| `SITE_TAGLINE`      | Optional tagline appended to the title           | (see defaults)             |
+| `SITE_DESCRIPTION`  | Meta description and OG description              | (see defaults)             |
+| `SITE_URL`          | Canonical origin (used for OG/canonical/sitemap) | `https://gravatar.zla.app` |
+| `OG_IMAGE_URL`      | OG image path or URL                             | `/og.png`                  |
+| `FAVICON_PATH`      | Favicon path                                     | `/favicon.ico`             |
+| `ROBOTS_ALLOW`      | `true/false/1/0` or custom meta value            | `true`                     |
+| `FOOTER_TEXT`       | Footer label (linked if `CONTACT_URL` is set)    | `ZL Asica`                 |
+| `CONTACT_URL`       | Footer contact link                              | `https://zla.pub/`         |
+| `ME_EMAIL`          | Email for `/avatar/me` (hashed server-side)      | unset                      |
+| `ME_HASH`           | Precomputed MD5/SHA-256 for `/avatar/me`         | unset                      |
+| `ALLOW_RAW_EMAIL`   | Allow `/avatar?email=` endpoint                  | `true`                     |
+| `DEFAULT_SIZE`      | Default avatar size                              | `200`                      |
+| `MAX_SIZE`          | Maximum avatar size                              | `2048`                     |
+| `CACHE_TTL_BROWSER` | Browser cache TTL for 200 responses (seconds)    | `259200`                   |
+| `CACHE_TTL_EDGE`    | Edge cache TTL for 200 responses (seconds)       | `604800`                   |
+| `HASH`              | Legacy hash env for `/avatar/me`                 | unset                      |
 
 ## 🌐 Endpoints
 

@@ -11,13 +11,37 @@ const Section = ({ title, children }: PropsWithChildren<{ title: string }>) => {
   )
 }
 
-const ApiDocs = () => {
+interface ApiDocsProps {
+  config: SiteConfig
+}
+
+const ApiDocs = ({ config }: ApiDocsProps) => {
+  const formatTtl = (seconds: number) => {
+    if (seconds % 86400 === 0) {
+      const days = seconds / 86400
+      return `${days} day${days === 1 ? '' : 's'}`
+    }
+    if (seconds % 3600 === 0) {
+      const hours = seconds / 3600
+      return `${hours} hour${hours === 1 ? '' : 's'}`
+    }
+    if (seconds % 60 === 0) {
+      const minutes = seconds / 60
+      return `${minutes} minute${minutes === 1 ? '' : 's'}`
+    }
+    return `${seconds} seconds`
+  }
+
   return (
-    <main className="api-docs" aria-label="Gravatar CDN API Documentation">
+    <main className="api-docs" aria-label={`${config.branding.siteName} API Documentation`}>
       <header>
-        <h1>Gravatar CDN API</h1>
+        <h1>
+          {config.branding.siteName}
+          {' '}
+          API
+        </h1>
         <p className="subtitle">
-          Serve avatars from Gravatar with modern WebP/AVIF support, intelligent caching, and graceful fallback handling.
+          {config.branding.siteTagline ?? 'Serve avatars from Gravatar with modern WebP/AVIF support, intelligent caching, and graceful fallback handling.'}
         </p>
       </header>
 
@@ -49,7 +73,11 @@ const ApiDocs = () => {
           aria-label="Email-based avatar endpoint"
         >
           <code>GET /avatar?email=&lt;email&gt;</code>
-          <p>Fetch avatar via raw email (securely hashed on the server).</p>
+          <p>
+            Fetch avatar via raw email (securely hashed on the server).
+            {' '}
+            {!config.api.allowRawEmail && 'Raw email lookups are disabled by default on this deployment.'}
+          </p>
           <ul>
             <li>
               <strong>&lt;email&gt;</strong>
@@ -67,7 +95,11 @@ const ApiDocs = () => {
             or
             <code>size=</code>
             {' '}
-            <b>(default: 200)</b>
+            <b>
+              (default:
+              {config.api.defaultSize}
+              )
+            </b>
             <br />
             Avatar size in pixels (applies to both width and height).
           </li>
@@ -124,11 +156,31 @@ const ApiDocs = () => {
         <ul>
           <li>
             <b>200 OK</b>
-            : Cached at the edge for 7 days, browser cache for 3 days, with 7-day stale-while-revalidate for seamless background updates.
+            : Cached at the edge for
+            {' '}
+            {formatTtl(config.cache.edgeTtlOk)}
+            , browser cache for
+            {' '}
+            {formatTtl(config.cache.browserTtlOk)}
+            , with
+            {' '}
+            {formatTtl(config.cache.staleRevalidateOk)}
+            {' '}
+            stale-while-revalidate for seamless background updates.
           </li>
           <li>
             <b>404 fallback</b>
-            : Cached at the edge for 1 hour, browser cache for 5 minutes, with 1-hour stale-while-revalidate to support retry on new accounts.
+            : Cached at the edge for
+            {' '}
+            {formatTtl(config.cache.edgeTtl404)}
+            , browser cache for
+            {' '}
+            {formatTtl(config.cache.browserTtl404)}
+            , with
+            {' '}
+            {formatTtl(config.cache.staleRevalidate404)}
+            {' '}
+            stale-while-revalidate to support retry on new accounts.
           </li>
           <li>
             <code>Vary: Accept</code>
@@ -170,7 +222,7 @@ const ApiDocs = () => {
         </ul>
       </Section>
 
-      <Footer />
+      <Footer config={config} />
     </main>
   )
 }
