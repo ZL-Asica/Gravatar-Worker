@@ -50,7 +50,7 @@
     "lint-staged": "^16.2.6",
     "vite": "^6.3.5",
     "vite-ssr-components": "^0.5.2",
-    "wrangler": "^4.61.1"
+    "wrangler": "^4.69.0"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,yml,css,scss,less,styl,html,md,mdx}": [
