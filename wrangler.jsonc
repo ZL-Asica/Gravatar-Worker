@@ -9,15 +9,15 @@
   },
   "vars": {
     // Branding / SEO
-    "SITE_NAME": "ZLA Gravatar CDN",
+    "SITE_NAME": "Gravatar CDN",
     "SITE_TAGLINE": "Serve avatars from Gravatar with modern WebP/AVIF support, intelligent caching, and graceful fallback handling.",
     "SITE_DESCRIPTION": "A fast, modern, and cache-friendly Gravatar CDN proxy built with Cloudflare Workers. Supports WebP/AVIF conversion, intelligent caching, and MD5/SHA-256 hash lookups.",
-    "SITE_URL": "https://gravatar.zla.app",
+    "SITE_URL": "https://gravatar.fv.cx",
     "OG_IMAGE_URL": "/og.png",
     "FAVICON_PATH": "/favicon.ico",
     "ROBOTS_ALLOW": "true",
-    "FOOTER_TEXT": "ZL Asica",
-    "CONTACT_URL": "https://zla.pub/",
+    "FOOTER_TEXT": "gravatar.fv.cx",
+    "CONTACT_URL": "https://fv.cx/",
     // API behavior
     "ME_EMAIL": "",
     "ME_HASH": "",
@@ -30,7 +30,7 @@
   "routes": [
     {
       // Custom domain
-      "pattern": "gravatar.zla.app",
+      "pattern": "gravatar.fv.cx",
       "custom_domain": true
     }
   ]
