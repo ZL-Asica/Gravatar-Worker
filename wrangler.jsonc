@@ -19,7 +19,7 @@
     "FOOTER_TEXT": "gravatar.fv.cx",
     "CONTACT_URL": "https://fv.cx/",
     // API behavior
-    "ME_EMAIL": "",
+    "ME_EMAIL": "z@fv.cx",
     "ME_HASH": "",
     "ALLOW_RAW_EMAIL": "true",
     "DEFAULT_SIZE": "200",
