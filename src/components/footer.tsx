@@ -25,20 +25,6 @@ const Footer = ({ config }: FooterProps) => {
         {' '}
         | All rights reserved.
       </p>
-      <p class="footer-text">
-        Powered by
-        {' '}
-        <a href="https://github.com/ZL-Asica/Gravatar-Worker" target="_blank" rel="noopener noreferrer" class="footer-link">
-          Gravatar Worker
-        </a>
-        {' '}
-        ·
-        Crafted by
-        {' '}
-        <a href="https://zla.pub" target="_blank" rel="noopener noreferrer" class="footer-link">
-          ZL Asica
-        </a>
-      </p>
     </footer>
   )
 }
