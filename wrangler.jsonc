@@ -16,8 +16,8 @@
     "OG_IMAGE_URL": "/og.png",
     "FAVICON_PATH": "/favicon.ico",
     "ROBOTS_ALLOW": "true",
-    "FOOTER_TEXT": "gravatar.fv.cx",
-    "CONTACT_URL": "https://fv.cx/",
+    "FOOTER_TEXT": "Gravatar CDN",
+    "CONTACT_URL": "https://gravatar.fv.cx/",
     // API behavior
     "ME_EMAIL": "z@fv.cx",
     "ME_HASH": "",
