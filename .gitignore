@@ -11,6 +11,7 @@ dist-server/
 .idea/workspace.xml
 .idea/usage.statistics.xml
 .idea/shelf
+.playwright-mcp/
 
 # deps
 node_modules/
