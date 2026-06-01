@@ -217,7 +217,8 @@ jobs:
                 }
 
                 const match = trimmed.match(conventionalTitlePattern);
-                const category = match
+                const shouldUseConventionalFallback = !currentCategory || currentCategory === miscCategory;
+                const category = match && shouldUseConventionalFallback
                   ? categoryByType.get(match[1].toLowerCase())
                   : undefined;
                 (category || currentCategory || miscCategory).lines.push(trimmed);
