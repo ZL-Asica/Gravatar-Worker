@@ -1,0 +1,227 @@
+name: Create GitHub Release
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Existing tag version to publish, with or without the v prefix
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: create-github-release-${{ github.event.inputs.version || github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history + tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.sha }}
+
+      - name: Detect release PR
+        id: detect
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const sha = context.sha;
+            const releasePattern = /^v?([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)$/;
+
+            if (context.eventName === "workflow_dispatch") {
+              const inputVersion = (context.payload.inputs?.version || "").trim();
+              const version = inputVersion.match(releasePattern)?.[1];
+              if (!version) {
+                core.setFailed(`Invalid release version input: ${inputVersion}`);
+                return;
+              }
+
+              let body = "";
+              try {
+                const release = await github.rest.repos.getReleaseByTag({
+                  owner,
+                  repo,
+                  tag: `v${version}`,
+                });
+                body = (release.data.body || "").trim();
+              }
+              catch (error) {
+                core.info(`No existing GitHub Release found for v${version}; it will be created if needed.`);
+              }
+
+              core.setOutput("is_release", "true");
+              core.setOutput("source", "manual");
+              core.setOutput("version", version);
+              core.setOutput("is_prerelease", version.includes("-") ? "true" : "false");
+              core.setOutput("body", body);
+              return;
+            }
+
+            if ((process.env.GITHUB_REF || "").startsWith("refs/tags/")) {
+              const tagName = (process.env.GITHUB_REF || "").replace(/^refs\/tags\//, "");
+              const version = tagName.match(releasePattern)?.[1];
+              if (!version) {
+                core.setOutput("is_release", "false");
+                return;
+              }
+
+              core.setOutput("is_release", "true");
+              core.setOutput("source", "tag");
+              core.setOutput("version", version);
+              core.setOutput("is_prerelease", version.includes("-") ? "true" : "false");
+              core.setOutput("body", "");
+              return;
+            }
+
+            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner,
+              repo,
+              commit_sha: sha,
+            });
+
+            const releaseTitlePattern = /^release:\s+v([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)$/;
+            const releasePr = prs.data.find((pr) => {
+              const title = pr.title || "";
+              const branch = pr.head?.ref || "";
+              return releaseTitlePattern.test(title)
+                && /^release\/v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/.test(branch);
+            });
+
+            if (!releasePr) {
+              core.setOutput("is_release", "false");
+              return;
+            }
+
+            const titleMatch = (releasePr.title || "").match(releaseTitlePattern);
+            const branchMatch = (releasePr.head?.ref || "").match(/^release\/v([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)$/);
+            const version = titleMatch?.[1] || branchMatch?.[1];
+            if (!version) {
+              core.setFailed(`Could not parse release version from PR #${releasePr.number}`);
+              return;
+            }
+
+            let body = (releasePr.body || "").trim();
+
+            const notesMatch = body.match(/##\s*Release notes\s*([\s\S]*)/i);
+            if (notesMatch) body = notesMatch[1].trim();
+
+            body = body.replace(/[ \t]+$/gm, "").trim();
+
+            core.setOutput("is_release", "true");
+            core.setOutput("source", "main");
+            core.setOutput("version", version);
+            core.setOutput("is_prerelease", version.includes("-") ? "true" : "false");
+            core.setOutput("body", body);
+
+      - name: Stop if not a release commit
+        if: steps.detect.outputs.is_release != 'true'
+        run: echo "Not a release PR merge commit. Skip tag and release creation."
+
+      - name: Set tag name
+        if: steps.detect.outputs.is_release == 'true'
+        id: tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="v${{ steps.detect.outputs.version }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout existing release tag
+        if: steps.detect.outputs.is_release == 'true' && steps.detect.outputs.source != 'main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git checkout --detach "${{ steps.tag.outputs.tag }}"
+
+      - name: Check package version
+        if: steps.detect.outputs.is_release == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          RELEASE_VERSION="${{ steps.detect.outputs.version }}"
+
+          echo "Release PR version: $RELEASE_VERSION"
+          echo "package.json:       $PKG_VERSION"
+
+          if [ "$PKG_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "package.json version does not match release PR version."
+            exit 1
+          fi
+
+      - name: Setup pnpm
+        if: steps.detect.outputs.is_release == 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          package_json_file: package.json
+
+      - name: Setup Node
+        if: steps.detect.outputs.is_release == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.detect.outputs.is_release == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        if: steps.detect.outputs.is_release == 'true'
+        run: pnpm run lint
+
+      - name: Build
+        if: steps.detect.outputs.is_release == 'true'
+        run: pnpm run build
+
+      - name: Check if tag already exists
+        if: steps.detect.outputs.is_release == 'true'
+        id: tag_exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.tag }}"
+          CURRENT_COMMIT="$(git rev-parse HEAD)"
+          if TAG_COMMIT="$(git rev-parse "$TAG^{commit}" 2>/dev/null)"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Tag $TAG already exists."
+            if [ "$TAG_COMMIT" != "$CURRENT_COMMIT" ]; then
+              echo "Tag $TAG points to $TAG_COMMIT, but this release is for $CURRENT_COMMIT."
+              exit 1
+            fi
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create tag
+        if: steps.detect.outputs.is_release == 'true' && steps.detect.outputs.source == 'main' && steps.tag_exists.outputs.exists != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.tag.outputs.tag }}"
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        if: steps.detect.outputs.is_release == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          body: ${{ steps.detect.outputs.body }}
+          draft: false
+          prerelease: ${{ steps.detect.outputs.is_prerelease == 'true' }}
+          make_latest: ${{ steps.detect.outputs.is_prerelease == 'true' && 'false' || 'legacy' }}
+          generate_release_notes: ${{ steps.detect.outputs.body == '' }}

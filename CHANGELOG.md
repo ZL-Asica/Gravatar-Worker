@@ -1,5 +1,12 @@
 # gravatar-worker
 
+## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.0.0...HEAD)
+
+- Replace the legacy automatic release workflow with separate release preparation and GitHub Release publishing workflows.
+- Add a pull request CI workflow that runs lint and build checks.
+- Remove npm publishing from the release workflow; this project releases the Worker source and GitHub release artifacts only.
+- Support existing tag releases while validating that release tags point to the expected commit.
+
 ## 1.0.0
 
 - Customization improvements
