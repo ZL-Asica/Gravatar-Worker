@@ -1,6 +1,14 @@
 # gravatar-worker
 
-## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.1...HEAD)
+## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0...HEAD)
+
+## [1.1.0](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.1...v1.1.0) - 2026-06-01
+
+Stable 1.1.0 release after CI hardening and dependency/tooling updates.
+
+### 🧰 Internal / 内部变更
+- ci: update workflow actions ([#55](https://github.com/ZL-Asica/Gravatar-Worker/pull/55)) by @ZL-Asica
+- chore(deps): update package tooling ([#56](https://github.com/ZL-Asica/Gravatar-Worker/pull/56)) by @ZL-Asica
 
 ## [1.1.0-beta.1](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.0...v1.1.0-beta.1) - 2026-06-01
 
