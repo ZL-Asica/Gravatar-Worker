@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (full history + tags)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -33,7 +33,7 @@ jobs:
 
       - name: Detect release PR
         id: detect
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9.0.0
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -209,13 +209,13 @@ jobs:
 
       - name: Setup pnpm
         if: steps.detect.outputs.is_release == 'true'
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6.0.8
         with:
           package_json_file: package.json
 
       - name: Setup Node
         if: steps.detect.outputs.is_release == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.4.0
         with:
           node-version-file: .node-version
           cache: pnpm
@@ -262,7 +262,7 @@ jobs:
 
       - name: Create GitHub Release
         if: steps.detect.outputs.is_release == 'true'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3.0.0
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.tag.outputs.tag }}
