@@ -1,0 +1,21 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - miniflare@4.20260529.0
+  - wrangler@4.96.0
+  - '@cloudflare/vite-plugin@1.39.1'
+  - vite@8.0.16
+
+shellEmulator: true
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - semver@6.3.1
+
+overrides:
+  defu: 6.1.7
+  flatted: 3.4.2
+  picomatch: 4.0.4
+  yaml: 2.9.0

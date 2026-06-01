@@ -2,8 +2,9 @@ interface FooterProps {
   config: SiteConfig
 }
 
+const CURRENT_YEAR = new Date().getFullYear()
+
 const Footer = ({ config }: FooterProps) => {
-  const currentYear = new Date().getFullYear()
   const footerLabel = config.branding.footerText ?? config.branding.siteName
 
   return (
@@ -11,7 +12,7 @@ const Footer = ({ config }: FooterProps) => {
       <p class="footer-text">
         ©
         {' '}
-        {currentYear}
+        {CURRENT_YEAR}
         {' '}
         {config.branding.contactUrl !== undefined
           ? (
