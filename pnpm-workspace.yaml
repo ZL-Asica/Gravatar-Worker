@@ -1,10 +1,14 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - miniflare@4.20260529.0
+  - wrangler@4.96.0
+
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - semver@6.3.1
   - vite@6.4.1
-
-allowBuilds:
-  esbuild: true
-  sharp: true
-  workerd: true
