@@ -1,5 +1,16 @@
 # Contributing
 
+## Local setup
+
+Use the Node.js version pinned in `.node-version` and the pnpm version pinned in `package.json`:
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+```
+
+The pre-commit hook runs `nano-staged` through pnpm. If you bypass hooks for an emergency fix, run the relevant checks manually before pushing.
+
 ## CI
 
 Pull requests and pushes to `main` run the CI workflow. CI installs dependencies with pnpm, then runs:
