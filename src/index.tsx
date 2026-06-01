@@ -8,6 +8,7 @@ import ApiDocs from './components/api-docs'
 import { loadConfig } from './config'
 import { renderer } from './renderer'
 import { fetchGravatar } from './utils'
+import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
 
 const app = new Hono<{ Bindings: EnvRecord }>()
 
@@ -82,7 +83,11 @@ app.get('/avatar/me', async (c) => {
   if (hash === undefined && config.api.meEmail === undefined) {
     return c.text('Set `ME_EMAIL` or `ME_HASH` (legacy: `HASH`) in your Cloudflare Worker environment variables to enable this endpoint.')
   }
-  const resolvedHash = hash ?? await sha256(config.api.meEmail ?? '')
+  const normalizedEmail = normalizeEmail(config.api.meEmail)
+  if (hash === undefined && normalizedEmail === undefined) {
+    return c.text('Set a valid `ME_EMAIL` or `ME_HASH` (legacy: `HASH`) in your Cloudflare Worker environment variables to enable this endpoint.', 500)
+  }
+  const resolvedHash = hash ?? await sha256(normalizedEmail ?? '')
   if (resolvedHash === null) {
     return c.text('Internal Server Error', 500)
   }
@@ -103,7 +108,7 @@ app.get('/avatar', async (c) => {
   if (!config.api.allowRawEmail) {
     return c.text('Raw email lookup is disabled on this deployment.', 403)
   }
-  const emailValue = c.req.query('email') ?? 'email@example.com'
+  const emailValue = resolveLookupEmail(c.req.query('email'))
   const hash = await sha256(emailValue)
 
   if (hash === null) {
