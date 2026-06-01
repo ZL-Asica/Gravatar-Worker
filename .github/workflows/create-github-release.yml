@@ -59,6 +59,22 @@ jobs:
               }
               catch (error) {
                 core.info(`No existing GitHub Release found for v${version}; it will be created if needed.`);
+                const releaseTitle = `release: v${version}`;
+                const releaseBranch = `release/v${version}`;
+                const pulls = await github.paginate(github.rest.pulls.list, {
+                  owner,
+                  repo,
+                  state: "closed",
+                  base: "main",
+                  per_page: 100,
+                });
+                const releasePr = pulls.find((pr) =>
+                  pr.merged_at && (pr.title === releaseTitle || pr.head?.ref === releaseBranch)
+                );
+                if (releasePr) {
+                  const notesMatch = (releasePr.body || "").match(/##\s*Release notes\s*([\s\S]*)/i);
+                  body = (notesMatch ? notesMatch[1] : releasePr.body || "").trim();
+                }
               }
 
               core.setOutput("is_release", "true");
