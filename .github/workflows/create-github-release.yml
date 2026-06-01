@@ -85,34 +85,64 @@ jobs:
               return;
             }
 
-            const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              owner,
-              repo,
-              commit_sha: sha,
-            });
-
             const releaseTitlePattern = /^release:\s+v([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)$/;
-            const releasePr = prs.data.find((pr) => {
+            const releaseBranchPattern = /^release\/v([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)$/;
+            const findReleasePr = (pulls) => pulls.find((pr) => {
               const title = pr.title || "";
               const branch = pr.head?.ref || "";
-              return releaseTitlePattern.test(title)
-                && /^release\/v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/.test(branch);
+              return releaseTitlePattern.test(title) || releaseBranchPattern.test(branch);
             });
 
+            const listAssociatedPrs = async () => {
+              const prs = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner,
+                repo,
+                commit_sha: sha,
+              });
+              return prs.data;
+            };
+
+            let releasePr = findReleasePr(await listAssociatedPrs());
+            let commitMessage = "";
+            let subjectMatch;
             if (!releasePr) {
-              core.setOutput("is_release", "false");
-              return;
+              const commit = await github.rest.repos.getCommit({
+                owner,
+                repo,
+                ref: sha,
+              });
+              commitMessage = commit.data.commit?.message || "";
+              const subject = commitMessage.split("\n")[0]?.trim() || "";
+              subjectMatch = subject.match(releaseTitlePattern);
+              if (!subjectMatch) {
+                core.setOutput("is_release", "false");
+                return;
+              }
+
+              core.info("Release commit subject matched. Retrying associated PR lookup for release notes.");
+              for (let attempt = 1; attempt <= 5 && !releasePr; attempt += 1) {
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+                releasePr = findReleasePr(await listAssociatedPrs());
+              }
             }
 
-            const titleMatch = (releasePr.title || "").match(releaseTitlePattern);
-            const branchMatch = (releasePr.head?.ref || "").match(/^release\/v([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)$/);
-            const version = titleMatch?.[1] || branchMatch?.[1];
+            let version = "";
+            let body = "";
+            if (releasePr) {
+              const titleMatch = (releasePr.title || "").match(releaseTitlePattern);
+              const branchMatch = (releasePr.head?.ref || "").match(releaseBranchPattern);
+              version = titleMatch?.[1] || branchMatch?.[1] || "";
+              body = (releasePr.body || "").trim();
+            }
+            else {
+              version = subjectMatch[1];
+              body = commitMessage.split("\n").slice(1).join("\n").trim();
+            }
+
             if (!version) {
-              core.setFailed(`Could not parse release version from PR #${releasePr.number}`);
+              core.setFailed(`Could not parse release version for commit ${sha}`);
               return;
             }
-
-            let body = (releasePr.body || "").trim();
 
             const notesMatch = body.match(/##\s*Release notes\s*([\s\S]*)/i);
             if (notesMatch) body = notesMatch[1].trim();
