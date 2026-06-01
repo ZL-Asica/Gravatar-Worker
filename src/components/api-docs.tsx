@@ -13,9 +13,10 @@ const Section = ({ title, children }: PropsWithChildren<{ title: string }>) => {
 
 interface ApiDocsProps {
   config: SiteConfig
+  currentYear: number
 }
 
-const ApiDocs = ({ config }: ApiDocsProps) => {
+const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
   const formatTtl = (seconds: number) => {
     if (seconds % 86400 === 0) {
       const days = seconds / 86400
@@ -224,7 +225,7 @@ const ApiDocs = ({ config }: ApiDocsProps) => {
         </ul>
       </Section>
 
-      <Footer config={config} />
+      <Footer config={config} currentYear={currentYear} />
     </main>
   )
 }
