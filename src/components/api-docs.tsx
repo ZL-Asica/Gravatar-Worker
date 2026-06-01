@@ -87,6 +87,53 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
         </article>
       </Section>
 
+      <Section title="🔗 Generate Avatar Links">
+        <form className="link-generator" data-avatar-link-form>
+          <div className="link-generator-fields">
+            <label>
+              Email
+              <input data-avatar-email type="email" inputMode="email" autoComplete="email" placeholder="email@example.com" required />
+            </label>
+            <label>
+              Size
+              <input data-avatar-size type="number" min="16" max={config.api.maxSize} defaultValue={config.api.defaultSize} />
+            </label>
+            <label>
+              Fallback
+              <input data-avatar-default type="text" defaultValue="404" placeholder="404, mp, identicon, initials..." />
+            </label>
+          </div>
+
+          <div className="link-generator-result" aria-live="polite">
+            <img className="avatar-preview" data-avatar-preview alt="Avatar preview" width={config.api.defaultSize} height={config.api.defaultSize} />
+            <div className="generated-links">
+              <label>
+                Direct URL
+                <span className="copy-row">
+                  <input id="generated-avatar-url" data-avatar-url readOnly />
+                  <button type="button" data-copy-target="#generated-avatar-url">Copy</button>
+                </span>
+              </label>
+              <label>
+                Markdown
+                <span className="copy-row">
+                  <textarea id="generated-avatar-markdown" data-avatar-markdown readOnly rows={2} />
+                  <button type="button" data-copy-target="#generated-avatar-markdown">Copy</button>
+                </span>
+              </label>
+              <label>
+                HTML
+                <span className="copy-row">
+                  <textarea id="generated-avatar-html" data-avatar-html readOnly rows={2} />
+                  <button type="button" data-copy-target="#generated-avatar-html">Copy</button>
+                </span>
+              </label>
+            </div>
+          </div>
+          <p className="generator-status" data-avatar-status>Enter a valid email to generate a hash-based avatar link.</p>
+        </form>
+      </Section>
+
       <Section title="⚙️ Query Parameters">
         <ul>
           <li>

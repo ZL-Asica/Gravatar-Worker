@@ -68,6 +68,109 @@ body {
   margin-bottom: 1rem;
 }
 
+.link-generator {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.link-generator label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.link-generator input,
+.link-generator textarea {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.link-generator textarea {
+  min-height: 4.2rem;
+  resize: vertical;
+}
+
+.link-generator input:focus,
+.link-generator textarea:focus,
+.link-generator button:focus {
+  outline: 2px solid var(--color-secondary-300);
+  outline-offset: 2px;
+}
+
+.link-generator-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 8rem minmax(10rem, 0.7fr);
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.link-generator-result {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.avatar-preview {
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-card);
+  object-fit: cover;
+}
+
+.generated-links {
+  display: grid;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.copy-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.copy-row button {
+  border: 1px solid var(--color-secondary-500);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--color-secondary-700);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.65rem 0.85rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.copy-row button:hover {
+  border-color: var(--color-accent-500);
+  color: var(--color-accent-500);
+}
+
+.generator-status {
+  min-height: 1.3rem;
+  margin: 0.8rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 code {
   background-color: #f5f5f7;
   color: #333;
@@ -136,4 +239,17 @@ ul li {
   color: var(--color-accent-500);
   text-decoration-style: dotted;
   text-underline-offset: 4px;
+}
+
+@media (max-width: 700px) {
+  .link-generator-fields,
+  .link-generator-result,
+  .copy-row {
+    grid-template-columns: 1fr;
+  }
+
+  .avatar-preview {
+    width: 5rem;
+    height: 5rem;
+  }
 }
