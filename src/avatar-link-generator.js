@@ -77,6 +77,7 @@ if (form instanceof HTMLFormElement) {
     if (preview instanceof HTMLImageElement) {
       preview.removeAttribute('src')
       preview.alt = 'Avatar preview'
+      preview.hidden = true
     }
     if (urlOutput instanceof HTMLInputElement) {
       urlOutput.value = ''
@@ -100,6 +101,7 @@ if (form instanceof HTMLFormElement) {
     if (preview instanceof HTMLImageElement) {
       preview.src = result.url
       preview.alt = `Avatar preview for ${result.alt}`
+      preview.hidden = false
     }
     if (urlOutput instanceof HTMLInputElement) {
       urlOutput.value = result.url

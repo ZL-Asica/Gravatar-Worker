@@ -15,6 +15,10 @@
 - 基于 `Accept` 头自动转换图片格式为 **AVIF** 或 **WebP**
 <!-- 预留：回退策略与更灵活的自定义 -->
 
+## 🧩 个性化配置（Customization）
+
+Fork 后主要通过 `wrangler.jsonc` 自定义站点名称、描述、头像来源、页脚链接、资源链接和部署域名。详见 [`CUSTOMIZATION.md`](./CUSTOMIZATION.md)。
+
 ## 🌐 接口（Endpoints）
 
 ### 🔹 `GET /avatar/me`

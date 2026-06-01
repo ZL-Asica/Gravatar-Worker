@@ -105,7 +105,7 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
           </div>
 
           <div className="link-generator-result" aria-live="polite">
-            <img className="avatar-preview" data-avatar-preview alt="Avatar preview" width={config.api.defaultSize} height={config.api.defaultSize} />
+            <img className="avatar-preview" data-avatar-preview alt="Avatar preview" width={config.api.defaultSize} height={config.api.defaultSize} hidden />
             <div className="generated-links">
               <label>
                 Direct URL
@@ -158,21 +158,21 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
             {' '}
             <b>(default: 404)</b>
             <br />
-            Default fallback image when the requested email do not have a image associated with. You can put URL, or any other options that gravatar support.
+            Fallback shown when the requested email has no Gravatar image. Use a URL or any fallback option supported by Gravatar.
           </li>
           <li>
             <code>initials=</code>
             {' '}
             <b>(Only works when you set default to initials)</b>
             <br />
-            Default fallback image with the given initials when the requested email do not have a image associated with. You need to put the initials you would like to have as a fallback.
+            Fallback image using the initials you provide. Only applies when the default option is set to initials.
           </li>
           <li>
             <code>name=</code>
             {' '}
             <b>(Only works when you set default to initials)</b>
             <br />
-            Default fallback image with the initials based on the given name when the requested email do not have a image associated with. You can put the full name you would like to have as a fallback. Initials will be auto extracted.
+            Fallback image using initials extracted from the provided name. Only applies when the default option is set to initials.
           </li>
         </ul>
       </Section>

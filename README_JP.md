@@ -15,6 +15,10 @@
 - `Accept` ヘッダーに基づく **AVIF / WebP** への自動フォーマット変換
 <!-- 将来的な：フォールバック処理やカスタマイズ -->
 
+## 🧩 カスタマイズ（Customization）
+
+Fork 後は主に `wrangler.jsonc` でサイト名、説明、アバター設定、フッターリンク、ソースリンク、デプロイドメインを調整できます。詳しくは [`CUSTOMIZATION.md`](./CUSTOMIZATION.md) を参照してください。
+
 ## 🌐 エンドポイント（Endpoints）
 
 ### 🔹 `GET /avatar/me`
