@@ -12,7 +12,11 @@ import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
 
 const app = new Hono<{ Bindings: EnvRecord }>()
 
-app.use(cors())
+app.use(cors({
+  origin: '*',
+  allowMethods: ['GET', 'HEAD', 'OPTIONS'],
+  maxAge: 86400,
+}))
 app.use(poweredBy({ serverName: 'Gravatar Worker built by ZL Asica with Hono' }))
 app.use(
   secureHeaders({

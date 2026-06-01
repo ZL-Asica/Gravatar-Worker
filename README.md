@@ -10,7 +10,7 @@
 
 Supports:
 
-- MD5 / SHA-256 hash or raw email lookups
+- MD5 / SHA-256 hash lookups, with optional raw email lookup
 - Smart caching (Edge + Browser)
 - Auto image format conversion to **AVIF** or **WebP** based on `Accept` header
 - Customizable via environment variables
@@ -35,7 +35,7 @@ See [`CUSTOMIZATION.md`](./CUSTOMIZATION.md) for a 5-minute after-fork checklist
 | `CONTACT_URL`       | Footer contact link                              | `https://zla.pub/`         |
 | `ME_EMAIL`          | Email for `/avatar/me` (hashed server-side)      | unset                      |
 | `ME_HASH`           | Precomputed MD5/SHA-256 for `/avatar/me`         | unset                      |
-| `ALLOW_RAW_EMAIL`   | Allow `/avatar?email=` endpoint                  | `true`                     |
+| `ALLOW_RAW_EMAIL`   | Allow `/avatar?email=` endpoint                  | `false`                    |
 | `DEFAULT_SIZE`      | Default avatar size                              | `200`                      |
 | `MAX_SIZE`          | Maximum avatar size                              | `2048`                     |
 | `CACHE_TTL_BROWSER` | Browser cache TTL for 200 responses (seconds)    | `259200`                   |
@@ -66,7 +66,7 @@ GET /avatar/205e460b479e2e5b48aec07710c08d50?s=128
 
 ### 🔹 `GET /avatar?email=<email>`
 
-Fetches the avatar by raw email (safely normalized and hashed server-side). If the email is missing or invalid, it falls back to `email@example.com`.
+Fetches the avatar by raw email (safely normalized and hashed server-side). This endpoint is disabled by default; set `ALLOW_RAW_EMAIL=true` only if you accept that email addresses can appear in URLs, logs, browser history, and intermediary proxies. If the email is missing or invalid, it falls back to `email@example.com`.
 
 **Example:**
 

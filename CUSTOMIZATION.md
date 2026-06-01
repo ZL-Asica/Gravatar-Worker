@@ -9,12 +9,13 @@ Wrangler treats `wrangler.jsonc` as the source of truth on deploy, so **don’t 
    - Set `ME_EMAIL` (or `ME_HASH`) so `/avatar/me` works.
    - Set `SITE_NAME` and `SITE_DESCRIPTION`.
    - (Optional) leave `SITE_URL` empty — the Worker can infer it from the request origin.
+   - Keep `ALLOW_RAW_EMAIL=false` unless you intentionally need `/avatar?email=`. Raw email lookups place email addresses in URLs, logs, browser history, and intermediary proxies.
 
 2. Replace assets
    - Replace `public/og.png` and `public/favicon.ico` (or update `OG_IMAGE_URL` / `FAVICON_PATH`).
 
-3. (Optional) tighten the API
-   - Set `ALLOW_RAW_EMAIL=false` to disable `/avatar?email=`.
+3. (Optional) enable raw email lookup
+   - Set `ALLOW_RAW_EMAIL=true` only when you accept the privacy tradeoff of `/avatar?email=`.
 
 4. Deploy
    - `npm run deploy` (or `wrangler deploy`)
