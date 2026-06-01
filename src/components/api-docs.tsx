@@ -11,6 +11,19 @@ const Section = ({ title, children }: PropsWithChildren<{ title: string }>) => {
   )
 }
 
+const FALLBACK_OPTIONS = [
+  { value: '404', label: '404 response' },
+  { value: 'mp', label: 'Mystery person' },
+  { value: 'identicon', label: 'Identicon' },
+  { value: 'monsterid', label: 'Monster ID' },
+  { value: 'retro', label: 'Retro' },
+  { value: 'robohash', label: 'RoboHash' },
+  { value: 'blank', label: 'Blank image' },
+  { value: 'initials', label: 'Initials' },
+]
+
+const COMMON_AVATAR_SIZES = [64, 96, 128, 200, 256, 512]
+
 interface ApiDocsProps {
   config: SiteConfig
   currentYear: number
@@ -33,26 +46,32 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
     return `${seconds} seconds`
   }
 
+  const sizeOptions = Array.from(
+    new Set([
+      ...COMMON_AVATAR_SIZES.filter(size => size <= config.api.maxSize),
+      config.api.defaultSize,
+    ]),
+  ).sort((a, b) => a - b)
+
   return (
     <main className="api-docs" aria-label={`${config.branding.siteName} API Documentation`}>
       <header>
+        <p className="eyebrow">API Reference</p>
         <h1>
           {config.branding.siteName}
-          {' '}
-          API
         </h1>
         <p className="subtitle">
           {config.branding.siteTagline ?? 'Serve avatars from Gravatar with modern WebP/AVIF support, intelligent caching, and graceful fallback handling.'}
         </p>
       </header>
 
-      <Section title="📌 Endpoints">
+      <Section title="Endpoints">
         <article
           className="endpoint"
           aria-label="CDN maintainer's avatar endpoint"
         >
           <code>GET /avatar/me</code>
-          <p>Fetch the maintainer's avatar with no param needed.</p>
+          <p>Returns the configured maintainer avatar.</p>
         </article>
 
         <article
@@ -60,7 +79,7 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
           aria-label="Hash-based avatar endpoint"
         >
           <code>GET /avatar/:hash</code>
-          <p>Fetch avatar via precomputed MD5 or SHA-256 hash of an email address.</p>
+          <p>Returns an avatar for a precomputed MD5 or SHA-256 email hash.</p>
           <ul>
             <li>
               <strong>hash</strong>
@@ -75,19 +94,22 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
         >
           <code>GET /avatar?email=&lt;email&gt;</code>
           <p>
-            Fetch avatar via raw email (securely hashed on the server). Enable this endpoint only when you accept that email addresses can appear in URLs, logs, browser history, and intermediary proxies.
+            Resolves a raw email address after server-side normalization. Enable this endpoint only when you accept that email addresses can appear in URLs, logs, browser history, and intermediary proxies.
             {!config.api.allowRawEmail && ' Raw email lookups are disabled on this deployment.'}
           </p>
           <ul>
             <li>
               <strong>&lt;email&gt;</strong>
-              : The plain email address to resolve a Gravatar. It is trimmed and lowercased before hashing; invalid or missing values fall back to `email@example.com`.
+              : The plain email address to resolve. It is trimmed and lowercased before hashing; invalid or missing values fall back to
+              {' '}
+              <code>email@example.com</code>
+              .
             </li>
           </ul>
         </article>
       </Section>
 
-      <Section title="🔗 Generate Avatar Links">
+      <Section title="Generate Avatar Links">
         <form className="link-generator" data-avatar-link-form>
           <div className="link-generator-fields">
             <label>
@@ -96,15 +118,31 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
             </label>
             <label>
               Size
-              <input data-avatar-size type="number" min="16" max={config.api.maxSize} defaultValue={config.api.defaultSize} />
+              <select data-avatar-size>
+                {sizeOptions.map(size => (
+                  <option key={size} value={String(size)} selected={size === config.api.defaultSize}>
+                    {size}
+                    {' '}
+                    px
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               Fallback
-              <input data-avatar-default type="text" defaultValue="404" placeholder="404, mp, identicon, initials..." />
+              <select data-avatar-default>
+                {FALLBACK_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value} selected={option.value === '404'}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+            <label data-avatar-initials-field hidden>
+              Initials
+              <input data-avatar-initials type="text" inputMode="text" maxLength={4} placeholder="ZA" />
             </label>
           </div>
 
-          <div className="link-generator-result" aria-live="polite">
+          <div className="link-generator-result" data-avatar-result aria-live="polite" hidden>
             <img className="avatar-preview" data-avatar-preview alt="Avatar preview" width={config.api.defaultSize} height={config.api.defaultSize} hidden />
             <div className="generated-links">
               <label>
@@ -130,11 +168,11 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
               </label>
             </div>
           </div>
-          <p className="generator-status" data-avatar-status>Enter a valid email to generate a hash-based avatar link.</p>
+          <p className="generator-status" data-avatar-status>Enter an email address to generate a hash-based avatar link.</p>
         </form>
       </Section>
 
-      <Section title="⚙️ Query Parameters">
+      <Section title="Query Parameters">
         <ul>
           <li>
             <code>s=</code>
@@ -144,6 +182,7 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
             {' '}
             <b>
               (default:
+              {' '}
               {config.api.defaultSize}
               )
             </b>
@@ -163,21 +202,21 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
           <li>
             <code>initials=</code>
             {' '}
-            <b>(Only works when you set default to initials)</b>
+            <b>(requires default=initials)</b>
             <br />
             Fallback image using the initials you provide. Only applies when the default option is set to initials.
           </li>
           <li>
             <code>name=</code>
             {' '}
-            <b>(Only works when you set default to initials)</b>
+            <b>(requires default=initials)</b>
             <br />
             Fallback image using initials extracted from the provided name. Only applies when the default option is set to initials.
           </li>
         </ul>
       </Section>
 
-      <Section title="🎨 Format Negotiation">
+      <Section title="Format Negotiation">
         <p>
           Avatars are automatically converted to
           {' '}
@@ -202,7 +241,7 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
         </pre>
       </Section>
 
-      <Section title="📦 Caching">
+      <Section title="Caching">
         <ul>
           <li>
             <b>200 OK</b>
@@ -243,7 +282,7 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
         </ul>
       </Section>
 
-      <Section title="🧪 Example Requests">
+      <Section title="Example Requests">
         <ul>
           <li>
             Request with MD5 hash and size 128:

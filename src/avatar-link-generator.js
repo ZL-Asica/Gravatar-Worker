@@ -1,14 +1,20 @@
 const form = document.querySelector('[data-avatar-link-form]')
 
 if (form instanceof HTMLFormElement) {
+  const DEBOUNCE_MS = 300
   const emailInput = form.querySelector('[data-avatar-email]')
   const sizeInput = form.querySelector('[data-avatar-size]')
   const defaultInput = form.querySelector('[data-avatar-default]')
+  const initialsField = form.querySelector('[data-avatar-initials-field]')
+  const initialsInput = form.querySelector('[data-avatar-initials]')
+  const resultPanel = document.querySelector('[data-avatar-result]')
   const preview = document.querySelector('[data-avatar-preview]')
   const urlOutput = document.querySelector('[data-avatar-url]')
   const markdownOutput = document.querySelector('[data-avatar-markdown]')
   const htmlOutput = document.querySelector('[data-avatar-html]')
   const status = document.querySelector('[data-avatar-status]')
+  let updateTimer = null
+  let updateSequence = 0
 
   const setStatus = (message) => {
     if (status !== null) {
@@ -37,14 +43,33 @@ if (form instanceof HTMLFormElement) {
 
   const readSize = (input) => {
     const fallback = 200
-    const min = Number.parseInt(input.min, 10) || 16
-    const max = Number.parseInt(input.max, 10) || 2048
+    const min = Number.parseInt(input.min ?? '', 10) || 16
+    const max = Number.parseInt(input.max ?? '', 10) || 2048
     const value = Number.parseInt(input.value, 10) || fallback
     return Math.min(Math.max(value, min), max)
   }
 
+  const getFallbackValue = () => {
+    return defaultInput instanceof HTMLInputElement || defaultInput instanceof HTMLSelectElement
+      ? defaultInput.value.trim()
+      : '404'
+  }
+
+  const setResultVisibility = (isVisible) => {
+    if (resultPanel instanceof HTMLElement) {
+      resultPanel.hidden = !isVisible
+    }
+  }
+
+  const syncInitialsField = () => {
+    const usesInitials = getFallbackValue() === 'initials'
+    if (initialsField instanceof HTMLElement) {
+      initialsField.hidden = !usesInitials
+    }
+  }
+
   const buildAvatarUrl = async () => {
-    if (!(emailInput instanceof HTMLInputElement) || !(sizeInput instanceof HTMLInputElement) || !(defaultInput instanceof HTMLInputElement)) {
+    if (!(emailInput instanceof HTMLInputElement) || !(sizeInput instanceof HTMLInputElement || sizeInput instanceof HTMLSelectElement)) {
       return null
     }
 
@@ -59,11 +84,17 @@ if (form instanceof HTMLFormElement) {
     }
 
     const size = readSize(sizeInput)
-    const fallback = defaultInput.value.trim()
+    const fallback = getFallbackValue()
     const url = new URL(`/avatar/${hash}`, window.location.origin)
     url.searchParams.set('s', String(size))
     if (fallback.length > 0 && fallback !== '404') {
       url.searchParams.set('d', fallback)
+    }
+    if (fallback === 'initials' && initialsInput instanceof HTMLInputElement) {
+      const initials = initialsInput.value.trim()
+      if (initials.length > 0) {
+        url.searchParams.set('initials', initials)
+      }
     }
 
     return {
@@ -74,6 +105,7 @@ if (form instanceof HTMLFormElement) {
   }
 
   const clearOutputs = () => {
+    setResultVisibility(false)
     if (preview instanceof HTMLImageElement) {
       preview.removeAttribute('src')
       preview.alt = 'Avatar preview'
@@ -91,13 +123,27 @@ if (form instanceof HTMLFormElement) {
   }
 
   const update = async () => {
-    const result = await buildAvatarUrl()
-    if (result === null) {
+    const sequence = ++updateSequence
+    syncInitialsField()
+
+    if (emailInput instanceof HTMLInputElement && emailInput.value.trim().length === 0) {
       clearOutputs()
-      setStatus('Enter a valid email to generate a hash-based avatar link.')
+      setStatus('Enter an email address to generate a hash-based avatar link.')
       return
     }
 
+    setStatus('Generating link...')
+    const result = await buildAvatarUrl()
+    if (sequence !== updateSequence) {
+      return
+    }
+    if (result === null) {
+      clearOutputs()
+      setStatus('Enter a valid email address.')
+      return
+    }
+
+    setResultVisibility(true)
     if (preview instanceof HTMLImageElement) {
       preview.src = result.url
       preview.alt = `Avatar preview for ${result.alt}`
@@ -113,6 +159,17 @@ if (form instanceof HTMLFormElement) {
       htmlOutput.value = `<img src="${result.url}" alt="Avatar" width="${result.size}" height="${result.size}">`
     }
     setStatus('Generated locally. The email was not sent to this Worker.')
+  }
+
+  const scheduleUpdate = () => {
+    if (updateTimer !== null) {
+      window.clearTimeout(updateTimer)
+    }
+    syncInitialsField()
+    updateTimer = window.setTimeout(() => {
+      updateTimer = null
+      void update()
+    }, DEBOUNCE_MS)
   }
 
   const copyValue = async (button) => {
@@ -139,9 +196,8 @@ if (form instanceof HTMLFormElement) {
     }
   }
 
-  form.addEventListener('input', () => {
-    void update()
-  })
+  form.addEventListener('input', scheduleUpdate)
+  form.addEventListener('change', scheduleUpdate)
   form.addEventListener('submit', (event) => {
     event.preventDefault()
     void update()
@@ -153,5 +209,6 @@ if (form instanceof HTMLFormElement) {
       }
     })
   })
-  void update()
+  syncInitialsField()
+  clearOutputs()
 }
