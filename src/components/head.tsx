@@ -1,4 +1,4 @@
-import { Link, ViteClient } from 'vite-ssr-components/hono'
+import { Link, Script, ViteClient } from 'vite-ssr-components/hono'
 
 interface HeadProps {
   config: SiteConfig
@@ -76,6 +76,7 @@ const Head = ({ config, meta }: HeadProps) => {
         })}
       </script>
       <ViteClient />
+      <Script src="/src/avatar-link-generator.js" />
       <Link href="/src/style.css" rel="stylesheet" />
     </head>
   )

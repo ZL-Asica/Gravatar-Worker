@@ -41,7 +41,7 @@ app.use('*', async (c, next) => {
 
 app.get('/', (c) => {
   const config = loadConfig(c.env)
-  return c.render(<ApiDocs config={config} />)
+  return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} />)
 })
 
 app.get('/robots.txt', (c) => {
