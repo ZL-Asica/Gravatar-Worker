@@ -17,7 +17,7 @@
 
 ## 🧩 个性化配置（Customization）
 
-Fork 后主要通过 `wrangler.jsonc` 自定义站点名称、描述、头像来源、页脚链接、资源链接和部署域名。详见 [`CUSTOMIZATION.md`](./CUSTOMIZATION.md)。
+Fork 后主要通过 `wrangler.jsonc` 自定义站点名称、描述、头像来源、页脚链接、资源链接和部署域名。详见 [`docs/CUSTOMIZATION_ZH-CN.md`](./docs/CUSTOMIZATION_ZH-CN.md)。
 
 ## 🌐 接口（Endpoints）
 

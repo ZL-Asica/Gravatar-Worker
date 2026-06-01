@@ -18,7 +18,7 @@ Supports:
 
 ## 🧩 Customization
 
-See [`CUSTOMIZATION.md`](./CUSTOMIZATION.md) for a 5-minute after-fork checklist and detailed guidance.
+See [`docs/CUSTOMIZATION.md`](./docs/CUSTOMIZATION.md) for a 5-minute after-fork checklist and detailed guidance.
 
 ### Environment Variables
 
