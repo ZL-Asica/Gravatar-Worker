@@ -66,7 +66,7 @@ GET /avatar/205e460b479e2e5b48aec07710c08d50?s=128
 
 ### 🔹 `GET /avatar?email=<email>`
 
-Fetches the avatar by raw email (safely hashed server-side). If the email is invalid, it falls back to `email@example.com`.
+Fetches the avatar by raw email (safely normalized and hashed server-side). If the email is missing or invalid, it falls back to `email@example.com`.
 
 **Example:**
 
@@ -89,11 +89,13 @@ Automatically returns the most optimized format:
 - `image/webp` (fallback)
 - Original JPEG (fallback fallback 🙃)
 
-Based on the browser’s `Accept` header:
+Based on the browser’s `Accept` header, including quality values like `q=0.9`:
 
 ```http
 Accept: image/avif,image/webp,image/*,*/*
 ```
+
+Large or unsupported source images may be streamed back in their original format to protect Worker memory and CPU limits.
 
 ## 📦 Caching Strategy
 

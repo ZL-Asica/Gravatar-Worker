@@ -39,7 +39,7 @@ GET /avatar/205e460b479e2e5b48aec07710c08d50?s=128
 
 ### 🔹 `GET /avatar?email=<email>`
 
-通过**原始邮箱**获取头像（服务器端安全地进行哈希）。若邮箱无效，将回退到 `email@example.com`。
+通过**原始邮箱**获取头像（服务器端安全地规范化并进行哈希）。若邮箱缺失或无效，将回退到 `email@example.com`。
 
 **示例：**
 
@@ -62,11 +62,13 @@ GET /avatar?email=email@example.com&size=256
 - `image/webp`（次优回退）
 - 原始 **JPEG**（兜底中的兜底 🙃）
 
-根据浏览器的 `Accept` 请求头进行协商：
+根据浏览器的 `Accept` 请求头进行协商，支持 `q=0.9` 这样的质量权重：
 
 ```http
 Accept: image/avif,image/webp,image/*,*/*
 ```
+
+为保护 Worker 的内存和 CPU 限制，过大的图片或不支持的源格式可能会以原始格式流式返回。
 
 ## 📦 缓存策略（Caching Strategy）
 

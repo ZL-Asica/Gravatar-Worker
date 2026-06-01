@@ -39,7 +39,7 @@ GET /avatar/205e460b479e2e5b48aec07710c08d50?s=128
 
 ### 🔹 `GET /avatar?email=<email>`
 
-**raw email** でアバターを取得（サーバー側で安全にハッシュ化）。無効なメールの場合、`email@example.com` にフォールバック。
+**raw email** でアバターを取得（サーバー側で安全に正規化してハッシュ化）。メールが未指定または無効な場合、`email@example.com` にフォールバック。
 
 **例：**
 
@@ -62,11 +62,13 @@ GET /avatar?email=email@example.com&size=256
 - `image/webp`（フォールバック）
 - 元の **JPEG**（最終フォールバック 🙃）
 
-ブラウザの `Accept` ヘッダーに基づいて判定：
+ブラウザの `Accept` ヘッダーに基づいて判定し、`q=0.9` のような品質値にも対応：
 
 ```http
 Accept: image/avif,image/webp,image/*,*/*
 ```
+
+Worker のメモリと CPU 制限を守るため、大きすぎる画像や未対応の元形式は元の形式のままストリーミングされる場合があります。
 
 ## 📦 キャッシュ戦略（Caching Strategy）
 

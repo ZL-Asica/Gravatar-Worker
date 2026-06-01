@@ -81,7 +81,7 @@ const ApiDocs = ({ config }: ApiDocsProps) => {
           <ul>
             <li>
               <strong>&lt;email&gt;</strong>
-              : The plain email address to resolve a Gravatar (if the email is invalid, we will use `email@example.com` as fallback).
+              : The plain email address to resolve a Gravatar. It is trimmed and lowercased before hashing; invalid or missing values fall back to `email@example.com`.
             </li>
           </ul>
         </article>
@@ -143,7 +143,10 @@ const ApiDocs = ({ config }: ApiDocsProps) => {
           based on the browser’s
           <code> Accept </code>
           {' '}
-          header. JPEG is used as a fallback if neither is supported.
+          header, including quality values such as
+          {' '}
+          <code>q=0.9</code>
+          . The original image format is used as a fallback if neither is supported or the requested image is too large to safely transform at the edge.
         </p>
         <pre aria-label="Accept header example">
           <code>
