@@ -1,6 +1,23 @@
 # gravatar-worker
 
-## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.0.0...HEAD)
+## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.0...HEAD)
+
+## [1.1.0-beta.0](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.0.0...v1.1.0-beta.0) - 2026-06-01
+
+Pre-release workflow smoke test.
+
+### 🐛 Bug Fixes / 修复
+- fix(avatar): normalize requests and guard transforms ([#44](https://github.com/ZL-Asica/Gravatar-Worker/pull/44)) by @ZL-Asica
+- fix(config): disable raw email lookup by default ([#45](https://github.com/ZL-Asica/Gravatar-Worker/pull/45)) by @ZL-Asica
+
+### 🛠️ Improvements / 改进
+- refactor(config): use generated worker bindings ([#47](https://github.com/ZL-Asica/Gravatar-Worker/pull/47)) by @ZL-Asica
+
+### 🧰 Internal / 内部变更
+- ci: fix release workflows ([#43](https://github.com/ZL-Asica/Gravatar-Worker/pull/43)) by @ZL-Asica
+- chore(github): fix issue template paths ([#46](https://github.com/ZL-Asica/Gravatar-Worker/pull/46)) by @ZL-Asica
+- chore: remove commitlint ([#48](https://github.com/ZL-Asica/Gravatar-Worker/pull/48)) by @ZL-Asica
+- ci: classify release notes by title ([#50](https://github.com/ZL-Asica/Gravatar-Worker/pull/50)) by @ZL-Asica
 
 - Replace the legacy automatic release workflow with separate release preparation and GitHub Release publishing workflows.
 - Add a pull request CI workflow that runs lint and build checks.
