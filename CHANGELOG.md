@@ -1,6 +1,13 @@
 # gravatar-worker
 
-## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.0...HEAD)
+## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.1...HEAD)
+
+## [1.1.0-beta.1](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.0...v1.1.0-beta.1) - 2026-06-01
+
+Automatic prerelease workflow verification.
+
+### 🧰 Internal / 内部变更
+- ci: reuse release PR notes on manual publish ([#53](https://github.com/ZL-Asica/Gravatar-Worker/pull/53)) by @ZL-Asica
 
 ## [1.1.0-beta.0](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.0.0...v1.1.0-beta.0) - 2026-06-01
 
