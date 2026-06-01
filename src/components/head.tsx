@@ -70,8 +70,8 @@ const Head = ({ config, meta }: HeadProps) => {
             'url': config.branding.contactUrl ?? meta.canonicalUrl,
           },
           'editor': meta.siteName,
-          'codeRepository': 'https://github.com/ZL-Asica/Gravatar-Worker',
-          'license': 'https://github.com/ZL-Asica/Gravatar-Worker/blob/main/LICENSE',
+          'codeRepository': config.branding.repositoryUrl,
+          'license': config.branding.licenseUrl,
           'isBasedOn': 'https://www.gravatar.com/',
         })}
       </script>

@@ -5,6 +5,7 @@ interface FooterProps {
 
 const Footer = ({ config, currentYear }: FooterProps) => {
   const footerLabel = config.branding.footerText ?? config.branding.siteName
+  const creditLabel = config.branding.creditText
 
   return (
     <footer class="footer">
@@ -28,16 +29,27 @@ const Footer = ({ config, currentYear }: FooterProps) => {
       <p class="footer-text">
         Powered by
         {' '}
-        <a href="https://github.com/ZL-Asica/Gravatar-Worker" target="_blank" rel="noopener noreferrer" class="footer-link">
-          Gravatar Worker
+        <a href={config.branding.repositoryUrl} target="_blank" rel="noopener noreferrer" class="footer-link">
+          {config.branding.sourceText}
         </a>
-        {' '}
-        ·
-        Crafted by
-        {' '}
-        <a href="https://zla.pub" target="_blank" rel="noopener noreferrer" class="footer-link">
-          ZL Asica
-        </a>
+        {creditLabel !== undefined && (
+          <>
+            {' '}
+            ·
+            {' '}
+            Crafted by
+            {' '}
+            {config.branding.creditUrl !== undefined
+              ? (
+                  <a href={config.branding.creditUrl} target="_blank" rel="noopener noreferrer" class="footer-link">
+                    {creditLabel}
+                  </a>
+                )
+              : (
+                  <span>{creditLabel}</span>
+                )}
+          </>
+        )}
       </p>
     </footer>
   )

@@ -85,6 +85,11 @@ export const loadConfig = (env: Partial<CloudflareBindings> = {}): SiteConfig =>
       faviconPath: normalizeString(env.FAVICON_PATH) ?? defaults.branding.faviconPath,
       footerText: normalizeString(env.FOOTER_TEXT) ?? defaults.branding.footerText,
       contactUrl: normalizeString(env.CONTACT_URL) ?? defaults.branding.contactUrl,
+      repositoryUrl: normalizeString(env.REPOSITORY_URL) ?? defaults.branding.repositoryUrl,
+      licenseUrl: normalizeString(env.LICENSE_URL) ?? defaults.branding.licenseUrl,
+      sourceText: normalizeString(env.SOURCE_TEXT) ?? defaults.branding.sourceText,
+      creditText: normalizeString(env.CREDIT_TEXT) ?? defaults.branding.creditText,
+      creditUrl: normalizeString(env.CREDIT_URL) ?? defaults.branding.creditUrl,
     },
     seo: parseRobots(env.ROBOTS_ALLOW, defaults.seo),
     api: {

@@ -17,6 +17,11 @@ interface SiteConfig {
     faviconPath: string
     footerText?: string
     contactUrl?: string
+    repositoryUrl: string
+    licenseUrl: string
+    sourceText: string
+    creditText?: string
+    creditUrl?: string
   }
   seo: {
     robotsAllow: boolean | null
