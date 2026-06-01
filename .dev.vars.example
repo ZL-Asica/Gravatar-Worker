@@ -19,7 +19,9 @@ CONTACT_URL="https://zla.pub/"
 # API behavior
 ME_EMAIL=""
 ME_HASH=""
-ALLOW_RAW_EMAIL="true"
+# Raw email lookups place email addresses in URLs, logs, and browser history.
+# Prefer hash-based URLs unless you intentionally need this endpoint.
+ALLOW_RAW_EMAIL="false"
 DEFAULT_SIZE="200"
 MAX_SIZE="2048"
 

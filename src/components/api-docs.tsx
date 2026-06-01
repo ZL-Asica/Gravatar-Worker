@@ -74,9 +74,8 @@ const ApiDocs = ({ config }: ApiDocsProps) => {
         >
           <code>GET /avatar?email=&lt;email&gt;</code>
           <p>
-            Fetch avatar via raw email (securely hashed on the server).
-            {' '}
-            {!config.api.allowRawEmail && 'Raw email lookups are disabled by default on this deployment.'}
+            Fetch avatar via raw email (securely hashed on the server). Enable this endpoint only when you accept that email addresses can appear in URLs, logs, browser history, and intermediary proxies.
+            {!config.api.allowRawEmail && ' Raw email lookups are disabled on this deployment.'}
           </p>
           <ul>
             <li>
@@ -207,7 +206,7 @@ const ApiDocs = ({ config }: ApiDocsProps) => {
             </pre>
           </li>
           <li>
-            Request with email and size 256:
+            {config.api.allowRawEmail ? 'Request with email and size 256:' : 'Raw email request with size 256 (requires ALLOW_RAW_EMAIL=true):'}
             <pre aria-label="Example request with email">
               <code>
                 GET /avatar?email=email@example.com&amp;size=256
@@ -215,7 +214,7 @@ const ApiDocs = ({ config }: ApiDocsProps) => {
             </pre>
           </li>
           <li>
-            Request with email and size 500 and fallback initial 'A':
+            {config.api.allowRawEmail ? 'Request with email and size 500 and fallback initial \'A\':' : 'Raw email request with size 500 and fallback initial \'A\' (requires ALLOW_RAW_EMAIL=true):'}
             <pre aria-label="Example request with email">
               <code>
                 GET /avatar?email=email@example.com&amp;size=500&d=initials&initials=A

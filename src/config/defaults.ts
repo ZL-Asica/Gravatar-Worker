@@ -16,7 +16,7 @@ export const DEFAULT_CONFIG: SiteConfig = {
   api: {
     meEmail: undefined,
     meHash: undefined,
-    allowRawEmail: true,
+    allowRawEmail: false,
     defaultSize: 200,
     maxSize: 2048,
   },
