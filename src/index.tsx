@@ -10,7 +10,7 @@ import { renderer } from './renderer'
 import { fetchGravatar } from './utils'
 import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
 
-const app = new Hono<{ Bindings: EnvRecord }>()
+const app = new Hono<{ Bindings: CloudflareBindings }>()
 
 app.use(cors({
   origin: '*',

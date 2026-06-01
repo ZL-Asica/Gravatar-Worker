@@ -48,7 +48,7 @@ const parseRobots = (value: string | undefined, fallback: SiteConfig['seo']) => 
   }
 }
 
-export const loadConfig = (env: EnvRecord = {}): SiteConfig => {
+export const loadConfig = (env: Partial<CloudflareBindings> = {}): SiteConfig => {
   const defaults = DEFAULT_CONFIG
 
   const maxSize = clamp(

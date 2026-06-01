@@ -19,6 +19,7 @@ CONTACT_URL="https://zla.pub/"
 # API behavior
 ME_EMAIL=""
 ME_HASH=""
+HASH=""
 # Raw email lookups place email addresses in URLs, logs, and browser history.
 # Prefer hash-based URLs unless you intentionally need this endpoint.
 ALLOW_RAW_EMAIL="false"
