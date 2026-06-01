@@ -143,6 +143,92 @@ jobs:
             const raw = (res.data.body || "").trim();
             const generated = raw.replace(/^<!--[\s\S]*?-->\s*/m, "").trim();
 
+            const categorizeByConventionalTitle = (notes) => {
+              const conventionalCategories = [
+                {
+                  title: "### 🚀 Features / 新功能",
+                  types: new Set(["feat"]),
+                  lines: [],
+                },
+                {
+                  title: "### 🐛 Bug Fixes / 修复",
+                  types: new Set(["fix"]),
+                  lines: [],
+                },
+                {
+                  title: "### 🛠️ Improvements / 改进",
+                  types: new Set(["perf", "refactor"]),
+                  lines: [],
+                },
+                {
+                  title: "### 📖 Documentation / 文档更新",
+                  types: new Set(["docs"]),
+                  lines: [],
+                },
+                {
+                  title: "### 📦 Dependencies / 依赖更新",
+                  types: new Set(["deps"]),
+                  lines: [],
+                },
+                {
+                  title: "### 🧰 Internal / 内部变更",
+                  types: new Set(["build", "chore", "ci", "test"]),
+                  lines: [],
+                },
+                {
+                  title: "### 💥 Breaking Changes / 破坏性变更",
+                  types: new Set([]),
+                  lines: [],
+                },
+                {
+                  title: "### 🎨 UI UX & Styling / UI UX & 样式",
+                  types: new Set(["style"]),
+                  lines: [],
+                },
+              ];
+              const miscCategory = {
+                title: "### 🔄 Miscellaneous / 其他变更",
+                lines: [],
+              };
+              const categoryByType = new Map(
+                conventionalCategories.flatMap((category) =>
+                  [...category.types].map((type) => [type, category])
+                )
+              );
+              const categoryByHeading = new Map(
+                conventionalCategories.map((category) => [
+                  category.title.replace(/^###\s+/, "").toLowerCase(),
+                  category,
+                ])
+              );
+              categoryByHeading.set("miscellaneous / 其他变更", miscCategory);
+              const headingPattern = /^#{2,4}\s+/;
+              const conventionalTitlePattern = /^-\s+([a-z]+)(?:\([^)]+\))?!?:\s+/i;
+              let currentCategory;
+
+              for (const line of notes.split("\n")) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+                if (headingPattern.test(trimmed)) {
+                  currentCategory = categoryByHeading.get(
+                    trimmed.replace(headingPattern, "").trim().toLowerCase()
+                  );
+                  continue;
+                }
+
+                const match = trimmed.match(conventionalTitlePattern);
+                const category = match
+                  ? categoryByType.get(match[1].toLowerCase())
+                  : undefined;
+                (category || currentCategory || miscCategory).lines.push(trimmed);
+              }
+
+              return [...conventionalCategories, miscCategory]
+                .filter((category) => category.lines.length > 0)
+                .map((category) => `${category.title}\n${category.lines.join("\n")}`)
+                .join("\n\n");
+            };
+
             let changelog = generated;
 
             // 1) Drop "What's Changed" heading (any heading level)
@@ -171,11 +257,27 @@ jobs:
               (_line, title, user, url, prNumber) => `- ${title} ([#${prNumber}](${url})) by ${user}`
             );
 
-            // 7) Tidy whitespace
+            // 7) Re-bucket unlabeled generated notes by Conventional Commit title.
+            changelog = categorizeByConventionalTitle(changelog);
+
+            // 8) Tidy whitespace
             changelog = changelog.replace(/\n{3,}/g, "\n\n").trim();
 
-            const releaseBody = generated
+            let releaseBody = generated
               .replace(/^\s*#+\s+What's Changed\s*\n+/im, "")
+              .replace(
+                /^\s*#+\s+New Contributors\s*\n[\s\S]*?(?=^\s*#+\s|\s*$)/im,
+                ""
+              )
+              .replace(/^\s*\*\*Full Changelog\*\*:[^\n]*\n?/im, "")
+              .replace(/^####\s+/gm, "### ")
+              .replace(/^##\s+/gm, "### ")
+              .replace(/^\*\s+/gm, "- ")
+              .replace(
+                /^- (.+?)\s+by\s+(@[A-Za-z0-9-]+)\s+in\s+(https:\/\/github\.com\/[^\/]+\/[^\/]+\/pull\/(\d+))\s*$/gm,
+                (_line, title, user, url, prNumber) => `- ${title} ([#${prNumber}](${url})) by ${user}`
+              );
+            releaseBody = categorizeByConventionalTitle(releaseBody)
               .replace(/\n{3,}/g, "\n\n")
               .trim();
             const body = [manualSummary, releaseBody].filter(Boolean).join("\n\n");
