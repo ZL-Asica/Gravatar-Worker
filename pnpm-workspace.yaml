@@ -6,6 +6,7 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - miniflare@4.20260529.0
   - wrangler@4.96.0
+  - '@cloudflare/vite-plugin@1.39.1'
 
 shellEmulator: true
 trustPolicy: no-downgrade
