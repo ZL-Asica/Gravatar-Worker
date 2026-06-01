@@ -1,24 +1,37 @@
 # Customization Guide
 
-This project is designed so your fork can be customized by editing `wrangler.jsonc`.
-Wrangler treats `wrangler.jsonc` as the source of truth on deploy, so **don’t rely on Cloudflare Dashboard environment variables** unless you intentionally opt into that workflow (see note below).
+This project is designed so a fork can be customized mostly by editing
+`wrangler.jsonc`.
+Wrangler treats `wrangler.jsonc` as the source of truth on deploy, so **don't
+rely on Cloudflare Dashboard environment variables** unless you intentionally
+opt into that workflow (see note below).
 
 ## 5-minute after-fork setup
 
-1. Update configuration in `wrangler.jsonc` (`vars` section)
-   - Set `ME_EMAIL` (or `ME_HASH`) so `/avatar/me` works.
-   - Set `SITE_NAME` and `SITE_DESCRIPTION`.
-   - (Optional) leave `SITE_URL` empty — the Worker can infer it from the request origin.
-   - Keep `ALLOW_RAW_EMAIL=false` unless you intentionally need `/avatar?email=`. Raw email lookups place email addresses in URLs, logs, browser history, and intermediary proxies.
+1. Update the `vars` section in `wrangler.jsonc`
+   - Set `SITE_NAME`, `SITE_TAGLINE`, and `SITE_DESCRIPTION`.
+   - Set `ME_EMAIL` or `ME_HASH` so `/avatar/me` works.
+   - Leave `SITE_URL` empty unless you need a fixed canonical origin. When
+     empty, the Worker uses the current request origin.
+   - Keep `ALLOW_RAW_EMAIL=false` unless you intentionally need
+     `/avatar?email=`. Raw email lookups place email addresses in URLs, logs,
+     browser history, and intermediary proxies.
 
 2. Replace assets
-   - Replace `public/og.png` and `public/favicon.ico` (or update `OG_IMAGE_URL` / `FAVICON_PATH`).
+   - Replace `public/og.png` and `public/favicon.ico`.
+   - If you prefer remote or renamed files, update `OG_IMAGE_URL` and
+     `FAVICON_PATH`.
 
-3. (Optional) enable raw email lookup
-   - Set `ALLOW_RAW_EMAIL=true` only when you accept the privacy tradeoff of `/avatar?email=`.
+3. Adjust footer and source links
+   - `FOOTER_TEXT` and `CONTACT_URL` control the primary footer credit.
+   - `SOURCE_TEXT` and `REPOSITORY_URL` control the source link.
+   - `CREDIT_TEXT` and `CREDIT_URL` add an optional extra credit link.
+   - `LICENSE_URL` is used in structured metadata.
 
 4. Deploy
-   - `npm run deploy` (or `wrangler deploy`)
+   - `pnpm run deploy` (or `pnpm exec wrangler deploy`)
+   - New forks deploy to the default `*.workers.dev` domain unless you add a
+     custom route.
 
 ## Local development vars (recommended)
 
@@ -31,9 +44,22 @@ These do not need to be committed.
 
 ## Custom domain routing (optional)
 
-The repo includes a `routes` / custom domain by default.
-If you own a Cloudflare zone and want a custom domain, add a route after your first deploy.
-If not, delete the `routes` section from `wrangler.jsonc` to use the default `*.workers.dev` domain.
+The default config does not include a `routes` section, which keeps first deploys
+simple and uses the default `*.workers.dev` domain.
+
+If you own a Cloudflare zone and want a custom domain, add a route after your
+first deploy:
+
+```jsonc
+{
+  "routes": [
+    {
+      "pattern": "gravatar.example.com",
+      "custom_domain": true
+    }
+  ]
+}
+```
 
 ## Note: “I want to configure in the Cloudflare Dashboard instead”
 

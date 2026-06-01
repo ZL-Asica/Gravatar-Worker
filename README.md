@@ -22,25 +22,30 @@ See [`CUSTOMIZATION.md`](./CUSTOMIZATION.md) for a 5-minute after-fork checklist
 
 ### Environment Variables
 
-| Name                | Purpose                                          | Default                    |
-| ------------------- | ------------------------------------------------ | -------------------------- |
-| `SITE_NAME`         | Site/brand name shown in titles and UI           | `ZLA Gravatar CDN`         |
-| `SITE_TAGLINE`      | Optional tagline appended to the title           | (see defaults)             |
-| `SITE_DESCRIPTION`  | Meta description and OG description              | (see defaults)             |
-| `SITE_URL`          | Canonical origin (used for OG/canonical/sitemap) | `https://gravatar.zla.app` |
-| `OG_IMAGE_URL`      | OG image path or URL                             | `/og.png`                  |
-| `FAVICON_PATH`      | Favicon path                                     | `/favicon.ico`             |
-| `ROBOTS_ALLOW`      | `true/false/1/0` or custom meta value            | `true`                     |
-| `FOOTER_TEXT`       | Footer label (linked if `CONTACT_URL` is set)    | `ZL Asica`                 |
-| `CONTACT_URL`       | Footer contact link                              | `https://zla.pub/`         |
-| `ME_EMAIL`          | Email for `/avatar/me` (hashed server-side)      | unset                      |
-| `ME_HASH`           | Precomputed MD5/SHA-256 for `/avatar/me`         | unset                      |
-| `ALLOW_RAW_EMAIL`   | Allow `/avatar?email=` endpoint                  | `false`                    |
-| `DEFAULT_SIZE`      | Default avatar size                              | `200`                      |
-| `MAX_SIZE`          | Maximum avatar size                              | `2048`                     |
-| `CACHE_TTL_BROWSER` | Browser cache TTL for 200 responses (seconds)    | `259200`                   |
-| `CACHE_TTL_EDGE`    | Edge cache TTL for 200 responses (seconds)       | `604800`                   |
-| `HASH`              | Legacy hash env for `/avatar/me`                 | unset                      |
+| Name                | Purpose                                           | Default            |
+| ------------------- | ------------------------------------------------- | ------------------ |
+| `SITE_NAME`         | Site/brand name shown in titles and UI            | `ZLA Gravatar CDN` |
+| `SITE_TAGLINE`      | Optional tagline appended to the title            | (see defaults)     |
+| `SITE_DESCRIPTION`  | Meta description and OG description               | (see defaults)     |
+| `SITE_URL`          | Canonical origin (uses request origin when empty) | empty              |
+| `OG_IMAGE_URL`      | OG image path or URL                              | `/og.png`          |
+| `FAVICON_PATH`      | Favicon path                                      | `/favicon.ico`     |
+| `ROBOTS_ALLOW`      | `true/false/1/0` or custom meta value             | `true`             |
+| `FOOTER_TEXT`       | Footer label (linked if `CONTACT_URL` is set)     | `ZL Asica`         |
+| `CONTACT_URL`       | Footer contact link                               | `https://zla.pub/` |
+| `REPOSITORY_URL`    | Source link used in footer and structured data    | project repository |
+| `LICENSE_URL`       | License URL used in structured data               | project license    |
+| `SOURCE_TEXT`       | Source link label in footer                       | `Gravatar Worker`  |
+| `CREDIT_TEXT`       | Footer credit label                               | `ZL Asica`         |
+| `CREDIT_URL`        | Footer credit link                                | `https://zla.pub`  |
+| `ME_EMAIL`          | Email for `/avatar/me` (hashed server-side)       | unset              |
+| `ME_HASH`           | Precomputed MD5/SHA-256 for `/avatar/me`          | unset              |
+| `ALLOW_RAW_EMAIL`   | Allow `/avatar?email=` endpoint                   | `false`            |
+| `DEFAULT_SIZE`      | Default avatar size                               | `200`              |
+| `MAX_SIZE`          | Maximum avatar size                               | `2048`             |
+| `CACHE_TTL_BROWSER` | Browser cache TTL for 200 responses (seconds)     | `259200`           |
+| `CACHE_TTL_EDGE`    | Edge cache TTL for 200 responses (seconds)        | `604800`           |
+| `HASH`              | Legacy hash env for `/avatar/me`                  | unset              |
 
 ## 🌐 Endpoints
 
