@@ -105,7 +105,7 @@ const ApiDocs = ({ config, currentYear }: ApiDocsProps) => {
           </div>
 
           <div className="link-generator-result" aria-live="polite">
-            <img className="avatar-preview" data-avatar-preview alt="Avatar preview" width={config.api.defaultSize} height={config.api.defaultSize} />
+            <img className="avatar-preview" data-avatar-preview alt="Avatar preview" width={config.api.defaultSize} height={config.api.defaultSize} hidden />
             <div className="generated-links">
               <label>
                 Direct URL

@@ -130,6 +130,10 @@ body {
   object-fit: cover;
 }
 
+.avatar-preview[hidden] {
+  display: none;
+}
+
 .generated-links {
   display: grid;
   gap: 0.8rem;
