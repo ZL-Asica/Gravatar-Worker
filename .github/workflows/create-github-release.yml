@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Existing tag version to publish, with or without the v prefix
+        description: Release version to publish, with or without the v prefix
         required: true
         type: string
 
@@ -169,7 +169,7 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Checkout existing release tag
-        if: steps.detect.outputs.is_release == 'true' && steps.detect.outputs.source != 'main'
+        if: steps.detect.outputs.is_release == 'true' && steps.detect.outputs.source == 'tag'
         shell: bash
         run: |
           set -euo pipefail
@@ -236,7 +236,7 @@ jobs:
           fi
 
       - name: Create tag
-        if: steps.detect.outputs.is_release == 'true' && steps.detect.outputs.source == 'main' && steps.tag_exists.outputs.exists != 'true'
+        if: steps.detect.outputs.is_release == 'true' && steps.detect.outputs.source != 'tag' && steps.tag_exists.outputs.exists != 'true'
         shell: bash
         run: |
           set -euo pipefail
