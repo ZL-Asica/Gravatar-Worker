@@ -9,6 +9,44 @@ const MAX_TRANSFORM_BYTES = 4 * 1024 * 1024
 const MAX_TRANSFORM_PIXELS = 1024 * 1024
 const UPSTREAM_TIMEOUT_MS = 10_000
 
+interface TransformCache {
+  match: (request: Request) => Promise<Response | undefined>
+  put: (request: Request, response: Response) => Promise<void>
+}
+
+const getTransformCacheKey = (
+  requestUrl: string,
+  hash: string,
+  size: number,
+  fallback: string,
+  initials: string | undefined,
+  name: string | undefined,
+  outputMime: string,
+) => {
+  const url = new URL('/__avatar-transform-cache', requestUrl)
+  url.searchParams.set('hash', hash)
+  url.searchParams.set('size', String(size))
+  url.searchParams.set('default', fallback)
+  url.searchParams.set('format', outputMime)
+  if (initials !== undefined) {
+    url.searchParams.set('initials', initials)
+  }
+  if (name !== undefined) {
+    url.searchParams.set('name', name)
+  }
+  return new Request(url, { method: 'GET' })
+}
+
+const getTransformMime = (acceptTypes: string[]) => {
+  if (acceptTypes.includes('image/avif')) {
+    return 'image/avif'
+  }
+  if (acceptTypes.includes('image/webp')) {
+    return 'image/webp'
+  }
+  return undefined
+}
+
 const getContentType = (headers: Headers): string => {
   return headers.get('Content-Type')?.split(';')[0]?.trim().toLowerCase() ?? 'image/jpeg'
 }
@@ -82,6 +120,20 @@ export const fetchGravatar = async (
   const name = c.req.query('name')
 
   const normalizedAccept = parseAcceptHeader(c.req.header('Accept'))
+  const transformMime = getTransformMime(normalizedAccept)
+  const transformCache = (globalThis as unknown as { caches?: { default?: TransformCache } }).caches?.default
+  const transformCacheKey = transformMime === undefined
+    ? undefined
+    : getTransformCacheKey(c.req.url, hash, size, fallback, initials, name, transformMime)
+
+  if (transformCache !== undefined && transformCacheKey !== undefined) {
+    const cached = await transformCache.match(transformCacheKey)
+    if (cached !== undefined) {
+      const headers = new Headers(cached.headers)
+      headers.set('X-Gravatar-Transform-Cache', 'HIT')
+      return new Response(cached.body, { status: cached.status, headers })
+    }
+  }
 
   const params = new URLSearchParams({
     s: `${size}`,
@@ -126,7 +178,12 @@ export const fetchGravatar = async (
   try {
     const imageBuffer = await res.arrayBuffer()
     const { data, mime } = await imgProcessor(imageBuffer, contentType, normalizedAccept)
-    return proxiedImageResponse(data, res.status, hash, config, mime)
+    const response = proxiedImageResponse(data, res.status, hash, config, mime)
+    if (transformCache !== undefined && transformCacheKey !== undefined && mime === transformMime) {
+      await transformCache.put(transformCacheKey, response.clone())
+      response.headers.set('X-Gravatar-Transform-Cache', 'MISS')
+    }
+    return response
   }
   catch {
     return upstreamErrorResponse()

@@ -23,16 +23,23 @@ interface ImageData {
 const supportedDecodeFormats = ['jpeg', 'jpg', 'png'] as const
 type DecodeFormat = (typeof supportedDecodeFormats)[number]
 
+let jpegDecoderReady: Promise<void> | undefined
+let pngDecoderReady: Promise<void> | undefined
+let avifEncoderReady: Promise<void> | undefined
+let webpEncoderReady: Promise<void> | undefined
+
 const decodeImage = async (
   imageBuffer: ArrayBuffer,
   format: DecodeFormat,
 ): Promise<ImageData> => {
   if (format === 'jpeg' || format === 'jpg') {
-    await initJpegDecode(JPEG_DEC_WASM)
+    jpegDecoderReady ??= initJpegDecode(JPEG_DEC_WASM)
+    await jpegDecoderReady
     return decodeJpeg(imageBuffer) as Promise<ImageData>
   }
   // eslint-disable-next-line ts/no-unsafe-argument
-  await initPngDecode(PNG_DEC_WASM)
+  pngDecoderReady ??= initPngDecode(PNG_DEC_WASM)
+  await pngDecoderReady
   return decodePng(imageBuffer) as Promise<ImageData>
 }
 
@@ -49,13 +56,15 @@ export const imgProcessor = async (
   const imageData = await decodeImage(imageBuffer, sourceImageFormat as DecodeFormat)
 
   if (acceptTypes.includes('image/avif')) {
-    await initAvifEncode(AVIF_ENC_WASM)
+    avifEncoderReady ??= initAvifEncode(AVIF_ENC_WASM)
+    await avifEncoderReady
     const avifBuffer = await encodeAvif(imageData, { quality: 65 })
     return { data: avifBuffer, mime: 'image/avif' }
   }
 
   if (acceptTypes.includes('image/webp')) {
-    await initWebpEncode(WEBP_ENC_WASM)
+    webpEncoderReady ??= initWebpEncode(WEBP_ENC_WASM)
+    await webpEncoderReady
     const webpBuffer = await encodeWebp(imageData, { quality: 85 })
     return { data: webpBuffer, mime: 'image/webp' }
   }
