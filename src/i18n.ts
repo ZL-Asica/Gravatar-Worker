@@ -2,6 +2,15 @@ export const LOCALES = ['en', 'ja', 'zh-CN', 'zh-TW'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export interface Messages {
+  craftedBy: string
+  poweredBy: string
+  fallbackBlank: string
+  fallbackPerson: string
+  fallback404: string
+  cryptoUnavailable: string
+  previewError: string
+  preview: string
+  language: string
   languageName: string
   navHome: string
   navDocs: string
@@ -9,6 +18,13 @@ export interface Messages {
   eyebrow: string
   title: string
   subtitle: string
+  resultPlaceholder: string
+  generatorIntro: string
+  stepEmail: string
+  stepOptions: string
+  stepOutput: string
+  emailHint: string
+  fallbackHint: string
   email: string
   emailPlaceholder: string
   size: string
@@ -41,6 +57,15 @@ export interface Messages {
 }
 
 const EN: Messages = {
+  craftedBy: 'Crafted by',
+  poweredBy: 'Powered by',
+  fallbackBlank: 'Blank image',
+  fallbackPerson: 'Mystery person',
+  fallback404: '404 response',
+  cryptoUnavailable: 'Web Crypto is unavailable. Open this page over HTTPS.',
+  previewError: 'Preview unavailable. The link is still ready to copy.',
+  preview: 'Avatar preview',
+  language: 'Language',
   languageName: 'English',
   navHome: 'Generator',
   navDocs: 'API docs',
@@ -48,6 +73,13 @@ const EN: Messages = {
   eyebrow: 'Avatar link generator',
   title: 'A faster link to every Gravatar.',
   subtitle: 'Hash an email in your browser, choose a fallback, and copy a production-ready avatar URL without sending the email to this Worker.',
+  resultPlaceholder: 'Your avatar preview and link will appear here.',
+  generatorIntro: 'Enter an email, choose the image options, then generate a link. The email is hashed with SHA-256 locally and never sent to this Worker.',
+  stepEmail: '1. Enter an email',
+  stepOptions: '2. Choose options',
+  stepOutput: '3. Generate and copy',
+  emailHint: 'Email addresses are trimmed and lowercased before hashing. Existing MD5 links still work.',
+  fallbackHint: 'Use 404 to show no image, or choose a generated fallback avatar.',
   email: 'Email address',
   emailPlaceholder: 'you@example.com',
   size: 'Size',
@@ -74,13 +106,22 @@ const EN: Messages = {
   requests: 'Requests',
   bytes: 'Data served',
   cacheHitRate: 'Cache hit rate',
-  noData: 'No leaderboard snapshot is configured yet.',
+  noData: 'Usage statistics are not available yet.',
   apiReference: 'API reference',
   footerRights: 'All rights reserved.',
 }
 
 const JA: Messages = {
   ...EN,
+  craftedBy: '制作',
+  poweredBy: '提供',
+  fallbackBlank: '空白画像',
+  fallbackPerson: '人物シルエット',
+  fallback404: '404 応答',
+  cryptoUnavailable: 'Web Crypto を利用できません。HTTPS で開いてください。',
+  previewError: 'プレビューを表示できません。リンクはコピーできます。',
+  preview: 'アバターのプレビュー',
+  language: '言語',
   languageName: '日本語',
   navHome: '生成ツール',
   navDocs: 'API ドキュメント',
@@ -88,6 +129,13 @@ const JA: Messages = {
   eyebrow: 'アバターリンク生成',
   title: 'すべての Gravatar へ、より速いリンクを。',
   subtitle: 'ブラウザでメールアドレスをハッシュ化し、フォールバックを選んで、本番で使えるアバター URL をコピーできます。メールアドレスは Worker に送信されません。',
+  resultPlaceholder: 'アバターのプレビューとリンクがここに表示されます。',
+  generatorIntro: 'メールアドレスを入力し、画像オプションを選んでからリンクを生成します。メールアドレスはブラウザ内で SHA-256 にハッシュ化され、Worker に送信されません。',
+  stepEmail: '1. メールアドレスを入力',
+  stepOptions: '2. オプションを選択',
+  stepOutput: '3. 生成してコピー',
+  emailHint: '前後の空白を除去し、小文字にしてからハッシュ化します。既存の MD5 リンクも利用できます。',
+  fallbackHint: '404 は画像なし、その他は生成されたフォールバック画像を表示します。',
   email: 'メールアドレス',
   emailPlaceholder: 'you@example.com',
   size: 'サイズ',
@@ -114,13 +162,22 @@ const JA: Messages = {
   requests: 'リクエスト数',
   bytes: '配信データ量',
   cacheHitRate: 'キャッシュヒット率',
-  noData: 'ランキングデータはまだ設定されていません。',
+  noData: '利用統計はまだありません。',
   apiReference: 'API リファレンス',
   footerRights: 'All rights reserved.',
 }
 
 const ZH_CN: Messages = {
   ...EN,
+  craftedBy: '作者',
+  poweredBy: '技术支持',
+  fallbackBlank: '空白图片',
+  fallbackPerson: '匿名人物',
+  fallback404: '返回 404',
+  cryptoUnavailable: 'Web Crypto 不可用，请通过 HTTPS 打开此页面。',
+  previewError: '预览不可用，链接仍可复制。',
+  preview: '头像预览',
+  language: '语言',
   languageName: '简体中文',
   navHome: '生成器',
   navDocs: 'API 文档',
@@ -128,6 +185,13 @@ const ZH_CN: Messages = {
   eyebrow: '头像链接生成器',
   title: '更快地生成每个 Gravatar 链接。',
   subtitle: '在浏览器中计算邮箱哈希，选择回退头像并复制可直接用于生产环境的头像 URL。邮箱不会发送到 Worker。',
+  resultPlaceholder: '头像预览和生成的链接会显示在这里。',
+  generatorIntro: '输入邮箱、选择图片选项，然后生成链接。邮箱只在浏览器中计算 SHA-256 哈希，不会发送到 Worker。',
+  stepEmail: '1. 输入邮箱',
+  stepOptions: '2. 选择选项',
+  stepOutput: '3. 生成并复制',
+  emailHint: '邮箱会先去除首尾空格并转为小写。已有的 MD5 链接仍然可用。',
+  fallbackHint: '404 表示不显示图片，其他选项会生成回退头像。',
   email: '邮箱地址',
   emailPlaceholder: 'you@example.com',
   size: '尺寸',
@@ -154,20 +218,37 @@ const ZH_CN: Messages = {
   requests: '请求数',
   bytes: '数据量',
   cacheHitRate: '缓存命中率',
-  noData: '尚未配置排行榜快照。',
+  noData: '暂无访问统计。',
   apiReference: 'API 参考',
   footerRights: '保留所有权利。',
 }
 
 const ZH_TW: Messages = {
   ...ZH_CN,
+  craftedBy: '作者',
+  poweredBy: '技術支援',
+  fallbackBlank: '空白圖片',
+  fallbackPerson: '匿名人物',
+  fallback404: '回傳 404',
+  cryptoUnavailable: 'Web Crypto 無法使用，請透過 HTTPS 開啟此頁面。',
+  previewError: '預覽無法使用，連結仍可複製。',
+  preview: '頭像預覽',
+  language: '語言',
   languageName: '繁體中文',
+  copy: '複製',
   navHome: '產生器',
   navDocs: 'API 文件',
   navLeaderboard: '排行榜',
   eyebrow: '頭像連結產生器',
   title: '更快產生每個 Gravatar 連結。',
   subtitle: '在瀏覽器中計算電子郵件雜湊，選擇備援頭像並複製可直接用於正式環境的頭像 URL。電子郵件不會傳送到 Worker。',
+  resultPlaceholder: '頭像預覽與產生的連結會顯示在這裡。',
+  generatorIntro: '輸入電子郵件、選擇圖片選項，然後產生連結。電子郵件只在瀏覽器中計算 SHA-256 雜湊，不會傳送到 Worker。',
+  stepEmail: '1. 輸入電子郵件',
+  stepOptions: '2. 選擇選項',
+  stepOutput: '3. 產生並複製',
+  emailHint: '電子郵件會先移除前後空白並轉為小寫。既有的 MD5 連結仍然可用。',
+  fallbackHint: '404 表示不顯示圖片，其他選項會產生備援頭像。',
   email: '電子郵件地址',
   size: '尺寸',
   fallback: '備援頭像',
@@ -190,7 +271,7 @@ const ZH_TW: Messages = {
   requests: '請求數',
   bytes: '資料量',
   cacheHitRate: '快取命中率',
-  noData: '尚未設定排行榜快照。',
+  noData: '尚無使用統計。',
   apiReference: 'API 參考',
   footerRights: '保留所有權利。',
 }
@@ -207,7 +288,7 @@ const normalizeLocale = (value: string | undefined): Locale | undefined => {
   if (normalized === 'ja' || normalized.startsWith('ja-')) {
     return 'ja'
   }
-  if (normalized === 'zh-tw' || normalized === 'zh-hant' || normalized === 'zh-hk' || normalized === 'zh-mo') {
+  if (normalized === 'zh-tw' || normalized.startsWith('zh-hant') || normalized === 'zh-hk' || normalized === 'zh-mo') {
     return 'zh-TW'
   }
   if (normalized === 'zh' || normalized.startsWith('zh-cn') || normalized.startsWith('zh-hans') || normalized === 'zh-sg') {
@@ -220,9 +301,17 @@ const normalizeLocale = (value: string | undefined): Locale | undefined => {
 }
 
 export const resolveLocale = (preferred: string | undefined, acceptLanguage: string | undefined): Locale => {
-  return normalizeLocale(preferred)
-    ?? acceptLanguage?.split(',').map(part => normalizeLocale(part.split(';')[0])).find(Boolean)
-    ?? 'en'
+  const explicit = normalizeLocale(preferred)
+  if (explicit !== undefined) {
+    return explicit
+  }
+  const accepted = (acceptLanguage ?? '').slice(0, 512).split(',').map((part) => {
+    const [tag, ...parameters] = part.trim().split(';')
+    const quality = parameters.find(value => value.trim().startsWith('q='))
+    return { locale: normalizeLocale(tag), q: quality === undefined ? 1 : Number(quality.trim().slice(2)) }
+  }).filter(item => item.locale !== undefined && Number.isFinite(item.q) && item.q > 0 && item.q <= 1)
+  accepted.sort((a, b) => b.q - a.q)
+  return accepted[0]?.locale ?? 'en'
 }
 
 export const localeLabel = (locale: Locale): string => MESSAGES[locale].languageName

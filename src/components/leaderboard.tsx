@@ -1,6 +1,7 @@
 import type { Locale } from '../i18n'
 import { getMessages } from '../i18n'
 import Footer from './footer'
+import { SiteHeader } from './site-header'
 
 export interface LeaderboardEntry {
   domain: string
@@ -33,16 +34,7 @@ const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps)
   const messages = getMessages(locale)
   return (
     <main class="site-shell leaderboard-page">
-      <header class="site-header">
-        <a class="brand" href={`/?lang=${locale}`}>
-          <span class="brand-mark" aria-hidden="true">✦</span>
-          <span>{config.branding.siteName}</span>
-        </a>
-        <nav class="main-nav" aria-label="Primary">
-          <a href={`/?lang=${locale}`}>{messages.navHome}</a>
-          <a href={`/leaderboard?lang=${locale}`} aria-current="page">{messages.navLeaderboard}</a>
-        </nav>
-      </header>
+      <SiteHeader config={config} locale={locale} path="/leaderboard" />
       <section class="leaderboard-hero">
         <p class="eyebrow">{messages.navLeaderboard}</p>
         <h1>{messages.leaderboard}</h1>
@@ -52,11 +44,10 @@ const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps)
         ? (
             <div class="empty-state">
               <p>{messages.noData}</p>
-              <code>{'LEADERBOARD_DATA=\'[{"domain":"example.com","requests":1200,"bytes":5242880,"cacheHitRate":0.94}]\''}</code>
             </div>
           )
         : (
-            <div class="table-wrap">
+            <div class="table-wrap" tabIndex={0} role="region" aria-label={messages.leaderboard}>
               <table>
                 <thead>
                   <tr>
@@ -82,7 +73,7 @@ const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps)
               </table>
             </div>
           )}
-      <Footer config={config} currentYear={currentYear} />
+      <Footer config={config} currentYear={currentYear} locale={locale} />
     </main>
   )
 }

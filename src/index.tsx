@@ -24,6 +24,10 @@ const isLeaderboardEntry = (entry: unknown): entry is LeaderboardEntry => {
     && typeof value.requests === 'number'
     && typeof value.bytes === 'number'
     && typeof value.cacheHitRate === 'number'
+    && value.domain.length > 0 && value.domain.length <= 253
+    && Number.isFinite(value.requests) && value.requests >= 0
+    && Number.isFinite(value.bytes) && value.bytes >= 0
+    && Number.isFinite(value.cacheHitRate) && value.cacheHitRate >= 0 && value.cacheHitRate <= 1
 }
 
 app.use(cors({
@@ -45,9 +49,14 @@ app.use(
 app.use(renderer)
 
 app.use('*', async (c, next) => {
+  if (c.req.path.startsWith('/avatar')) {
+    await next()
+    return
+  }
   const config = loadConfig(c.env)
   return cache({
-    cacheName: 'zla-gravatar-worker',
+    cacheName: 'zla-gravatar-worker-i18n-v1',
+    vary: ['Accept-Language'],
     cacheControl: `max-age=${config.cache.htmlTtl}`,
   // eslint-disable-next-line ts/no-unsafe-argument
   })(c, next)
@@ -59,6 +68,12 @@ app.get('/', (c) => {
   return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} locale={locale} />)
 })
 
+app.get('/docs', (c) => {
+  const config = loadConfig(c.env)
+  const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
+  return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} locale={locale} docsOnly />)
+})
+
 app.get('/leaderboard', (c) => {
   const config = loadConfig(c.env)
   const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
@@ -68,7 +83,7 @@ app.get('/leaderboard', (c) => {
     try {
       const parsed: unknown = JSON.parse(raw)
       if (Array.isArray(parsed)) {
-        entries = parsed.filter(isLeaderboardEntry).slice(0, 100)
+        entries = parsed.filter(isLeaderboardEntry)
       }
     }
     catch {
@@ -76,7 +91,7 @@ app.get('/leaderboard', (c) => {
     }
   }
   entries.sort((a, b) => b.requests - a.requests)
-  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} entries={entries} />)
+  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} entries={entries.slice(0, 100)} />)
 })
 
 app.get('/robots.txt', (c) => {

@@ -1,39 +1,35 @@
-# Low-quota leaderboard design
+# Leaderboard design and Free plan budget
 
-The leaderboard is designed for the Cloudflare Workers Free plan. It must not write to a database on every avatar request and it must never query Analytics Engine from a public request.
+## Implementation status
 
-## Recommended production setup
+The UI currently reads a manually configured `LEADERBOARD_DATA` array. It does not collect events, query Analytics Engine, or read KV. Workers Logs sampling is separate from leaderboard event collection.
 
-- Workers Analytics Engine receives a 1% sample only when `ANALYTICS_ENABLED=true`.
-- Each sampled point stores the referrer hostname, a weighted request count, weighted known response bytes, and weighted cache-hit count. The weight is `1 / sampleRate`.
-- One Cron Trigger runs hourly. It executes one 24-hour Analytics Engine SQL query and writes one JSON snapshot to Workers KV.
-- `/leaderboard` reads one KV snapshot and edge-caches it for one hour. It never calls the Analytics Engine SQL API.
-- At 100,000 avatar requests/day this is approximately 1,000 Analytics Engine writes and 24 SQL reads/day, below the documented Workers Free quotas of 100,000 writes/day and 10,000 reads/day.
+The integration below is a proposed follow-up, not deployed functionality. The public page must not claim live statistics or show deployment instructions to visitors.
 
-The snapshot can be stale for roughly two hours when the KV or edge cache is refreshed just before the hourly job. The UI should display the snapshot timestamp and mark snapshots older than two hours as delayed.
+## Collection and aggregation
 
-## Privacy and accuracy
+Use **100% application-side collection by default** for avatar GET requests. A fixed 1% sample loses too much information at low traffic: a domain with 100 requests yields only one event on average and has about a 37% chance of yielding none.
 
-Only a normalized referrer hostname is stored. Referrer attribution is approximate because the header is optional and client-controlled; private/local suffixes should be excluded before production. Direct or unknown traffic is grouped as `direct`.
+- Write one Analytics Engine point per avatar request. Keep only the referrer hostname, response bytes when known, and the observed cache result. Never store email, hash, full URL, IP, or referrer path.
+- Run one scheduled SQL query per hour over the last 24 hours, then write one KV snapshot. Public leaderboard requests must never query Analytics Engine.
+- Edge-cache the snapshot for one hour using a common key across locales/query strings. Read KV only on a cache miss; cache empty results too. Cache API storage is per location, so KV reads are not limited to 24 per day globally.
+- Display the reporting window, last update time, collection rate, and byte coverage. Mark snapshots older than two hours as delayed.
+- Keep collection opt-in and isolate failures from avatar delivery. Preserve the last successful snapshot if aggregation fails.
 
-The cache rate measures requests reaching this Worker that were served from the transform or upstream response cache. Browser-cache hits never reach the Worker and are not included. Response bytes are estimated only when `Content-Length` is known; each row should show its byte coverage.
+At higher traffic, choose a configurable collection rate from actual account-wide usage and retain a safety margin for other datasets. Sampling reduces expected writes; it is not a strict global cap. Changing rate requires storing an event weight (`1 / collectionRate`). SQL must also apply Analytics Engine's `_sample_interval`, including at 100% application collection, because Cloudflare may sample stored/query data internally.
 
-Analytics is opt-in and failure-isolated. If a binding, KV read, scheduled query, or cache operation fails, avatar delivery continues and the last successful snapshot remains visible.
+## Verified quota and usage
 
-## Bindings
+[Analytics Engine pricing](https://developers.cloudflare.com/analytics/analytics-engine/pricing/) lists Workers Free allowances of **100,000 written points/day** and **10,000 SQL queries/day**. Each `writeDataPoint()` counts as one write; each SQL API call counts as one read query. Cloudflare currently describes billing as not yet active, but the design budgets against the stated Free allowances.
 
-Provision these bindings only when enabling the feature:
+For example, 1,000 avatar requests/day with full collection adds 1,000 points/day: **1%** of the daily write allowance. Check both the recent average and peak traffic; a rolling 24-hour Worker request count is not an account-wide Analytics Engine usage meter.
 
-```jsonc
-{
-  "analytics_engine_datasets": [
-    { "binding": "AVATAR_ANALYTICS", "dataset": "gravatar_usage" }
-  ],
-  "kv_namespaces": [
-    { "binding": "LEADERBOARD_KV", "id": "<namespace-id>" }
-  ],
-  "triggers": { "crons": ["0 * * * *"] }
-}
-```
+Hourly aggregation adds 24 SQL queries/day (**0.24%** of the allowance) and 24 KV writes/day. [KV Free](https://developers.cloudflare.com/kv/platform/pricing/) includes 100,000 reads and 1,000 writes/day. Verify shared account usage again before provisioning or enabling collection.
 
-Store `ANALYTICS_API_TOKEN` as a Wrangler secret with only Account Analytics read permission. Keep `ANALYTICS_ENABLED=false` until both bindings and the secret are configured.
+## Measurement boundaries
+
+Referrer attribution is approximate: the header is optional and client-controlled. Group absent/invalid referrers as direct/unknown and exclude private/local hostnames.
+
+Cache rate covers requests that reach this Worker and are served by its transform or upstream response cache. Browser cache hits never reach the Worker. Unknown cache outcomes should remain unknown, not silently become misses. Response bytes include only known image body lengths; never buffer an image merely for statistics. Show byte coverage so partial counts are not mistaken for complete bandwidth totals.
+
+Full application collection improves small-domain counts but does not make referrer attribution or Cloudflare's internal sampling exact.

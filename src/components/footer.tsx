@@ -1,9 +1,14 @@
+import type { Locale } from '../i18n'
+import { getMessages } from '../i18n'
+
 interface FooterProps {
   config: SiteConfig
+  locale?: Locale
   currentYear: number
 }
 
-const Footer = ({ config, currentYear }: FooterProps) => {
+const Footer = ({ config, currentYear, locale = 'en' }: FooterProps) => {
+  const messages = getMessages(locale)
   const footerLabel = config.branding.footerText ?? config.branding.siteName
   const creditLabel = config.branding.creditText
 
@@ -24,10 +29,12 @@ const Footer = ({ config, currentYear }: FooterProps) => {
               <span>{footerLabel}</span>
             )}
         {' '}
-        | All rights reserved.
+        |
+        {' '}
+        {messages.footerRights}
       </p>
       <p class="footer-text">
-        Powered by
+        {messages.poweredBy}
         {' '}
         <a href={config.branding.repositoryUrl} target="_blank" rel="noopener noreferrer" class="footer-link">
           {config.branding.sourceText}
@@ -37,7 +44,7 @@ const Footer = ({ config, currentYear }: FooterProps) => {
             {' '}
             ·
             {' '}
-            Crafted by
+            {messages.craftedBy}
             {' '}
             {config.branding.creditUrl !== undefined
               ? (

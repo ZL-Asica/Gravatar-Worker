@@ -3,6 +3,7 @@ import antfu from '@antfu/eslint-config'
 export default antfu({
   formatters: true,
   react: true,
+  test: false,
   ignores: ['worker-configuration.d.ts'],
   typescript: {
     tsconfigPath: 'tsconfig.json',

@@ -1,7 +1,8 @@
 const form = document.querySelector('[data-avatar-link-form]')
 
 if (form instanceof HTMLFormElement) {
-  const DEBOUNCE_MS = 300
+  const submitButton = form.querySelector('[type=submit]')
+  const placeholder = form.querySelector('[data-avatar-placeholder]')
   const emailInput = form.querySelector('[data-avatar-email]')
   const sizeInput = form.querySelector('[data-avatar-size]')
   const defaultInput = form.querySelector('[data-avatar-default]')
@@ -14,7 +15,6 @@ if (form instanceof HTMLFormElement) {
   const htmlOutput = document.querySelector('[data-avatar-html]')
   const status = document.querySelector('[data-avatar-status]')
   const messages = status instanceof HTMLElement ? status.dataset : {}
-  let updateTimer = null
   let updateSequence = 0
 
   const setStatus = (message) => {
@@ -34,7 +34,7 @@ if (form instanceof HTMLFormElement) {
 
   const sha256 = async (value) => {
     if (window.crypto?.subtle === undefined) {
-      setStatus(messages.messageCrypto ?? 'Web Crypto is unavailable in this browser context.')
+      setStatus(messages.avatarMessageCrypto ?? 'Web Crypto is unavailable in this browser context.')
       return null
     }
 
@@ -57,6 +57,9 @@ if (form instanceof HTMLFormElement) {
   }
 
   const setResultVisibility = (isVisible) => {
+    if (placeholder instanceof HTMLElement) {
+      placeholder.hidden = isVisible
+    }
     if (resultPanel instanceof HTMLElement) {
       resultPanel.hidden = !isVisible
     }
@@ -79,14 +82,9 @@ if (form instanceof HTMLFormElement) {
       return null
     }
 
-    const hash = await sha256(email)
-    if (hash === null) {
-      return null
-    }
-
     const size = readSize(sizeInput)
     const fallback = getFallbackValue()
-    const url = new URL(`/avatar/${hash}`, window.location.origin)
+    const url = new URL('/avatar/pending', window.location.origin)
     url.searchParams.set('s', String(size))
     if (fallback.length > 0 && fallback !== '404') {
       url.searchParams.set('d', fallback)
@@ -98,8 +96,12 @@ if (form instanceof HTMLFormElement) {
       }
     }
 
+    const hash = await sha256(email)
+    if (hash === null) {
+      return null
+    }
+    url.pathname = `/avatar/${hash}`
     return {
-      alt: email,
       size,
       url: url.toString(),
     }
@@ -109,7 +111,7 @@ if (form instanceof HTMLFormElement) {
     setResultVisibility(false)
     if (preview instanceof HTMLImageElement) {
       preview.removeAttribute('src')
-      preview.alt = 'Avatar preview'
+      preview.alt = messages.avatarMessagePreview ?? 'Avatar preview'
       preview.hidden = true
     }
     if (urlOutput instanceof HTMLInputElement) {
@@ -127,27 +129,46 @@ if (form instanceof HTMLFormElement) {
     const sequence = ++updateSequence
     syncInitialsField()
 
-    if (emailInput instanceof HTMLInputElement && emailInput.value.trim().length === 0) {
-      clearOutputs()
-      setStatus(messages.messageEmpty ?? 'Enter an email address to generate a hash-based avatar link.')
-      return
+    if (emailInput instanceof HTMLInputElement) {
+      emailInput.value = normalizeEmail(emailInput.value)
+      if (!emailInput.checkValidity()) {
+        clearOutputs()
+        emailInput.setAttribute('aria-invalid', 'true')
+        setStatus(messages.avatarMessageInvalid)
+        emailInput.focus()
+        return
+      }
+      emailInput.removeAttribute('aria-invalid')
     }
-
-    setStatus(messages.messageWorking ?? 'Generating link…')
-    const result = await buildAvatarUrl()
+    setStatus(messages.avatarMessageWorking ?? 'Generating link…')
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = true
+    }
+    let result
+    try {
+      result = await buildAvatarUrl()
+    }
+    catch {
+      setStatus(messages.avatarMessageCrypto)
+    }
+    finally {
+      if (submitButton instanceof HTMLButtonElement) {
+        submitButton.disabled = false
+      }
+    }
     if (sequence !== updateSequence) {
       return
     }
-    if (result === null) {
+    if (result === null || result === undefined) {
       clearOutputs()
-      setStatus(messages.messageInvalid ?? 'Enter a valid email address.')
+      setStatus(messages.avatarMessageCrypto ?? 'Web Crypto is unavailable. Open this page over HTTPS.')
       return
     }
 
     setResultVisibility(true)
     if (preview instanceof HTMLImageElement) {
       preview.src = result.url
-      preview.alt = `Avatar preview for ${result.alt}`
+      preview.alt = messages.avatarMessagePreview ?? 'Avatar preview'
       preview.hidden = false
     }
     if (urlOutput instanceof HTMLInputElement) {
@@ -159,18 +180,7 @@ if (form instanceof HTMLFormElement) {
     if (htmlOutput instanceof HTMLTextAreaElement) {
       htmlOutput.value = `<img src="${result.url}" alt="Avatar" width="${result.size}" height="${result.size}">`
     }
-    setStatus(messages.messageReady ?? 'Generated locally. The email was not sent to this Worker.')
-  }
-
-  const scheduleUpdate = () => {
-    if (updateTimer !== null) {
-      window.clearTimeout(updateTimer)
-    }
-    syncInitialsField()
-    updateTimer = window.setTimeout(() => {
-      updateTimer = null
-      void update()
-    }, DEBOUNCE_MS)
+    setStatus(messages.avatarMessageReady ?? 'Generated locally. The email was not sent to this Worker.')
   }
 
   const copyValue = async (button) => {
@@ -184,21 +194,39 @@ if (form instanceof HTMLFormElement) {
       ? field.value
       : ''
     if (value.length === 0) {
-      setStatus(messages.messageEmpty ?? 'Generate a link before copying.')
+      setStatus(messages.avatarMessageEmpty ?? 'Generate a link before copying.')
       return
     }
 
     try {
       await navigator.clipboard.writeText(value)
-      setStatus(messages.messageCopied ?? 'Copied to clipboard.')
+      setStatus(messages.avatarMessageCopied ?? 'Copied to clipboard.')
     }
     catch {
-      setStatus(messages.messageClipboard ?? 'Clipboard access is unavailable. Select the field and copy manually.')
+      setStatus(messages.avatarMessageClipboard ?? 'Clipboard access is unavailable. Select the field and copy manually.')
     }
   }
 
-  form.addEventListener('input', scheduleUpdate)
-  form.addEventListener('change', scheduleUpdate)
+  if (preview instanceof HTMLImageElement) {
+    preview.addEventListener('error', () => {
+      if (!preview.hasAttribute('src')) {
+        return
+      }
+      preview.hidden = true
+      setStatus(messages.avatarMessagePreviewError ?? 'Preview unavailable. The link is still ready to copy.')
+    })
+  }
+
+  form.addEventListener('input', () => {
+    updateSequence += 1
+    syncInitialsField()
+    clearOutputs()
+    if (emailInput instanceof HTMLInputElement) {
+      emailInput.removeAttribute('aria-invalid')
+    }
+    setStatus('')
+  })
+  form.addEventListener('change', syncInitialsField)
   form.addEventListener('submit', (event) => {
     event.preventDefault()
     void update()
@@ -213,3 +241,13 @@ if (form instanceof HTMLFormElement) {
   syncInitialsField()
   clearOutputs()
 }
+
+document.querySelectorAll('[data-language-select]').forEach((select) => {
+  if (select instanceof HTMLSelectElement) {
+    select.addEventListener('change', () => {
+      if (select.value.length > 0) {
+        window.location.assign(select.value)
+      }
+    })
+  }
+})
