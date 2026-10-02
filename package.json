@@ -18,6 +18,7 @@
   "bugs": "https://github.com/ZL-Asica/Gravatar-Worker/issues",
   "scripts": {
     "dev": "vite",
+    "test": "node --test tests/*.test.mjs",
     "build": "vite build",
     "preview": "$npm_execpath run build && vite preview",
     "deploy": "$npm_execpath run build && wrangler deploy",
