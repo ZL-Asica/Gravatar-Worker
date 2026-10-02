@@ -13,6 +13,7 @@ if (form instanceof HTMLFormElement) {
   const markdownOutput = document.querySelector('[data-avatar-markdown]')
   const htmlOutput = document.querySelector('[data-avatar-html]')
   const status = document.querySelector('[data-avatar-status]')
+  const messages = status instanceof HTMLElement ? status.dataset : {}
   let updateTimer = null
   let updateSequence = 0
 
@@ -33,7 +34,7 @@ if (form instanceof HTMLFormElement) {
 
   const sha256 = async (value) => {
     if (window.crypto?.subtle === undefined) {
-      setStatus('Web Crypto is unavailable in this browser context.')
+      setStatus(messages.messageCrypto ?? 'Web Crypto is unavailable in this browser context.')
       return null
     }
 
@@ -128,18 +129,18 @@ if (form instanceof HTMLFormElement) {
 
     if (emailInput instanceof HTMLInputElement && emailInput.value.trim().length === 0) {
       clearOutputs()
-      setStatus('Enter an email address to generate a hash-based avatar link.')
+      setStatus(messages.messageEmpty ?? 'Enter an email address to generate a hash-based avatar link.')
       return
     }
 
-    setStatus('Generating link...')
+    setStatus(messages.messageWorking ?? 'Generating link…')
     const result = await buildAvatarUrl()
     if (sequence !== updateSequence) {
       return
     }
     if (result === null) {
       clearOutputs()
-      setStatus('Enter a valid email address.')
+      setStatus(messages.messageInvalid ?? 'Enter a valid email address.')
       return
     }
 
@@ -158,7 +159,7 @@ if (form instanceof HTMLFormElement) {
     if (htmlOutput instanceof HTMLTextAreaElement) {
       htmlOutput.value = `<img src="${result.url}" alt="Avatar" width="${result.size}" height="${result.size}">`
     }
-    setStatus('Generated locally. The email was not sent to this Worker.')
+    setStatus(messages.messageReady ?? 'Generated locally. The email was not sent to this Worker.')
   }
 
   const scheduleUpdate = () => {
@@ -183,16 +184,16 @@ if (form instanceof HTMLFormElement) {
       ? field.value
       : ''
     if (value.length === 0) {
-      setStatus('Generate a link before copying.')
+      setStatus(messages.messageEmpty ?? 'Generate a link before copying.')
       return
     }
 
     try {
       await navigator.clipboard.writeText(value)
-      setStatus('Copied to clipboard.')
+      setStatus(messages.messageCopied ?? 'Copied to clipboard.')
     }
     catch {
-      setStatus('Clipboard access is unavailable. Select the field and copy manually.')
+      setStatus(messages.messageClipboard ?? 'Clipboard access is unavailable. Select the field and copy manually.')
     }
   }
 
