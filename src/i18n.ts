@@ -2,6 +2,15 @@ export const LOCALES = ['en', 'ja', 'zh-CN', 'zh-TW'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export interface Messages {
+  craftedBy: string
+  poweredBy: string
+  fallbackBlank: string
+  fallbackPerson: string
+  fallback404: string
+  cryptoUnavailable: string
+  previewError: string
+  preview: string
+  language: string
   languageName: string
   navHome: string
   navDocs: string
@@ -41,6 +50,15 @@ export interface Messages {
 }
 
 const EN: Messages = {
+  craftedBy: 'Crafted by',
+  poweredBy: 'Powered by',
+  fallbackBlank: 'Blank image',
+  fallbackPerson: 'Mystery person',
+  fallback404: '404 response',
+  cryptoUnavailable: 'Web Crypto is unavailable. Open this page over HTTPS.',
+  previewError: 'Preview unavailable. The link is still ready to copy.',
+  preview: 'Avatar preview',
+  language: 'Language',
   languageName: 'English',
   navHome: 'Generator',
   navDocs: 'API docs',
@@ -81,6 +99,15 @@ const EN: Messages = {
 
 const JA: Messages = {
   ...EN,
+  craftedBy: '制作',
+  poweredBy: '提供',
+  fallbackBlank: '空白画像',
+  fallbackPerson: '人物シルエット',
+  fallback404: '404 応答',
+  cryptoUnavailable: 'Web Crypto を利用できません。HTTPS で開いてください。',
+  previewError: 'プレビューを表示できません。リンクはコピーできます。',
+  preview: 'アバターのプレビュー',
+  language: '言語',
   languageName: '日本語',
   navHome: '生成ツール',
   navDocs: 'API ドキュメント',
@@ -121,6 +148,15 @@ const JA: Messages = {
 
 const ZH_CN: Messages = {
   ...EN,
+  craftedBy: '作者',
+  poweredBy: '技术支持',
+  fallbackBlank: '空白图片',
+  fallbackPerson: '匿名人物',
+  fallback404: '返回 404',
+  cryptoUnavailable: 'Web Crypto 不可用，请通过 HTTPS 打开此页面。',
+  previewError: '预览不可用，链接仍可复制。',
+  preview: '头像预览',
+  language: '语言',
   languageName: '简体中文',
   navHome: '生成器',
   navDocs: 'API 文档',
@@ -161,7 +197,17 @@ const ZH_CN: Messages = {
 
 const ZH_TW: Messages = {
   ...ZH_CN,
+  craftedBy: '作者',
+  poweredBy: '技術支援',
+  fallbackBlank: '空白圖片',
+  fallbackPerson: '匿名人物',
+  fallback404: '回傳 404',
+  cryptoUnavailable: 'Web Crypto 無法使用，請透過 HTTPS 開啟此頁面。',
+  previewError: '預覽無法使用，連結仍可複製。',
+  preview: '頭像預覽',
+  language: '語言',
   languageName: '繁體中文',
+  copy: '複製',
   navHome: '產生器',
   navDocs: 'API 文件',
   navLeaderboard: '排行榜',
@@ -207,7 +253,7 @@ const normalizeLocale = (value: string | undefined): Locale | undefined => {
   if (normalized === 'ja' || normalized.startsWith('ja-')) {
     return 'ja'
   }
-  if (normalized === 'zh-tw' || normalized === 'zh-hant' || normalized === 'zh-hk' || normalized === 'zh-mo') {
+  if (normalized === 'zh-tw' || normalized.startsWith('zh-hant') || normalized === 'zh-hk' || normalized === 'zh-mo') {
     return 'zh-TW'
   }
   if (normalized === 'zh' || normalized.startsWith('zh-cn') || normalized.startsWith('zh-hans') || normalized === 'zh-sg') {
@@ -220,9 +266,17 @@ const normalizeLocale = (value: string | undefined): Locale | undefined => {
 }
 
 export const resolveLocale = (preferred: string | undefined, acceptLanguage: string | undefined): Locale => {
-  return normalizeLocale(preferred)
-    ?? acceptLanguage?.split(',').map(part => normalizeLocale(part.split(';')[0])).find(Boolean)
-    ?? 'en'
+  const explicit = normalizeLocale(preferred)
+  if (explicit !== undefined) {
+    return explicit
+  }
+  const accepted = (acceptLanguage ?? '').slice(0, 512).split(',').map((part) => {
+    const [tag, ...parameters] = part.trim().split(';')
+    const quality = parameters.find(value => value.trim().startsWith('q='))
+    return { locale: normalizeLocale(tag), q: quality === undefined ? 1 : Number(quality.trim().slice(2)) }
+  }).filter(item => item.locale !== undefined && Number.isFinite(item.q) && item.q > 0 && item.q <= 1)
+  accepted.sort((a, b) => b.q - a.q)
+  return accepted[0]?.locale ?? 'en'
 }
 
 export const localeLabel = (locale: Locale): string => MESSAGES[locale].languageName

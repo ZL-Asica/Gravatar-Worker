@@ -296,3 +296,17 @@ ul li {
     height: 5rem;
   }
 }
+
+.language-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.language-switcher a {
+  color: var(--color-link);
+  padding-block: 0.5rem;
+}
+.language-switcher [aria-current='page'] {
+  font-weight: 700;
+}
