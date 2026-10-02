@@ -13,6 +13,7 @@
 - 通过 **MD5 / SHA-256** 哈希查询头像，并可选择启用 **原始邮箱（raw email）** 查询
 - 智能缓存（Edge + Browser）
 - 基于 `Accept` 头自动转换图片格式为 **AVIF** 或 **WebP**
+
 <!-- 预留：回退策略与更灵活的自定义 -->
 
 ## 🧩 个性化配置（Customization）

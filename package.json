@@ -32,22 +32,22 @@
     "@jsquash/png": "^3.1.1",
     "@jsquash/webp": "^1.5.0",
     "@zl-asica/react": "^0.13.0",
-    "hono": "^4.12.23"
+    "hono": "^4.13.12"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.0.0",
-    "@cloudflare/vite-plugin": "^1.39.1",
-    "@eslint-react/eslint-plugin": "^5.8.8",
-    "bumpp": "^11.1.0",
-    "eslint": "^10.4.1",
+    "@antfu/eslint-config": "^9.5.1",
+    "@cloudflare/vite-plugin": "^1.62.3",
+    "@eslint-react/eslint-plugin": "^5.23.3",
+    "bumpp": "^12.2.2",
+    "eslint": "^10.11.0",
     "eslint-plugin-format": "^2.0.1",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-react-refresh": "^0.5.7",
     "husky": "^9.1.7",
     "nano-staged": "^1.0.2",
-    "vite": "^8.0.16",
+    "vite": "^8.3.1",
     "vite-ssr-components": "^0.6.1",
-    "wrangler": "^4.96.0"
+    "wrangler": "^4.145.0"
   },
   "nano-staged": {
     "**/*.{js,jsx,ts,tsx,json,yml,css,scss,less,styl,html,md,mdx}": [
