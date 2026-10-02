@@ -13,6 +13,7 @@ if (form instanceof HTMLFormElement) {
   const markdownOutput = document.querySelector('[data-avatar-markdown]')
   const htmlOutput = document.querySelector('[data-avatar-html]')
   const status = document.querySelector('[data-avatar-status]')
+  const messages = status instanceof HTMLElement ? status.dataset : {}
   let updateTimer = null
   let updateSequence = 0
 
@@ -33,7 +34,7 @@ if (form instanceof HTMLFormElement) {
 
   const sha256 = async (value) => {
     if (window.crypto?.subtle === undefined) {
-      setStatus('Web Crypto is unavailable in this browser context.')
+      setStatus(messages.avatarMessageCrypto ?? 'Web Crypto is unavailable in this browser context.')
       return null
     }
 
@@ -108,7 +109,7 @@ if (form instanceof HTMLFormElement) {
     setResultVisibility(false)
     if (preview instanceof HTMLImageElement) {
       preview.removeAttribute('src')
-      preview.alt = 'Avatar preview'
+      preview.alt = messages.avatarMessagePreview ?? 'Avatar preview'
       preview.hidden = true
     }
     if (urlOutput instanceof HTMLInputElement) {
@@ -128,25 +129,25 @@ if (form instanceof HTMLFormElement) {
 
     if (emailInput instanceof HTMLInputElement && emailInput.value.trim().length === 0) {
       clearOutputs()
-      setStatus('Enter an email address to generate a hash-based avatar link.')
+      setStatus(messages.avatarMessageEmpty ?? 'Enter an email address to generate a hash-based avatar link.')
       return
     }
 
-    setStatus('Generating link...')
+    setStatus(messages.avatarMessageWorking ?? 'Generating link…')
     const result = await buildAvatarUrl()
     if (sequence !== updateSequence) {
       return
     }
     if (result === null) {
       clearOutputs()
-      setStatus('Enter a valid email address.')
+      setStatus(messages.avatarMessageInvalid ?? 'Enter a valid email address.')
       return
     }
 
     setResultVisibility(true)
     if (preview instanceof HTMLImageElement) {
       preview.src = result.url
-      preview.alt = `Avatar preview for ${result.alt}`
+      preview.alt = messages.avatarMessagePreview ?? 'Avatar preview'
       preview.hidden = false
     }
     if (urlOutput instanceof HTMLInputElement) {
@@ -158,10 +159,11 @@ if (form instanceof HTMLFormElement) {
     if (htmlOutput instanceof HTMLTextAreaElement) {
       htmlOutput.value = `<img src="${result.url}" alt="Avatar" width="${result.size}" height="${result.size}">`
     }
-    setStatus('Generated locally. The email was not sent to this Worker.')
+    setStatus(messages.avatarMessageReady ?? 'Generated locally. The email was not sent to this Worker.')
   }
 
   const scheduleUpdate = () => {
+    updateSequence += 1
     if (updateTimer !== null) {
       window.clearTimeout(updateTimer)
     }
@@ -183,17 +185,24 @@ if (form instanceof HTMLFormElement) {
       ? field.value
       : ''
     if (value.length === 0) {
-      setStatus('Generate a link before copying.')
+      setStatus(messages.avatarMessageEmpty ?? 'Generate a link before copying.')
       return
     }
 
     try {
       await navigator.clipboard.writeText(value)
-      setStatus('Copied to clipboard.')
+      setStatus(messages.avatarMessageCopied ?? 'Copied to clipboard.')
     }
     catch {
-      setStatus('Clipboard access is unavailable. Select the field and copy manually.')
+      setStatus(messages.avatarMessageClipboard ?? 'Clipboard access is unavailable. Select the field and copy manually.')
     }
+  }
+
+  if (preview instanceof HTMLImageElement) {
+    preview.addEventListener('error', () => {
+      preview.hidden = true
+      setStatus(messages.avatarMessagePreviewError ?? 'Preview unavailable. The link is still ready to copy.')
+    })
   }
 
   form.addEventListener('input', scheduleUpdate)

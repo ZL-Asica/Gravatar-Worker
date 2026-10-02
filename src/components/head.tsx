@@ -1,11 +1,13 @@
+import type { Locale } from '../i18n'
 import { Link, Script, ViteClient } from 'vite-ssr-components/hono'
 
 interface HeadProps {
+  locale: Locale
   config: SiteConfig
   meta: HeadMeta
 }
 
-const Head = ({ config, meta }: HeadProps) => {
+const Head = ({ config, meta, locale }: HeadProps) => {
   return (
     <head>
       <meta charset="utf-8" />
@@ -31,7 +33,7 @@ const Head = ({ config, meta }: HeadProps) => {
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={`${meta.siteName} - Modern Gravatar Proxy Service`} />
-      <meta property="og:locale" content="en_US" />
+      <meta property="og:locale" content={{ 'en': 'en_US', 'ja': 'ja_JP', 'zh-CN': 'zh_CN', 'zh-TW': 'zh_TW' }[locale]} />
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={meta.title} />

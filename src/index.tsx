@@ -6,6 +6,7 @@ import { secureHeaders } from 'hono/secure-headers'
 import { sha256 } from 'hono/utils/crypto'
 import ApiDocs from './components/api-docs'
 import { loadConfig } from './config'
+import { resolveLocale } from './i18n'
 import { renderer } from './renderer'
 import { fetchGravatar } from './utils'
 import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
@@ -31,9 +32,14 @@ app.use(
 app.use(renderer)
 
 app.use('*', async (c, next) => {
+  if (c.req.path.startsWith('/avatar')) {
+    await next()
+    return
+  }
   const config = loadConfig(c.env)
   return cache({
-    cacheName: 'zla-gravatar-worker',
+    cacheName: 'zla-gravatar-worker-i18n-v1',
+    vary: ['Accept-Language'],
     cacheControl: `max-age=${config.cache.htmlTtl}`,
   // eslint-disable-next-line ts/no-unsafe-argument
   })(c, next)
@@ -41,7 +47,8 @@ app.use('*', async (c, next) => {
 
 app.get('/', (c) => {
   const config = loadConfig(c.env)
-  return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} />)
+  const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
+  return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} locale={locale} />)
 })
 
 app.get('/robots.txt', (c) => {
