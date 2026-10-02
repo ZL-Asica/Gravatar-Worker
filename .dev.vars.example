@@ -35,3 +35,4 @@ MAX_SIZE="2048"
 # No need to change unless for special usecase
 CACHE_TTL_BROWSER="259200"
 CACHE_TTL_EDGE="604800"
+LEADERBOARD_DATA="[]"

@@ -33,6 +33,7 @@
     "DEFAULT_SIZE": "200",
     "MAX_SIZE": "2048",
     "CACHE_TTL_BROWSER": "259200",
-    "CACHE_TTL_EDGE": "604800"
+    "CACHE_TTL_EDGE": "604800",
+    "LEADERBOARD_DATA": "[]"
   }
 }

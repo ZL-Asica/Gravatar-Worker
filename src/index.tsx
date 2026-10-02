@@ -1,3 +1,4 @@
+import type { LeaderboardEntry } from './components/leaderboard'
 import { Hono } from 'hono'
 import { cache } from 'hono/cache'
 import { cors } from 'hono/cors'
@@ -5,12 +6,25 @@ import { poweredBy } from 'hono/powered-by'
 import { secureHeaders } from 'hono/secure-headers'
 import { sha256 } from 'hono/utils/crypto'
 import ApiDocs from './components/api-docs'
+import Leaderboard from './components/leaderboard'
 import { loadConfig } from './config'
+import { resolveLocale } from './i18n'
 import { renderer } from './renderer'
 import { fetchGravatar } from './utils'
 import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
+
+const isLeaderboardEntry = (entry: unknown): entry is LeaderboardEntry => {
+  if (typeof entry !== 'object' || entry === null) {
+    return false
+  }
+  const value = entry as Record<string, unknown>
+  return typeof value.domain === 'string'
+    && typeof value.requests === 'number'
+    && typeof value.bytes === 'number'
+    && typeof value.cacheHitRate === 'number'
+}
 
 app.use(cors({
   origin: '*',
@@ -41,7 +55,28 @@ app.use('*', async (c, next) => {
 
 app.get('/', (c) => {
   const config = loadConfig(c.env)
-  return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} />)
+  const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
+  return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} locale={locale} />)
+})
+
+app.get('/leaderboard', (c) => {
+  const config = loadConfig(c.env)
+  const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
+  const raw = (c.env as CloudflareBindings & { LEADERBOARD_DATA?: string }).LEADERBOARD_DATA
+  let entries: LeaderboardEntry[] = []
+  if (raw !== undefined) {
+    try {
+      const parsed: unknown = JSON.parse(raw)
+      if (Array.isArray(parsed)) {
+        entries = parsed.filter(isLeaderboardEntry).slice(0, 100)
+      }
+    }
+    catch {
+      entries = []
+    }
+  }
+  entries.sort((a, b) => b.requests - a.requests)
+  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} entries={entries} />)
 })
 
 app.get('/robots.txt', (c) => {
