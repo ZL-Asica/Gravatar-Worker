@@ -1,4 +1,5 @@
 import type { Context } from 'hono'
+import { getTransformCacheKey, readTransformCache, writeTransformCache } from './avatarCache'
 import { parseAcceptHeader } from './avatarInput'
 import { cacheHeaders } from './cacheHeader'
 import { imgProcessor } from './imgProcessor'
@@ -82,6 +83,19 @@ export const fetchGravatar = async (
   const name = c.req.query('name')
 
   const normalizedAccept = parseAcceptHeader(c.req.header('Accept'))
+  const transformMime = normalizedAccept.find(mime => TRANSFORM_MIMES.includes(mime))
+  const transformCacheKey = transformMime === undefined
+    ? undefined
+    : getTransformCacheKey(c.req.url, hash, size, fallback, initials, name, transformMime)
+
+  if (transformCacheKey !== undefined) {
+    const cached = await readTransformCache(transformCacheKey)
+    if (cached !== undefined) {
+      const headers = new Headers({ ...cacheHeaders(true, hash, config), 'Content-Type': cached.headers.get('Content-Type') ?? transformMime ?? 'image/jpeg' })
+      headers.set('X-Gravatar-Transform-Cache', 'HIT')
+      return new Response(cached.body, { status: cached.status, headers })
+    }
+  }
 
   const params = new URLSearchParams({
     s: `${size}`,
@@ -126,7 +140,12 @@ export const fetchGravatar = async (
   try {
     const imageBuffer = await res.arrayBuffer()
     const { data, mime } = await imgProcessor(imageBuffer, contentType, normalizedAccept)
-    return proxiedImageResponse(data, res.status, hash, config, mime)
+    const response = proxiedImageResponse(data, res.status, hash, config, mime)
+    if (transformCacheKey !== undefined && mime === transformMime) {
+      c.executionCtx.waitUntil(writeTransformCache(transformCacheKey, response.clone(), config.cache.edgeTtlOk))
+      response.headers.set('X-Gravatar-Transform-Cache', 'MISS')
+    }
+    return response
   }
   catch {
     return upstreamErrorResponse()
