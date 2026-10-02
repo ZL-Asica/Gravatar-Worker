@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { it } from 'vitest'
+import { it } from 'node:test'
 import { getTransformCacheKey, readTransformCache, writeTransformCache } from '../src/utils/avatarCache.ts'
 
 it('keys isolate image formats, sizes and effective initials', () => {
