@@ -1,7 +1,10 @@
 /* eslint-disable style/max-statements-per-line */
+import { createCopyFeedback } from './copy-feedback'
+
 const form = document.querySelector('[data-avatar-link-form]')
 
 if (form instanceof HTMLFormElement) {
+  const feedback = createCopyFeedback(form)
   const placeholder = form.querySelector('[data-avatar-placeholder]')
   const emailInput = form.querySelector('[data-avatar-email]')
   const sizeInput = form.querySelector('[data-avatar-size]')
@@ -26,7 +29,7 @@ if (form instanceof HTMLFormElement) {
   const getFallbackValue = () => defaultInput instanceof HTMLSelectElement ? defaultInput.value.trim() : '404'
   const setResultVisibility = (visible) => { if (placeholder instanceof HTMLElement) { placeholder.hidden = visible } if (resultPanel instanceof HTMLElement) { resultPanel.hidden = !visible } }
   const syncInitialsField = () => { if (initialsField instanceof HTMLElement) { initialsField.hidden = getFallbackValue() !== 'initials' } }
-  const clearOutputs = () => { setResultVisibility(false); if (preview instanceof HTMLImageElement) { preview.removeAttribute('src'); preview.hidden = true }; Object.values(outputs).forEach((output) => { if (output instanceof HTMLElement) { output.textContent = '' } }) }
+  const clearOutputs = () => { feedback.reset(); setResultVisibility(false); if (preview instanceof HTMLImageElement) { preview.removeAttribute('src'); preview.hidden = true }; Object.values(outputs).forEach((output) => { if (output instanceof HTMLElement) { output.textContent = '' } }) }
   const buildAvatarUrl = async () => {
     if (!(emailInput instanceof HTMLInputElement) || !(sizeInput instanceof HTMLInputElement || sizeInput instanceof HTMLSelectElement)) { return null }
     const email = normalizeEmail(emailInput.value)
@@ -56,7 +59,7 @@ if (form instanceof HTMLFormElement) {
     if (sequence !== updateSequence) { return }
     if (result === null) { clearOutputs(); setStatus(messages.avatarMessageCrypto ?? 'Web Crypto is unavailable.'); return }
     const markdown = `![Avatar](${result.url})`
-    const html = `<img src="${result.url}" alt="Avatar" width="${result.size}" height="${result.size}">`
+    const html = `<img src="${result.url.replaceAll('&', '&amp;')}" alt="Avatar" width="${result.size}" height="${result.size}">`
     if (outputs.url instanceof HTMLElement) { outputs.url.textContent = result.url }
     if (outputs.markdown instanceof HTMLElement) { outputs.markdown.textContent = markdown }
     if (outputs.html instanceof HTMLElement) { outputs.html.textContent = html }
@@ -70,12 +73,23 @@ if (form instanceof HTMLFormElement) {
     const output = key ? outputs[key] : null
     const value = output instanceof HTMLElement ? output.textContent ?? '' : ''
     if (!value) { setStatus(messages.avatarMessageEmpty ?? 'Enter an email address first.'); return }
-    try { await navigator.clipboard.writeText(value); setStatus(messages.avatarMessageCopied ?? 'Copied to clipboard.') }
-    catch { const selection = window.getSelection(); const range = document.createRange(); range.selectNodeContents(output); selection?.removeAllRanges(); selection?.addRange(range); setStatus(messages.avatarMessageClipboard ?? 'Select the field and copy manually.') }
+    const sequence = updateSequence
+    try {
+      await navigator.clipboard.writeText(value)
+      if (sequence === updateSequence) {
+        feedback.success(button, messages.avatarMessageCopied ?? 'Copied to clipboard.')
+      }
+    }
+    catch { if (sequence !== updateSequence) { return }; const selection = window.getSelection(); const range = document.createRange(); range.selectNodeContents(output); selection?.removeAllRanges(); selection?.addRange(range); setStatus(messages.avatarMessageClipboard ?? 'Select the field and copy manually.') }
   }
   if (preview instanceof HTMLImageElement) { preview.addEventListener('error', () => { preview.hidden = true; setStatus(messages.avatarMessagePreviewError ?? 'Preview unavailable. The link is still ready to copy.') }) }
   form.addEventListener('input', () => { updateSequence += 1; clearOutputs(); emailInput instanceof HTMLInputElement && emailInput.removeAttribute('aria-invalid'); setStatus(''); scheduleUpdate() })
-  form.addEventListener('change', () => { syncInitialsField(); scheduleUpdate() })
+  form.addEventListener('change', () => {
+    updateSequence += 1
+    clearOutputs()
+    syncInitialsField()
+    scheduleUpdate()
+  })
   form.querySelectorAll('[data-copy-value]').forEach(button => button.addEventListener('click', () => { void copyValue(button) }))
   syncInitialsField()
   clearOutputs()

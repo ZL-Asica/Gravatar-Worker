@@ -2,6 +2,20 @@ export const LOCALES = ['en', 'ja', 'zh-CN', 'zh-TW'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export interface Messages {
+  copyHint: string
+  demoData: string
+  reportingPeriod: string
+  periodUnknown: string
+  avatarRequests: string
+  requestDefinition: string
+  dataServedDefinition: string
+  domainPrivacy: string
+  sortedRequests: string
+  pagination: string
+  previousPage: string
+  nextPage: string
+  pageLabel: string
+
   craftedBy: string
   poweredBy: string
   fallbackBlank: string
@@ -57,6 +71,20 @@ export interface Messages {
 }
 
 const EN: Messages = {
+  copyHint: 'Click to copy',
+  demoData: 'Sample data · not real traffic',
+  reportingPeriod: 'Reporting period:',
+  periodUnknown: 'Not provided for this snapshot',
+  avatarRequests: 'Avatar requests',
+  requestDefinition: 'Avatar GET requests attributed to each domain in this snapshot; not unique visitors. Browser cache hits are excluded. Statistics are supplied snapshots, not live counters.',
+  dataServedDefinition: 'Data served is the known image response body size; it excludes unknown bodies and browser cache hits.',
+  domainPrivacy: 'Domains are partially masked. Different domains may share the same masked label.',
+  sortedRequests: 'Sorted by avatar requests, highest first',
+  pagination: 'Leaderboard pages',
+  previousPage: 'Previous',
+  nextPage: 'Next',
+  pageLabel: 'Page',
+
   craftedBy: 'Crafted by',
   poweredBy: 'Powered by',
   fallbackBlank: 'Blank image',
@@ -113,6 +141,20 @@ const EN: Messages = {
 
 const JA: Messages = {
   ...EN,
+  copyHint: 'クリックしてコピー',
+  demoData: 'サンプルデータ · 実際の通信量ではありません',
+  reportingPeriod: '集計期間：',
+  periodUnknown: 'このスナップショットの集計期間は未提供です',
+  avatarRequests: 'アバターリクエスト数',
+  requestDefinition: 'このスナップショットの各ドメインに帰属するアバター GET リクエスト数です。訪問者数ではなく、ブラウザキャッシュのヒットは含みません。リアルタイム集計ではありません。',
+  dataServedDefinition: '配信データ量は判明している画像レスポンス本文のサイズです。不明な本文とブラウザキャッシュのヒットは含みません。',
+  domainPrivacy: 'ドメインは一部を伏せています。同じ表示になる別ドメインもあります。',
+  sortedRequests: 'アバターリクエスト数の多い順',
+  pagination: 'ランキングのページ',
+  previousPage: '前へ',
+  nextPage: '次へ',
+  pageLabel: 'ページ',
+
   craftedBy: '制作',
   poweredBy: '提供',
   fallbackBlank: '空白画像',
@@ -169,6 +211,20 @@ const JA: Messages = {
 
 const ZH_CN: Messages = {
   ...EN,
+  copyHint: '点击复制',
+  demoData: '示例数据 · 非真实流量',
+  reportingPeriod: '统计范围：',
+  periodUnknown: '此快照未提供时间范围',
+  avatarRequests: '头像请求数',
+  requestDefinition: '此快照中归属各域名的头像 GET 请求次数，不是独立访客数；不包含浏览器缓存命中。当前展示配置快照，并非实时统计。',
+  dataServedDefinition: '数据量是已知头像响应正文的大小，不包含未知正文和浏览器缓存命中。',
+  domainPrivacy: '域名已部分脱敏；不同域名可能显示为相同名称。',
+  sortedRequests: '按头像请求数降序排列',
+  pagination: '排行榜分页',
+  previousPage: '上一页',
+  nextPage: '下一页',
+  pageLabel: '页码',
+
   craftedBy: '作者',
   poweredBy: '技术支持',
   fallbackBlank: '空白图片',
@@ -225,6 +281,20 @@ const ZH_CN: Messages = {
 
 const ZH_TW: Messages = {
   ...ZH_CN,
+  copyHint: '點擊複製',
+  demoData: '範例資料 · 非真實流量',
+  reportingPeriod: '統計範圍：',
+  periodUnknown: '此快照未提供時間範圍',
+  avatarRequests: '頭像請求數',
+  requestDefinition: '此快照中歸屬各網域的頭像 GET 請求次數，不是獨立訪客數；不包含瀏覽器快取命中。目前顯示設定快照，並非即時統計。',
+  dataServedDefinition: '資料量是已知頭像回應本文的大小，不包含未知本文與瀏覽器快取命中。',
+  domainPrivacy: '網域已部分遮罩；不同網域可能顯示為相同名稱。',
+  sortedRequests: '依頭像請求數由高至低排列',
+  pagination: '排行榜分頁',
+  previousPage: '上一頁',
+  nextPage: '下一頁',
+  pageLabel: '頁碼',
+
   craftedBy: '作者',
   poweredBy: '技術支援',
   fallbackBlank: '空白圖片',

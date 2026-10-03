@@ -1,20 +1,16 @@
 import type { Locale } from '../i18n'
+import type { LeaderboardSnapshot } from '../utils/leaderboard'
 import { getMessages } from '../i18n'
+import { getLeaderboardPage, LEADERBOARD_PAGE_SIZE } from '../utils/leaderboard'
 import Footer from './footer'
 import { SiteHeader } from './site-header'
-
-export interface LeaderboardEntry {
-  domain: string
-  requests: number
-  bytes: number
-  cacheHitRate: number
-}
 
 interface LeaderboardProps {
   config: SiteConfig
   currentYear: number
   locale: Locale
-  entries: LeaderboardEntry[]
+  snapshot: LeaderboardSnapshot
+  pageQuery?: string
 }
 
 const formatBytes = (bytes: number) => {
@@ -30,8 +26,12 @@ const formatBytes = (bytes: number) => {
   return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`
 }
 
-const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps) => {
+const Leaderboard = ({ config, currentYear, locale, snapshot, pageQuery }: LeaderboardProps) => {
   const messages = getMessages(locale)
+  const { entries, periodStart, periodEnd, demo } = snapshot
+  const { page, pages, offset } = getLeaderboardPage(entries.length, pageQuery)
+  const formatDate = (value: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(value))
+  const pageUrl = (value: number) => `/leaderboard?lang=${locale}&page=${value}`
   return (
     <div class="site-shell leaderboard-page">
       <SiteHeader config={config} locale={locale} path="/leaderboard" />
@@ -40,6 +40,18 @@ const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps)
           <h1>{messages.leaderboard}</h1>
           <p class="subtitle">{messages.leaderboardIntro}</p>
         </section>
+        <div class="leaderboard-meta">
+          {demo && <span class="demo-badge">{messages.demoData}</span>}
+          <p>
+            <strong>{messages.reportingPeriod}</strong>
+            {' '}
+            {periodStart !== undefined && periodEnd !== undefined ? `${formatDate(periodStart)} – ${formatDate(periodEnd)} (UTC)` : messages.periodUnknown}
+          </p>
+          <p>{messages.requestDefinition}</p>
+          <p>{messages.dataServedDefinition}</p>
+          <p>{messages.domainPrivacy}</p>
+          <p>{messages.sortedRequests}</p>
+        </div>
         {entries.length === 0
           ? (
               <div class="empty-state">
@@ -52,15 +64,22 @@ const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps)
                   <thead>
                     <tr>
                       <th scope="col">{messages.domain}</th>
-                      <th scope="col">{messages.requests}</th>
+                      <th scope="col" aria-sort="descending">
+                        {messages.avatarRequests}
+                        {' '}
+                        <span aria-hidden="true">↓</span>
+                      </th>
                       <th scope="col">{messages.bytes}</th>
                       <th scope="col">{messages.cacheHitRate}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {entries.map(entry => (
-                      <tr key={entry.domain}>
-                        <th scope="row">{entry.domain}</th>
+                    {entries.slice(offset, offset + LEADERBOARD_PAGE_SIZE).map((entry, index) => (
+                      <tr key={`${entry.domain}-${offset + index}`}>
+                        <th scope="row">
+                          <span class="domain-rank">{offset + index + 1}</span>
+                          {entry.domain}
+                        </th>
                         <td>{entry.requests.toLocaleString(locale)}</td>
                         <td>{formatBytes(entry.bytes)}</td>
                         <td>
@@ -73,6 +92,13 @@ const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps)
                 </table>
               </div>
             )}
+        {entries.length > 0 && (
+          <nav class="pagination" aria-label={messages.pagination}>
+            {page > 1 ? <a href={pageUrl(page - 1)}>{messages.previousPage}</a> : <span aria-disabled="true">{messages.previousPage}</span>}
+            <span>{`${messages.pageLabel} ${page} / ${pages} · ${offset + 1}–${Math.min(offset + LEADERBOARD_PAGE_SIZE, entries.length)} / ${entries.length}`}</span>
+            {page < pages ? <a href={pageUrl(page + 1)}>{messages.nextPage}</a> : <span aria-disabled="true">{messages.nextPage}</span>}
+          </nav>
+        )}
       </main>
       <Footer config={config} currentYear={currentYear} locale={locale} />
     </div>

@@ -67,49 +67,20 @@ export const Documentation = ({ config, locale, endpointsOnly = false }: { confi
       </section>
       <section className="doc-section doc-caching" aria-labelledby="caching">
         <h2 id="caching">{messages.caching}</h2>
-        <ul>
-          <li>
-            200 OK —
-            {text.edge}
-            :
-            {config.cache.edgeTtlOk}
-            {' '}
-            {text.seconds}
-            ;
-            {' '}
-            {text.browser}
-            :
-            {' '}
-            {config.cache.browserTtlOk}
-            {' '}
-            {text.seconds}
-            .
-          </li>
-          <li>
-            404 —
-            {text.edge}
-            :
-            {config.cache.edgeTtl404}
-            {' '}
-            {text.seconds}
-            ;
-            {' '}
-            {text.browser}
-            :
-            {' '}
-            {config.cache.browserTtl404}
-            {' '}
-            {text.seconds}
-            .
-          </li>
-          <li>
-            <code>Vary: Accept</code>
-            {' '}
-            —
-            {' '}
-            {text.vary}
-          </li>
-        </ul>
+        <dl className="cache-rules">
+          <div>
+            <dt><code>200 OK</code></dt>
+            <dd>{`${text.edge}: ${config.cache.edgeTtlOk.toLocaleString(locale)} ${text.seconds} · ${text.browser}: ${config.cache.browserTtlOk.toLocaleString(locale)} ${text.seconds}`}</dd>
+          </div>
+          <div>
+            <dt><code>404</code></dt>
+            <dd>{`${text.edge}: ${config.cache.edgeTtl404.toLocaleString(locale)} ${text.seconds} · ${text.browser}: ${config.cache.browserTtl404.toLocaleString(locale)} ${text.seconds}`}</dd>
+          </div>
+          <div>
+            <dt><code>Vary: Accept</code></dt>
+            <dd>{text.vary}</dd>
+          </div>
+        </dl>
       </section>
       <section className="doc-section doc-examples" aria-labelledby="examples">
         <h2 id="examples">{text.examples}</h2>

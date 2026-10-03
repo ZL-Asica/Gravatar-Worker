@@ -35,7 +35,7 @@ summary {
   cursor: pointer;
 }
 :focus-visible {
-  outline: 3px solid #328f83;
+  outline: 3px solid #6a8fd4;
   outline-offset: 3px;
 }
 .site-shell {
@@ -85,19 +85,8 @@ summary {
   max-width: 140px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  appearance: none;
-  padding: 8px 36px 8px 12px;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-link) 50%),
-    linear-gradient(135deg, var(--color-link) 50%, transparent 50%);
-  background-position:
-    calc(100% - 17px) 19px,
-    calc(100% - 11px) 19px;
-  background-size:
-    6px 6px,
-    6px 6px;
-  background-repeat: no-repeat;
-  background: #fff;
+  padding: 8px 40px 8px 12px;
+  background-color: #fff;
   color: var(--text-main);
   font-size: 16px;
 }
@@ -163,7 +152,7 @@ h2 {
   min-height: 46px;
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #b9cbc5;
+  border: 1px solid #c9d9ed;
   border-radius: 8px;
   color: var(--text-main);
   background: #fff;
@@ -177,7 +166,7 @@ h2 {
 }
 .generator-options {
   display: grid;
-  grid-template-columns: 100px minmax(0, 1fr);
+  grid-template-columns: 112px minmax(0, 1fr);
   gap: 12px;
 }
 .field-hint {
@@ -225,7 +214,7 @@ h2 {
   padding: 20px;
   border: 1px dashed var(--border-color);
   border-radius: 8px;
-  background: #f8faf9;
+  background: #f5f8fe;
   color: var(--text-muted);
   font-size: 14px;
 }
@@ -265,7 +254,7 @@ h2 {
 }
 .copy-row button {
   min-height: 46px;
-  border: 1px solid #b9cbc5;
+  border: 1px solid #c9d9ed;
   border-radius: 8px;
   background: var(--bg-muted);
   color: var(--text-main);
@@ -534,7 +523,7 @@ td {
     padding-inline: 12px;
   }
   .generator-options {
-    grid-template-columns: 104px minmax(0, 1fr);
+    grid-template-columns: 112px minmax(0, 1fr);
     gap: 10px;
   }
   th,
@@ -544,5 +533,123 @@ td {
   }
   .table-wrap table {
     min-width: 500px;
+  }
+}
+
+/* One chevron and inset for every native select. Keep after field backgrounds. */
+.language-switcher select,
+.link-generator select {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23667895' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 14px center;
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+}
+.doc-examples {
+  grid-column: 1 / -1;
+}
+.doc-formats pre {
+  background: #f6f3fd;
+  border-color: #ddd5f2;
+  color: #635182;
+}
+.cache-rules {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+.cache-rules div {
+  display: grid;
+  gap: 6px;
+}
+.cache-rules dd {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.copy-field.is-copied {
+  border-color: #54a58a;
+  box-shadow: 0 0 0 3px #e2f3eb;
+}
+.copy-tooltip,
+.copy-toast {
+  position: fixed;
+  z-index: 10;
+  pointer-events: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+.copy-tooltip {
+  background: #20304a;
+  color: white;
+  max-width: calc(100vw - 24px);
+}
+.copy-toast {
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 40px);
+  color: #235c47;
+  background: #eefaf3;
+  border: 1px solid #b6ddca;
+  box-shadow: 0 6px 24px #20304a18;
+}
+.copy-toast:empty {
+  display: none;
+}
+.leaderboard-meta {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.leaderboard-meta p {
+  margin: 0;
+}
+.demo-badge {
+  width: fit-content;
+  border-radius: 20px;
+  padding: 4px 12px;
+  background: #f0eafa;
+  color: #635182;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+.pagination a,
+.pagination [aria-disabled] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+.pagination [aria-disabled] {
+  color: var(--text-muted);
+}
+.domain-rank {
+  display: inline-block;
+  min-width: 32px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+  .copy-field {
+    transition: none;
   }
 }

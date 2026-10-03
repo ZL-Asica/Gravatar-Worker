@@ -1,4 +1,3 @@
-import type { LeaderboardEntry } from './components/leaderboard'
 import { Hono } from 'hono'
 import { cache } from 'hono/cache'
 import { cors } from 'hono/cors'
@@ -13,22 +12,9 @@ import { renderer } from './renderer'
 import { fetchGravatar } from './utils'
 import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
 
-const app = new Hono<{ Bindings: CloudflareBindings }>()
+import { parseLeaderboard } from './utils/leaderboard'
 
-const isLeaderboardEntry = (entry: unknown): entry is LeaderboardEntry => {
-  if (typeof entry !== 'object' || entry === null) {
-    return false
-  }
-  const value = entry as Record<string, unknown>
-  return typeof value.domain === 'string'
-    && typeof value.requests === 'number'
-    && typeof value.bytes === 'number'
-    && typeof value.cacheHitRate === 'number'
-    && value.domain.length > 0 && value.domain.length <= 253
-    && Number.isFinite(value.requests) && value.requests >= 0
-    && Number.isFinite(value.bytes) && value.bytes >= 0
-    && Number.isFinite(value.cacheHitRate) && value.cacheHitRate >= 0 && value.cacheHitRate <= 1
-}
+const app = new Hono<{ Bindings: CloudflareBindings }>()
 
 app.use(cors({
   origin: '*',
@@ -78,20 +64,8 @@ app.get('/leaderboard', (c) => {
   const config = loadConfig(c.env)
   const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
   const raw = (c.env as CloudflareBindings & { LEADERBOARD_DATA?: string }).LEADERBOARD_DATA
-  let entries: LeaderboardEntry[] = []
-  if (raw !== undefined) {
-    try {
-      const parsed: unknown = JSON.parse(raw)
-      if (Array.isArray(parsed)) {
-        entries = parsed.filter(isLeaderboardEntry)
-      }
-    }
-    catch {
-      entries = []
-    }
-  }
-  entries.sort((a, b) => b.requests - a.requests)
-  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} entries={entries.slice(0, 100)} />)
+  const snapshot = parseLeaderboard(raw)
+  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} snapshot={snapshot} pageQuery={c.req.query('page')} />)
 })
 
 app.get('/robots.txt', (c) => {

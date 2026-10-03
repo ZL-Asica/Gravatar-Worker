@@ -87,6 +87,8 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
           </div>
         </div>
       </div>
+      <span className="copy-tooltip" data-copy-tooltip hidden aria-hidden="true">{messages.copyHint}</span>
+      <div className="copy-toast" data-copy-toast role="status" aria-live="polite" aria-atomic="true" />
       <p
         className="generator-status"
         role="status"

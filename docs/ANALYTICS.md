@@ -33,3 +33,11 @@ Referrer attribution is approximate: the header is optional and client-controlle
 Cache rate covers requests that reach this Worker and are served by its transform or upstream response cache. Browser cache hits never reach the Worker. Unknown cache outcomes should remain unknown, not silently become misses. Response bytes include only known image body lengths; never buffer an image merely for statistics. Show byte coverage so partial counts are not mistaken for complete bandwidth totals.
 
 Full application collection improves small-domain counts but does not make referrer attribution or Cloudflare's internal sampling exact.
+
+## Current snapshot display contract
+
+`LEADERBOARD_DATA` accepts a legacy array (shown with an unknown reporting period), or an object with `entries`, `periodStart`, `periodEnd` and optional `demo: true`. Dates use UTC ISO timestamps, for example `2026-10-01T00:00:00Z`. Supply the actual aggregation interval; the UI never invents a rolling range. `demo: true` explicitly labels sample traffic.
+
+`requests` means avatar GET requests attributed to the domain over that interval, including requests served from the Worker's caches. It is not visitors, page views or browser cache hits. This is a contract for supplied snapshots; collection remains unimplemented.
+
+The server masks every hostname label except its final suffix before rendering (for example `studio.example.com` → `s***.e***.com`); this reduces casual exposure, but is not anonymization. Masked labels can collide. Sorting uses descending requests, with the original domain as a deterministic tie-breaker, and each page shows 10 entries with a global rank. Original domains are never emitted in HTML or attributes. Pagination reads the same configured snapshot and makes no Analytics Engine or KV calls. The old silent top-100 cutoff is removed.
