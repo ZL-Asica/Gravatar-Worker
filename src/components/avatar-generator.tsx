@@ -24,12 +24,12 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
           <legend>{messages.stepEmail}</legend>
           <label>
             {messages.email}
-            <input aria-describedby="email-hint email-error" data-avatar-email type="email" inputMode="email" autoComplete="email" placeholder={messages.emailPlaceholder} required />
+            <input aria-describedby="email-hint email-error" data-avatar-email type="email" inputMode="email" autoComplete="email" spellCheck={false} autoCapitalize="none" placeholder={messages.emailPlaceholder} required />
           </label>
           <div className="field-error-slot">
             <span className="field-error-sizer" aria-hidden="true">{messages.generatorEmpty}</span>
             <span className="field-error-sizer" aria-hidden="true">{messages.generatorInvalid}</span>
-            <p id="email-error" className="field-error" data-avatar-email-error role="alert" aria-hidden="true" />
+            <p id="email-error" className="field-error" data-avatar-email-error aria-live="polite" />
           </div>
           <p id="email-hint" className="field-hint">{messages.emailHint}</p>
         </fieldset>
@@ -60,7 +60,7 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
           <p id="fallback-hint" className="field-hint">{messages.fallbackHint}</p>
           <label data-avatar-initials-field hidden>
             {messages.initials}
-            <input data-avatar-initials type="text" inputMode="text" maxLength={4} placeholder="ZA" />
+            <input data-avatar-initials type="text" inputMode="text" autoComplete="off" maxLength={4} placeholder="ZA" />
           </label>
         </fieldset>
       </div>
@@ -73,27 +73,39 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
         </div>
         <div className="generated-links">
           <div className="output-group">
-            <label>{messages.directUrl}</label>
-            <button type="button" className="copy-field" data-copy-value="url" aria-label={`${messages.copy} ${messages.directUrl}`}>
+            <span>{messages.directUrl}</span>
+            <button type="button" className="copy-field" data-copy-value="url" data-copy-label={messages.directUrl} aria-label={`${messages.copy} ${messages.directUrl}`}>
               <code data-avatar-url-display />
             </button>
           </div>
           <div className="output-group">
-            <label>{messages.markdown}</label>
-            <button type="button" className="copy-field" data-copy-value="markdown" aria-label={`${messages.copy} ${messages.markdown}`}>
+            <span>{messages.markdown}</span>
+            <button type="button" className="copy-field" data-copy-value="markdown" data-copy-label={messages.markdown} aria-label={`${messages.copy} ${messages.markdown}`}>
               <code data-avatar-markdown-display />
             </button>
           </div>
           <div className="output-group">
-            <label>{messages.html}</label>
-            <button type="button" className="copy-field" data-copy-value="html" aria-label={`${messages.copy} ${messages.html}`}>
+            <span>{messages.html}</span>
+            <button type="button" className="copy-field" data-copy-value="html" data-copy-label={messages.html} aria-label={`${messages.copy} ${messages.html}`}>
               <code data-avatar-html-display />
             </button>
           </div>
         </div>
       </div>
       <span className="copy-tooltip" data-copy-tooltip hidden aria-hidden="true">{messages.copyHint}</span>
-      <div className="copy-toast" data-copy-toast role="status" aria-live="polite" aria-atomic="true" />
+      <div className="copy-toasts" data-copy-toasts role="status" aria-live="polite" aria-relevant="additions" aria-atomic="false" />
+      <template data-copy-toast-template>
+        <div className="copy-toast" data-copy-toast>
+          <svg className="toast-success-icon" viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true" focusable="false">
+            <circle cx="10" cy="10" r="8" fill="currentColor" />
+            <path d="m6.5 10 2.3 2.4 4.7-4.8" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <div className="toast-content">
+            <strong data-toast-label />
+            <span data-toast-message />
+          </div>
+        </div>
+      </template>
       <p
         className="generator-status"
         role="status"

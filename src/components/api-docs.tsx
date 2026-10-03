@@ -12,10 +12,10 @@ const ApiDocs = ({ config, currentYear, locale, docsOnly = false }: ApiDocsProps
   return (
     <div class="site-shell">
       <SiteHeader config={config} locale={locale} path={docsOnly ? '/docs' : '/'} />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section class="hero" aria-labelledby="page-title">
           <h1 id="page-title">{docsOnly ? messages.apiReference : messages.eyebrow}</h1>
-          <p class="subtitle">{docsOnly ? messages.subtitle : messages.generatorIntro}</p>
+          <p class="subtitle">{docsOnly ? messages.apiIntro : messages.generatorIntro}</p>
         </section>
         {docsOnly
           ? (

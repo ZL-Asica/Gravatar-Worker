@@ -78,7 +78,7 @@ const Leaderboard = ({ config, currentYear, locale, snapshot }: LeaderboardProps
   return (
     <div className="site-shell leaderboard-page">
       <SiteHeader config={config} locale={locale} path="/leaderboard" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="leaderboard-hero"><h1>{messages.leaderboard}</h1></section>
         <div className="leaderboard-meta" data-leaderboard-root data-page-size={LEADERBOARD_PAGE_SIZE} data-initial-range={firstRange}>
           {snapshot.demo && <span className="demo-badge">{messages.demoData}</span>}

@@ -7,7 +7,11 @@ export const SiteHeader = ({ config, locale, path }: { config: SiteConfig, local
   const links = [['/', messages.navHome], ['/docs', messages.navDocs], ['/leaderboard', messages.navLeaderboard]]
   return (
     <header class="site-header">
-      <a class="brand" href={`/?lang=${locale}`}>{config.branding.siteName}</a>
+      <a class="skip-link" href="#main-content">{messages.skipToContent}</a>
+      <a class="brand" href={`/?lang=${locale}`}>
+        <img src="/logo-mark.svg" alt="" width="36" height="36" />
+        <span translate="no">{config.branding.siteName}</span>
+      </a>
       <nav class="main-nav" aria-label={messages.navHome}>
         {links.map(([href, label]) => <a key={href} href={`${href}?lang=${locale}`} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
       </nav>

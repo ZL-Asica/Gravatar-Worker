@@ -19,13 +19,12 @@ if (form instanceof HTMLFormElement) {
   const status = form.querySelector('[data-avatar-status]')
   const messages = status instanceof HTMLElement ? status.dataset : {}
   let updateSequence = 0
+  let copySequence = 0
   let debounceTimer
   const setStatus = (message) => { if (status instanceof HTMLElement) { status.textContent = message ?? '' } }
   const setEmailError = (message) => {
     if (emailError instanceof HTMLElement) {
       emailError.textContent = message ?? ''
-      emailError.classList.toggle('is-visible', Boolean(message))
-      emailError.setAttribute('aria-hidden', message ? 'false' : 'true')
     }
   }
   const normalizeEmail = value => value.trim().toLowerCase()
@@ -79,6 +78,7 @@ if (form instanceof HTMLFormElement) {
   }
   const scheduleUpdate = () => { window.clearTimeout(debounceTimer); debounceTimer = window.setTimeout(() => { void update() }, 240) }
   const copyValue = async (button) => {
+    const copyRequest = ++copySequence
     const key = button.getAttribute('data-copy-value')
     const output = key ? outputs[key] : null
     const value = output instanceof HTMLElement ? output.textContent ?? '' : ''
@@ -86,11 +86,11 @@ if (form instanceof HTMLFormElement) {
     const sequence = updateSequence
     try {
       await navigator.clipboard.writeText(value)
-      if (sequence === updateSequence) {
+      if (sequence === updateSequence && copyRequest === copySequence) {
         feedback.success(button, messages.avatarMessageCopied ?? 'Copied to clipboard.')
       }
     }
-    catch { if (sequence !== updateSequence) { return }; const selection = window.getSelection(); const range = document.createRange(); range.selectNodeContents(output); selection?.removeAllRanges(); selection?.addRange(range); setStatus(messages.avatarMessageClipboard ?? 'Select the field and copy manually.') }
+    catch { if (sequence !== updateSequence || copyRequest !== copySequence) { return }; const selection = window.getSelection(); const range = document.createRange(); range.selectNodeContents(output); selection?.removeAllRanges(); selection?.addRange(range); setStatus(messages.avatarMessageClipboard ?? 'Select the field and copy manually.') }
   }
   if (preview instanceof HTMLImageElement) { preview.addEventListener('error', () => { preview.hidden = true; setStatus(messages.avatarMessagePreviewError ?? 'Preview unavailable. The link is still ready to copy.') }) }
   form.addEventListener('input', () => { updateSequence += 1; clearOutputs(); emailInput instanceof HTMLInputElement && emailInput.removeAttribute('aria-invalid'); setEmailError(''); setStatus(''); scheduleUpdate() })
@@ -108,7 +108,7 @@ if (form instanceof HTMLFormElement) {
   form.addEventListener('submit', (event) => {
     event.preventDefault()
     void update()
-    if (emailInput instanceof HTMLInputElement && !emailInput.value.trim()) {
+    if (emailInput instanceof HTMLInputElement && !emailInput.checkValidity()) {
       emailInput.focus()
     }
   })

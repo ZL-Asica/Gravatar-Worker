@@ -2,6 +2,7 @@ export const LOCALES = ['en', 'ja', 'zh-CN', 'zh-TW'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export interface Messages {
+  skipToContent: string
   copyHint: string
   demoData: string
   reportingPeriod: string
@@ -72,10 +73,13 @@ export interface Messages {
   cacheHitRate: string
   noData: string
   apiReference: string
+  apiIntro: string
   footerRights: string
 }
 
 const EN: Messages = {
+  skipToContent: 'Skip to content',
+  apiIntro: 'Avatar endpoints, request options, image formats, and cache lifetimes.',
   copyHint: 'Click to copy',
   demoData: 'Sample data · not real traffic',
   reportingPeriod: 'Reporting period:',
@@ -151,6 +155,8 @@ const EN: Messages = {
 
 const JA: Messages = {
   ...EN,
+  skipToContent: '本文へスキップ',
+  apiIntro: 'アバターのエンドポイント、リクエストオプション、画像形式、キャッシュ期間。',
   copyHint: 'クリックしてコピー',
   demoData: 'サンプルデータ · 実際の通信量ではありません',
   reportingPeriod: '集計期間：',
@@ -226,6 +232,8 @@ const JA: Messages = {
 
 const ZH_CN: Messages = {
   ...EN,
+  skipToContent: '跳转到主要内容',
+  apiIntro: '了解头像接口、请求参数、图片格式和缓存时间。',
   copyHint: '点击复制',
   demoData: '示例数据 · 非真实流量',
   reportingPeriod: '统计范围：',
@@ -301,6 +309,8 @@ const ZH_CN: Messages = {
 
 const ZH_TW: Messages = {
   ...ZH_CN,
+  skipToContent: '跳至主要內容',
+  apiIntro: '瞭解頭像端點、請求參數、圖片格式與快取時間。',
   copyHint: '點擊複製',
   demoData: '範例資料 · 非真實流量',
   reportingPeriod: '統計範圍：',
