@@ -1,5 +1,6 @@
-/* eslint-disable style/max-statements-per-line */
 import { createCopyFeedback } from './copy-feedback'
+/* eslint-disable style/max-statements-per-line */
+import './leaderboard-controls'
 
 const form = document.querySelector('[data-avatar-link-form]')
 
@@ -23,7 +24,8 @@ if (form instanceof HTMLFormElement) {
   const setEmailError = (message) => {
     if (emailError instanceof HTMLElement) {
       emailError.textContent = message ?? ''
-      emailError.hidden = !message
+      emailError.classList.toggle('is-visible', Boolean(message))
+      emailError.setAttribute('aria-hidden', message ? 'false' : 'true')
     }
   }
   const normalizeEmail = value => value.trim().toLowerCase()
@@ -103,6 +105,13 @@ if (form instanceof HTMLFormElement) {
     scheduleUpdate()
   })
   form.querySelectorAll('[data-copy-value]').forEach(button => button.addEventListener('click', () => { void copyValue(button) }))
+  form.addEventListener('submit', (event) => {
+    event.preventDefault()
+    void update()
+    if (emailInput instanceof HTMLInputElement && !emailInput.value.trim()) {
+      emailInput.focus()
+    }
+  })
   syncInitialsField()
   clearOutputs()
 }
@@ -110,13 +119,3 @@ if (form instanceof HTMLFormElement) {
 document.querySelectorAll('[data-language-select]').forEach((select) => {
   if (select instanceof HTMLSelectElement) { select.addEventListener('change', () => { if (select.value) { window.location.assign(select.value) } }) }
 })
-
-const leaderboardRange = document.querySelector('[data-leaderboard-range]')
-if (leaderboardRange instanceof HTMLSelectElement) {
-  leaderboardRange.addEventListener('change', () => {
-    const url = new URL(window.location.href)
-    url.searchParams.set('range', leaderboardRange.value)
-    url.searchParams.delete('page')
-    window.location.assign(url.toString())
-  })
-}

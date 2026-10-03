@@ -174,11 +174,28 @@ h2 {
   color: var(--text-muted);
   margin: 8px 0 0;
 }
-.field-error {
-  margin: 6px 0 0;
-  color: #b44262;
+.field-error-slot {
+  display: grid;
+  margin-top: 6px;
+}
+.field-error,
+.field-error-sizer {
+  grid-area: 1 / 1;
+  margin: 0;
   font-size: 13px;
+  line-height: 1.4;
+}
+.field-error-sizer {
+  visibility: hidden;
   font-weight: 650;
+}
+.field-error {
+  color: #b44262;
+  font-weight: 650;
+  visibility: hidden;
+}
+.field-error.is-visible {
+  visibility: visible;
 }
 [data-avatar-initials-field] {
   margin-top: 12px;
@@ -579,7 +596,8 @@ td {
 
 /* One chevron and inset for every native select. Keep after field backgrounds. */
 .language-switcher select,
-.link-generator select {
+.link-generator select,
+.range-picker select {
   appearance: none;
   padding-right: 40px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%23667895' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -609,6 +627,14 @@ td {
   color: var(--text-muted);
   font-size: 14px;
 }
+.cache-rules strong {
+  color: var(--text-main);
+}
+.cache-explanation {
+  margin: 2px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
 .copy-field.is-copied {
   border-color: #54a58a;
   box-shadow: 0 0 0 3px #e2f3eb;
@@ -619,7 +645,7 @@ td {
   z-index: 10;
   pointer-events: none;
   border-radius: 10px;
-  padding: 8px 12px;
+  padding: 10px 16px 10px 14px;
   font-size: 14px;
 }
 .copy-tooltip {
@@ -628,15 +654,39 @@ td {
   max-width: calc(100vw - 24px);
 }
 .copy-toast {
-  bottom: max(24px, env(safe-area-inset-bottom));
+  top: max(24px, env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
   max-width: calc(100vw - 40px);
-  color: #235c47;
-  background: #eefaf3;
+  color: #205a48;
+  background: #fff;
   border: 1px solid #b6ddca;
-  box-shadow: 0 6px 24px #20304a18;
+  box-shadow: 0 10px 30px #20304a26;
+  animation: toast-in 180ms ease-out;
+}
+.copy-toast::before {
+  content: '✓';
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 50%;
+  color: #fff;
+  background: #4eae8c;
+  font-size: 13px;
+  font-weight: 800;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 .copy-toast:empty {
   display: none;
@@ -662,9 +712,22 @@ td {
   min-height: 42px;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 8px 36px 8px 12px;
+  padding: 8px 40px 8px 12px;
   background-color: #fff;
   color: var(--text-main);
+}
+.pagination button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text-main);
+}
+.pagination button:disabled {
+  cursor: default;
+  color: var(--text-muted);
+  opacity: 0.6;
 }
 .demo-badge {
   width: fit-content;
@@ -707,5 +770,8 @@ td {
   }
   .copy-field {
     transition: none;
+  }
+  .copy-toast {
+    animation: none;
   }
 }

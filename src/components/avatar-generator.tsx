@@ -26,7 +26,11 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
             {messages.email}
             <input aria-describedby="email-hint email-error" data-avatar-email type="email" inputMode="email" autoComplete="email" placeholder={messages.emailPlaceholder} required />
           </label>
-          <p id="email-error" className="field-error" data-avatar-email-error role="alert" hidden />
+          <div className="field-error-slot">
+            <span className="field-error-sizer" aria-hidden="true">{messages.generatorEmpty}</span>
+            <span className="field-error-sizer" aria-hidden="true">{messages.generatorInvalid}</span>
+            <p id="email-error" className="field-error" data-avatar-email-error role="alert" aria-hidden="true" />
+          </div>
           <p id="email-hint" className="field-hint">{messages.emailHint}</p>
         </fieldset>
         <fieldset className="generator-field generator-options-field">

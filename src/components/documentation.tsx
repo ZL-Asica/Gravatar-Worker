@@ -2,10 +2,22 @@ import type { Locale } from '../i18n'
 import { getMessages } from '../i18n'
 import { docsMessages } from '../i18n-docs'
 
-const formatTtl = (seconds: number, locale: Locale, secondsLabel: string, minutesLabel: string) => {
-  const value = seconds.toLocaleString(locale)
-  const minutes = (seconds / 60).toLocaleString(locale, { maximumFractionDigits: 1 })
-  return `${value} ${secondsLabel} (${minutes} ${minutesLabel})`
+const formatTtl = (seconds: number, locale: Locale, secondsLabel: string) => {
+  const units: [Intl.NumberFormatOptions['unit'], number][] = [['day', 86400], ['hour', 3600], ['minute', 60]]
+  const number = (value: number, unit: Intl.NumberFormatOptions['unit']) => new Intl.NumberFormat(locale, { style: 'unit', unit, unitDisplay: 'long' }).format(value)
+  const parts: string[] = []
+  let remaining = seconds
+  for (const [unit, size] of units) {
+    const count = Math.floor(remaining / size)
+    if (count > 0) {
+      parts.push(number(count, unit))
+      remaining %= size
+    }
+  }
+  if (remaining > 0 || parts.length === 0) {
+    parts.push(number(remaining, 'second'))
+  }
+  return `${seconds.toLocaleString(locale)} ${secondsLabel} (${parts.join(', ')})`
 }
 
 const RequestCode = ({ route, variable, query = [] }: { route: string, variable?: string, query?: [string, string][] }) => (
@@ -104,11 +116,31 @@ export const Documentation = ({ config, locale, endpointsOnly = false }: { confi
         <dl className="cache-rules">
           <div>
             <dt><code>200 OK</code></dt>
-            <dd>{`${text.edge}: ${formatTtl(config.cache.edgeTtlOk, locale, text.seconds, text.minutes)} · ${text.browser}: ${formatTtl(config.cache.browserTtlOk, locale, text.seconds, text.minutes)}`}</dd>
+            <dd>
+              <strong>{text.edge}</strong>
+              {': '}
+              {formatTtl(config.cache.edgeTtlOk, locale, text.seconds)}
+            </dd>
+            <dd>
+              <strong>{text.browser}</strong>
+              {': '}
+              {formatTtl(config.cache.browserTtlOk, locale, text.seconds)}
+            </dd>
+            <dd className="cache-explanation">{text.okCaching}</dd>
           </div>
           <div>
-            <dt><code>404</code></dt>
-            <dd>{`${text.edge}: ${formatTtl(config.cache.edgeTtl404, locale, text.seconds, text.minutes)} · ${text.browser}: ${formatTtl(config.cache.browserTtl404, locale, text.seconds, text.minutes)}`}</dd>
+            <dt><code>404 Not Found</code></dt>
+            <dd>
+              <strong>{text.edge}</strong>
+              {': '}
+              {formatTtl(config.cache.edgeTtl404, locale, text.seconds)}
+            </dd>
+            <dd>
+              <strong>{text.browser}</strong>
+              {': '}
+              {formatTtl(config.cache.browserTtl404, locale, text.seconds)}
+            </dd>
+            <dd className="cache-explanation">{text.notFoundCaching}</dd>
           </div>
           <div>
             <dt><HeaderCode name="Vary" value="Accept" /></dt>

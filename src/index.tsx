@@ -39,11 +39,24 @@ app.use('*', async (c, next) => {
     await next()
     return
   }
+  if (import.meta.env.DEV) {
+    await next()
+    c.header('Cache-Control', 'no-store')
+    return
+  }
   const config = loadConfig(c.env)
   return cache({
-    cacheName: 'zla-gravatar-worker-i18n-v1',
+    cacheName: 'zla-gravatar-worker-i18n-v2',
     vary: ['Accept-Language'],
-    cacheControl: `public, max-age=${config.cache.htmlTtl}, s-maxage=${config.cache.htmlTtl}, stale-while-revalidate=60`,
+    cacheControl: `public, max-age=${config.cache.htmlTtl}, s-maxage=${config.cache.htmlTtl}`,
+    keyGenerator: (context) => {
+      const url = new URL(context.req.url)
+      if (context.req.path === '/leaderboard') {
+        const locale = resolveLocale(url.searchParams.get('lang') ?? undefined, context.req.header('Accept-Language'))
+        return `${url.origin}/leaderboard?lang=${locale}`
+      }
+      return context.req.url
+    },
   // eslint-disable-next-line ts/no-unsafe-argument
   })(c, next)
 })
@@ -65,7 +78,7 @@ app.get('/leaderboard', (c) => {
   const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
   const raw = (c.env as CloudflareBindings & { LEADERBOARD_DATA?: string }).LEADERBOARD_DATA
   const snapshot = parseLeaderboard(raw)
-  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} snapshot={snapshot} pageQuery={c.req.query('page')} rangeQuery={c.req.query('range')} />)
+  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} snapshot={snapshot} />)
 })
 
 app.get('/robots.txt', (c) => {

@@ -93,7 +93,7 @@ const EN: Messages = {
   range1d: '1 day',
   range3d: '3 days',
   range7d: '7 days',
-  range30d: '1 month',
+  range30d: '1 month (30 days)',
 
   craftedBy: 'Crafted by',
   poweredBy: 'Powered by',
@@ -168,7 +168,7 @@ const JA: Messages = {
   range1d: '1日',
   range3d: '3日',
   range7d: '7日',
-  range30d: '1か月',
+  range30d: '1か月（30日）',
 
   craftedBy: '制作',
   poweredBy: '提供',
@@ -243,7 +243,7 @@ const ZH_CN: Messages = {
   range1d: '1 天',
   range3d: '3 天',
   range7d: '7 天',
-  range30d: '1 个月',
+  range30d: '1 个月（30 天）',
 
   craftedBy: '作者',
   poweredBy: '技术支持',
@@ -318,7 +318,7 @@ const ZH_TW: Messages = {
   range1d: '1 天',
   range3d: '3 天',
   range7d: '7 天',
-  range30d: '1 個月',
+  range30d: '1 個月（30 天）',
 
   craftedBy: '作者',
   poweredBy: '技術支援',
