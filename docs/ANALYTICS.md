@@ -40,6 +40,8 @@ Full application collection improves small-domain counts but does not make refer
 
 `requests` means avatar GET requests attributed to the domain over that interval, including requests served from the Worker's caches. It is not visitors, page views or browser cache hits. This is a contract for supplied snapshots; collection remains unimplemented.
 
+The UI can expose precomputed `1d`, `3d`, `7d` and `30d` range snapshots from one `LEADERBOARD_DATA` envelope. Selecting a range does not query Analytics Engine or KV. Leaderboard HTML is marked public and edge-cacheable for five minutes (`s-maxage` plus stale-while-revalidate); keep snapshot refreshes at or above that interval to avoid unnecessary reads.
+
 The leaderboard displays validated hostnames without masking. Its purpose is to compare which sites use the service, and masking makes similar domains indistinguishable without reliably anonymizing them. Only publish intended public hostnames in the supplied snapshot; never include URLs, paths, emails, IP addresses or internal hostnames. Automated collection remains a follow-up and must apply its own publication policy before generating a public snapshot.
 
 Sorting uses descending requests, with domain as a deterministic tie-breaker, and each page shows 10 entries with a global rank. Pagination reads the same configured snapshot and makes no Analytics Engine or KV calls. The old silent top-100 cutoff is removed.

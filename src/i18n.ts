@@ -15,6 +15,11 @@ export interface Messages {
   previousPage: string
   nextPage: string
   pageLabel: string
+  rangeLabel: string
+  range1d: string
+  range3d: string
+  range7d: string
+  range30d: string
 
   craftedBy: string
   poweredBy: string
@@ -84,6 +89,11 @@ const EN: Messages = {
   previousPage: 'Previous',
   nextPage: 'Next',
   pageLabel: 'Page',
+  rangeLabel: 'Range',
+  range1d: '1 day',
+  range3d: '3 days',
+  range7d: '7 days',
+  range30d: '1 month',
 
   craftedBy: 'Crafted by',
   poweredBy: 'Powered by',
@@ -154,6 +164,11 @@ const JA: Messages = {
   previousPage: '前へ',
   nextPage: '次へ',
   pageLabel: 'ページ',
+  rangeLabel: '期間',
+  range1d: '1日',
+  range3d: '3日',
+  range7d: '7日',
+  range30d: '1か月',
 
   craftedBy: '制作',
   poweredBy: '提供',
@@ -224,6 +239,11 @@ const ZH_CN: Messages = {
   previousPage: '上一页',
   nextPage: '下一页',
   pageLabel: '页码',
+  rangeLabel: '范围',
+  range1d: '1 天',
+  range3d: '3 天',
+  range7d: '7 天',
+  range30d: '1 个月',
 
   craftedBy: '作者',
   poweredBy: '技术支持',
@@ -294,6 +314,11 @@ const ZH_TW: Messages = {
   previousPage: '上一頁',
   nextPage: '下一頁',
   pageLabel: '頁碼',
+  rangeLabel: '範圍',
+  range1d: '1 天',
+  range3d: '3 天',
+  range7d: '7 天',
+  range30d: '1 個月',
 
   craftedBy: '作者',
   poweredBy: '技術支援',

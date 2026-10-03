@@ -1,5 +1,5 @@
 import type { Locale } from '../i18n'
-import type { LeaderboardSnapshot } from '../utils/leaderboard'
+import type { LeaderboardRange, LeaderboardSnapshot } from '../utils/leaderboard'
 import { getMessages } from '../i18n'
 import { getLeaderboardPage, LEADERBOARD_PAGE_SIZE } from '../utils/leaderboard'
 import Footer from './footer'
@@ -11,6 +11,7 @@ interface LeaderboardProps {
   locale: Locale
   snapshot: LeaderboardSnapshot
   pageQuery?: string
+  rangeQuery?: string
 }
 
 const formatBytes = (bytes: number) => {
@@ -26,9 +27,13 @@ const formatBytes = (bytes: number) => {
   return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`
 }
 
-const Leaderboard = ({ config, currentYear, locale, snapshot, pageQuery }: LeaderboardProps) => {
+const Leaderboard = ({ config, currentYear, locale, snapshot, pageQuery, rangeQuery }: LeaderboardProps) => {
   const messages = getMessages(locale)
-  const { entries, periodStart, periodEnd, demo } = snapshot
+  const selectedRange: LeaderboardRange = rangeQuery === '3d' || rangeQuery === '7d' || rangeQuery === '30d' ? rangeQuery : '1d'
+  const selectedSnapshot = snapshot.ranges?.[selectedRange]
+  const { entries, periodStart, periodEnd, demo } = selectedSnapshot === undefined
+    ? snapshot
+    : { ...selectedSnapshot, demo: snapshot.demo }
   const { page, pages, offset } = getLeaderboardPage(entries.length, pageQuery)
   const formatDate = (value: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(value))
   const pageUrl = (value: number) => `/leaderboard?lang=${locale}&page=${value}`
@@ -41,6 +46,17 @@ const Leaderboard = ({ config, currentYear, locale, snapshot, pageQuery }: Leade
         </section>
         <div class="leaderboard-meta">
           {demo && <span class="demo-badge">{messages.demoData}</span>}
+          {snapshot.ranges !== undefined && (
+            <label class="range-picker">
+              {messages.rangeLabel}
+              <select data-leaderboard-range value={selectedRange}>
+                <option value="1d">{messages.range1d}</option>
+                <option value="3d">{messages.range3d}</option>
+                <option value="7d">{messages.range7d}</option>
+                <option value="30d">{messages.range30d}</option>
+              </select>
+            </label>
+          )}
           <p class="leaderboard-summary">
             <strong>{messages.reportingPeriod}</strong>
             {' '}

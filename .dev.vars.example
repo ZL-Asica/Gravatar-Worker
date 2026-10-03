@@ -39,3 +39,5 @@ LEADERBOARD_DATA="[]"
 # Optional snapshot envelope: UTC period, sample-data badge and paginated entries.
 # Legacy arrays still work but display "period not provided".
 # LEADERBOARD_DATA='{"periodStart":"2026-10-01T00:00:00Z","periodEnd":"2026-10-02T00:00:00Z","demo":true,"entries":[{"domain":"studio.example.com","requests":12840,"bytes":18432000,"cacheHitRate":0.97}]}'
+# Each range is precomputed in one snapshot so changing the selector does not query Analytics Engine or KV.
+# The page is edge cached for 5 minutes; keep the snapshot refresh interval at or above that window.

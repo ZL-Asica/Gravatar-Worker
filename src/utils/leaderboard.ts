@@ -10,6 +10,15 @@ export interface LeaderboardSnapshot {
   periodStart?: string
   periodEnd?: string
   demo: boolean
+  ranges?: Partial<Record<LeaderboardRange, LeaderboardPeriod>>
+}
+
+export type LeaderboardRange = '1d' | '3d' | '7d' | '30d'
+
+export interface LeaderboardPeriod {
+  entries: LeaderboardEntry[]
+  periodStart?: string
+  periodEnd?: string
 }
 
 export const LEADERBOARD_PAGE_SIZE = 10
@@ -55,17 +64,39 @@ export const parseLeaderboard = (raw?: string): LeaderboardSnapshot => {
     const parsed: unknown = JSON.parse(raw ?? '[]')
     const record = typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed) ? parsed as Record<string, unknown> : undefined
     const entries = Array.isArray(parsed) ? parsed : record?.entries
-    if (!Array.isArray(entries)) {
+    if (!Array.isArray(entries) && !(record?.ranges !== undefined)) {
       return empty
     }
+    const baseEntries = Array.isArray(entries) ? entries : []
     const periodStart = parseDate(record?.periodStart)
     const periodEnd = parseDate(record?.periodEnd)
     const validPeriod = periodStart !== undefined && periodEnd !== undefined && periodStart < periodEnd
+    const ranges: Partial<Record<LeaderboardRange, LeaderboardPeriod>> = {}
+    if (typeof record?.ranges === 'object' && record.ranges !== null && !Array.isArray(record.ranges)) {
+      for (const range of ['1d', '3d', '7d', '30d'] as LeaderboardRange[]) {
+        const rangeRecord = (record.ranges as Record<string, unknown>)[range]
+        if (typeof rangeRecord !== 'object' || rangeRecord === null) {
+          continue
+        }
+        const rangeEntries = (rangeRecord as Record<string, unknown>).entries
+        if (!Array.isArray(rangeEntries)) {
+          continue
+        }
+        const rangeStart = parseDate((rangeRecord as Record<string, unknown>).periodStart)
+        const rangeEnd = parseDate((rangeRecord as Record<string, unknown>).periodEnd)
+        ranges[range] = {
+          entries: rangeEntries.filter(isEntry).sort((a, b) => b.requests - a.requests || a.domain.localeCompare(b.domain)).map(entry => ({ ...entry, domain: normalizeDomain(entry.domain) ?? entry.domain })),
+          periodStart: rangeStart !== undefined && rangeEnd !== undefined && rangeStart < rangeEnd ? rangeStart : undefined,
+          periodEnd: rangeStart !== undefined && rangeEnd !== undefined && rangeStart < rangeEnd ? rangeEnd : undefined,
+        }
+      }
+    }
     return {
-      entries: entries.filter(isEntry).sort((a, b) => b.requests - a.requests || a.domain.localeCompare(b.domain)).map(entry => ({ ...entry, domain: normalizeDomain(entry.domain) ?? entry.domain })),
+      entries: baseEntries.filter(isEntry).sort((a, b) => b.requests - a.requests || a.domain.localeCompare(b.domain)).map(entry => ({ ...entry, domain: normalizeDomain(entry.domain) ?? entry.domain })),
       periodStart: validPeriod ? periodStart : undefined,
       periodEnd: validPeriod ? periodEnd : undefined,
       demo: record?.demo === true,
+      ranges: Object.keys(ranges).length > 0 ? ranges : undefined,
     }
   }
   catch {

@@ -651,6 +651,21 @@ td {
 .leaderboard-meta p {
   margin: 0;
 }
+.range-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  font-weight: 650;
+}
+.range-picker select {
+  min-height: 42px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 36px 8px 12px;
+  background-color: #fff;
+  color: var(--text-main);
+}
 .demo-badge {
   width: fit-content;
   border-radius: 20px;

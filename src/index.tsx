@@ -43,7 +43,7 @@ app.use('*', async (c, next) => {
   return cache({
     cacheName: 'zla-gravatar-worker-i18n-v1',
     vary: ['Accept-Language'],
-    cacheControl: `max-age=${config.cache.htmlTtl}`,
+    cacheControl: `public, max-age=${config.cache.htmlTtl}, s-maxage=${config.cache.htmlTtl}, stale-while-revalidate=60`,
   // eslint-disable-next-line ts/no-unsafe-argument
   })(c, next)
 })
@@ -65,7 +65,7 @@ app.get('/leaderboard', (c) => {
   const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
   const raw = (c.env as CloudflareBindings & { LEADERBOARD_DATA?: string }).LEADERBOARD_DATA
   const snapshot = parseLeaderboard(raw)
-  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} snapshot={snapshot} pageQuery={c.req.query('page')} />)
+  return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} snapshot={snapshot} pageQuery={c.req.query('page')} rangeQuery={c.req.query('range')} />)
 })
 
 app.get('/robots.txt', (c) => {
