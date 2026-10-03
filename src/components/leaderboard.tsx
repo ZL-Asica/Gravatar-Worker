@@ -33,48 +33,49 @@ const formatBytes = (bytes: number) => {
 const Leaderboard = ({ config, currentYear, locale, entries }: LeaderboardProps) => {
   const messages = getMessages(locale)
   return (
-    <main class="site-shell leaderboard-page">
+    <div class="site-shell leaderboard-page">
       <SiteHeader config={config} locale={locale} path="/leaderboard" />
-      <section class="leaderboard-hero">
-        <p class="eyebrow">{messages.navLeaderboard}</p>
-        <h1>{messages.leaderboard}</h1>
-        <p class="subtitle">{messages.leaderboardIntro}</p>
-      </section>
-      {entries.length === 0
-        ? (
-            <div class="empty-state">
-              <p>{messages.noData}</p>
-            </div>
-          )
-        : (
-            <div class="table-wrap" tabIndex={0} role="region" aria-label={messages.leaderboard}>
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col">{messages.domain}</th>
-                    <th scope="col">{messages.requests}</th>
-                    <th scope="col">{messages.bytes}</th>
-                    <th scope="col">{messages.cacheHitRate}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {entries.map(entry => (
-                    <tr key={entry.domain}>
-                      <th scope="row">{entry.domain}</th>
-                      <td>{entry.requests.toLocaleString(locale)}</td>
-                      <td>{formatBytes(entry.bytes)}</td>
-                      <td>
-                        {(entry.cacheHitRate * 100).toFixed(1)}
-                        %
-                      </td>
+      <main>
+        <section class="leaderboard-hero">
+          <h1>{messages.leaderboard}</h1>
+          <p class="subtitle">{messages.leaderboardIntro}</p>
+        </section>
+        {entries.length === 0
+          ? (
+              <div class="empty-state">
+                <p>{messages.noData}</p>
+              </div>
+            )
+          : (
+              <div class="table-wrap" tabIndex={0} role="region" aria-label={messages.leaderboard}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">{messages.domain}</th>
+                      <th scope="col">{messages.requests}</th>
+                      <th scope="col">{messages.bytes}</th>
+                      <th scope="col">{messages.cacheHitRate}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody>
+                    {entries.map(entry => (
+                      <tr key={entry.domain}>
+                        <th scope="row">{entry.domain}</th>
+                        <td>{entry.requests.toLocaleString(locale)}</td>
+                        <td>{formatBytes(entry.bytes)}</td>
+                        <td>
+                          {(entry.cacheHitRate * 100).toFixed(1)}
+                          %
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+      </main>
       <Footer config={config} currentYear={currentYear} locale={locale} />
-    </main>
+    </div>
   )
 }
 

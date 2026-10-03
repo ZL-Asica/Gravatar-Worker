@@ -60,13 +60,6 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
         </fieldset>
       </div>
 
-      <div className="generator-submit-row">
-        <span className="generator-output-label">{messages.stepOutput}</span>
-        <button className="primary-action" type="submit">
-          {messages.generate}
-          <span aria-hidden="true">↗</span>
-        </button>
-      </div>
       <p className="result-placeholder" data-avatar-placeholder>{messages.resultPlaceholder}</p>
       <div className="link-generator-result" data-avatar-result hidden>
         <div className="preview-column">
@@ -74,30 +67,24 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
           <img className="avatar-preview" data-avatar-preview alt={messages.preview} width={config.api.defaultSize} height={config.api.defaultSize} hidden />
         </div>
         <div className="generated-links">
-          <div>
-            <label htmlFor="generated-avatar-url">{messages.directUrl}</label>
-            <div className="copy-row">
-              <input id="generated-avatar-url" data-avatar-url readOnly />
-              <button type="button" aria-label={`${messages.copy} ${messages.directUrl}`} data-copy-target="#generated-avatar-url">{messages.copy}</button>
-            </div>
+          <div className="output-group">
+            <label>{messages.directUrl}</label>
+            <button type="button" className="copy-field" data-copy-value="url" aria-label={`${messages.copy} ${messages.directUrl}`}>
+              <code data-avatar-url-display />
+            </button>
           </div>
-          <details className="embed-options">
-            <summary>Markdown / HTML</summary>
-            <div>
-              <label htmlFor="generated-avatar-markdown">Markdown</label>
-              <div className="copy-row">
-                <textarea id="generated-avatar-markdown" data-avatar-markdown readOnly rows={2} />
-                <button type="button" aria-label={`${messages.copy} ${messages.markdown}`} data-copy-target="#generated-avatar-markdown">{messages.copy}</button>
-              </div>
-            </div>
-            <div>
-              <label htmlFor="generated-avatar-html">HTML</label>
-              <div className="copy-row">
-                <textarea id="generated-avatar-html" data-avatar-html readOnly rows={2} />
-                <button type="button" aria-label={`${messages.copy} ${messages.html}`} data-copy-target="#generated-avatar-html">{messages.copy}</button>
-              </div>
-            </div>
-          </details>
+          <div className="output-group">
+            <label>{messages.markdown}</label>
+            <button type="button" className="copy-field" data-copy-value="markdown" aria-label={`${messages.copy} ${messages.markdown}`}>
+              <code data-avatar-markdown-display />
+            </button>
+          </div>
+          <div className="output-group">
+            <label>{messages.html}</label>
+            <button type="button" className="copy-field" data-copy-value="html" aria-label={`${messages.copy} ${messages.html}`}>
+              <code data-avatar-html-display />
+            </button>
+          </div>
         </div>
       </div>
       <p

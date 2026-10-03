@@ -7,9 +7,9 @@ export const Documentation = ({ config, locale, endpointsOnly = false }: { confi
   const text = docsMessages[locale]
   if (endpointsOnly) {
     return (
-      <section aria-labelledby="endpoints">
+      <section className="doc-section doc-endpoints" aria-labelledby="endpoints">
         <h2 id="endpoints">{messages.endpoints}</h2>
-        <article className="endpoint">
+        <article className="endpoint endpoint-primary">
           <code>GET /avatar/me</code>
           <p>{text.me}</p>
         </article>
@@ -27,7 +27,7 @@ export const Documentation = ({ config, locale, endpointsOnly = false }: { confi
   }
   return (
     <>
-      <section aria-labelledby="parameters">
+      <section className="doc-section doc-parameters" aria-labelledby="parameters">
         <h2 id="parameters">{messages.queryParameters}</h2>
         <ul>
           <li>
@@ -60,12 +60,12 @@ export const Documentation = ({ config, locale, endpointsOnly = false }: { confi
           </li>
         </ul>
       </section>
-      <section aria-labelledby="formats">
+      <section className="doc-section doc-formats" aria-labelledby="formats">
         <h2 id="formats">{messages.formatNegotiation}</h2>
         <p>{text.format}</p>
         <pre><code>Accept: image/avif,image/webp,image/*,*/*</code></pre>
       </section>
-      <section aria-labelledby="caching">
+      <section className="doc-section doc-caching" aria-labelledby="caching">
         <h2 id="caching">{messages.caching}</h2>
         <ul>
           <li>
@@ -111,7 +111,7 @@ export const Documentation = ({ config, locale, endpointsOnly = false }: { confi
           </li>
         </ul>
       </section>
-      <section aria-labelledby="examples">
+      <section className="doc-section doc-examples" aria-labelledby="examples">
         <h2 id="examples">{text.examples}</h2>
         <pre><code>GET /avatar/205e460b479e2e5b48aec07710c08d50?s=128</code></pre>
         <pre><code>GET /avatar?email=email@example.com&amp;size=256</code></pre>

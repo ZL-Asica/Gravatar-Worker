@@ -14,7 +14,6 @@ const ApiDocs = ({ config, currentYear, locale, docsOnly = false }: ApiDocsProps
       <SiteHeader config={config} locale={locale} path={docsOnly ? '/docs' : '/'} />
       <main>
         <section class="hero" aria-labelledby="page-title">
-          <p class="eyebrow">{config.branding.siteName}</p>
           <h1 id="page-title">{docsOnly ? messages.apiReference : messages.eyebrow}</h1>
           <p class="subtitle">{docsOnly ? messages.subtitle : messages.generatorIntro}</p>
         </section>

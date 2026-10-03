@@ -36,3 +36,5 @@ MAX_SIZE="2048"
 CACHE_TTL_BROWSER="259200"
 CACHE_TTL_EDGE="604800"
 LEADERBOARD_DATA="[]"
+# Optional local preview data for /leaderboard (keep production deployments at []):
+# LEADERBOARD_DATA='[{"domain":"studio.example.com","requests":12840,"bytes":18432000,"cacheHitRate":0.97},{"domain":"docs.example.com","requests":8640,"bytes":9270000,"cacheHitRate":0.93}]'
