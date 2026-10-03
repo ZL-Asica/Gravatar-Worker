@@ -25,7 +25,8 @@ it('validates snapshots, retains legacy arrays, sorts before paging without a to
   assert.deepEqual(parseLeaderboard('invalid'), { entries: [], demo: false })
   assert.equal(parseLeaderboard(JSON.stringify({ entries, periodStart: '2026-10-03T00:00:00Z', periodEnd: '2026-10-02T00:00:00Z' })).periodStart, undefined)
   assert.equal(parseLeaderboard(JSON.stringify({ entries, periodStart: '2026-02-30T00:00:00Z', periodEnd: '2026-03-02T00:00:00Z' })).periodStart, undefined)
-  assert.equal(parseLeaderboard(JSON.stringify({ entries: [entry('huge.example.com', 1)], periodStart: '2026-10-01T00:00:00Z', periodEnd: '2026-10-02T00:00:00Z' })).entries.length, 1)
+  assert.equal(parseLeaderboard(JSON.stringify({ entries, periodStart: '2026-99-99T00:00:00Z', periodEnd: '2026-03-02T00:00:00Z' })).entries.length, 123)
+  assert.equal(parseLeaderboard(JSON.stringify([{ ...entry('huge.example.com', 1), bytes: 1e100 }])).entries.length, 0)
 })
 it('clamps pagination and rejects malformed or enormous page numbers', () => {
   assert.deepEqual(getLeaderboardPage(123, '13'), { page: 13, pages: 13, offset: 120 })

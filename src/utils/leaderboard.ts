@@ -40,9 +40,12 @@ const parseDate = (value: unknown): string | undefined => {
     return undefined
   }
   const date = new Date(value)
+  if (!Number.isFinite(date.getTime())) {
+    return undefined
+  }
   const canonical = date.toISOString()
   const normalized = value.replace('.000Z', 'Z')
-  if (!Number.isFinite(date.getTime()) || canonical.replace('.000Z', 'Z') !== normalized) {
+  if (canonical.replace('.000Z', 'Z') !== normalized) {
     return undefined
   }
   return date.toISOString()

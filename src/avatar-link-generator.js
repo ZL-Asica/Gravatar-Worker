@@ -84,7 +84,11 @@ if (form instanceof HTMLFormElement) {
   }
   if (preview instanceof HTMLImageElement) { preview.addEventListener('error', () => { preview.hidden = true; setStatus(messages.avatarMessagePreviewError ?? 'Preview unavailable. The link is still ready to copy.') }) }
   form.addEventListener('input', () => { updateSequence += 1; clearOutputs(); emailInput instanceof HTMLInputElement && emailInput.removeAttribute('aria-invalid'); setStatus(''); scheduleUpdate() })
-  form.addEventListener('change', () => {
+  form.addEventListener('change', (event) => {
+    // Text inputs already invalidate on input; their blur must not interrupt copying.
+    if (!(event.target instanceof HTMLSelectElement)) {
+      return
+    }
     updateSequence += 1
     clearOutputs()
     syncInitialsField()
