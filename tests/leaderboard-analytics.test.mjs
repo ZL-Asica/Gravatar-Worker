@@ -42,3 +42,14 @@ it('falls back to configured data when the snapshot is unavailable', async () =>
   const snapshot = await loadLeaderboardSnapshot({ LEADERBOARD_KV: makeKv() }, fallback)
   assert.equal(snapshot.entries[0].domain, 'fallback.example.com')
 })
+
+it('hydrates a missing snapshot from existing events', async () => {
+  const now = Date.parse('2026-10-03T00:00:00.000Z')
+  const kv = makeKv({
+    'lb:event:2026-10-02:a': JSON.stringify({ domain: 'live.example.com', bytes: 100, cacheHit: true, timestamp: now - 60_000 }),
+  })
+  const snapshot = await loadLeaderboardSnapshot({ LEADERBOARD_KV: kv }, '[]')
+  assert.equal(snapshot.entries[0].domain, 'live.example.com')
+  assert.equal(snapshot.entries[0].requests, 1)
+  assert.ok(kv.values.has(SNAPSHOT_KEY))
+})

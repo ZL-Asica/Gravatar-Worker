@@ -102,9 +102,9 @@ const readEvents = async (kv: KVNamespace): Promise<LeaderboardEvent[]> => {
   return events
 }
 
-export const refreshLeaderboardSnapshot = async (env: LeaderboardEnv, now = Date.now()): Promise<void> => {
+export const refreshLeaderboardSnapshot = async (env: LeaderboardEnv, now = Date.now()): Promise<LeaderboardSnapshot | undefined> => {
   if (env.LEADERBOARD_KV === undefined) {
-    return
+    return undefined
   }
   const events = await readEvents(env.LEADERBOARD_KV)
   const ranges = Object.fromEntries(RANGES.map(([range, days]) => {
@@ -114,6 +114,7 @@ export const refreshLeaderboardSnapshot = async (env: LeaderboardEnv, now = Date
   })) as LeaderboardSnapshot['ranges']
   const snapshot: LeaderboardSnapshot = { entries: ranges?.['1d']?.entries ?? [], ranges, periodStart: ranges?.['1d']?.periodStart, periodEnd: ranges?.['1d']?.periodEnd, demo: false }
   await env.LEADERBOARD_KV.put(SNAPSHOT_KEY, JSON.stringify(snapshot), { expirationTtl: SNAPSHOT_TTL_SECONDS })
+  return snapshot
 }
 
 export const loadLeaderboardSnapshot = async (env: LeaderboardEnv, fallback?: string): Promise<LeaderboardSnapshot> => {
@@ -122,6 +123,18 @@ export const loadLeaderboardSnapshot = async (env: LeaderboardEnv, fallback?: st
       const live = await env.LEADERBOARD_KV.get(SNAPSHOT_KEY, { type: 'text', cacheTtl: 300 })
       if (live !== null) {
         return parseLeaderboard(live)
+      }
+
+      // A scheduled event normally keeps this snapshot warm. If a deployment
+      // missed its first cron tick, hydrate it once on demand when events are
+      // already present. The cheap prefix probe avoids scanning KV on every
+      // leaderboard request when there is no traffic to aggregate.
+      const pending = await env.LEADERBOARD_KV.list({ prefix: EVENT_PREFIX, limit: 1 })
+      if (pending.keys.length > 0) {
+        const refreshed = await refreshLeaderboardSnapshot(env)
+        if (refreshed !== undefined) {
+          return refreshed
+        }
       }
     }
     catch { /* Fall back to configured data when KV is unavailable. */ }
