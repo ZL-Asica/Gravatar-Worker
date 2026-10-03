@@ -3,8 +3,6 @@ name: Create GitHub Release
 on:
   push:
     branches: [main]
-    tags:
-      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       version:
@@ -227,6 +225,10 @@ jobs:
       - name: Lint
         if: steps.detect.outputs.is_release == 'true'
         run: pnpm run lint
+
+      - name: Test
+        if: steps.detect.outputs.is_release == 'true'
+        run: pnpm run test
 
       - name: Build
         if: steps.detect.outputs.is_release == 'true'

@@ -6,6 +6,22 @@ Wrangler はデプロイ時に `wrangler.jsonc` を設定の基準として扱�
 
 ## Fork 後の 5 分セットアップ
 
+### 最小構成
+
+まず `wrangler.jsonc` に次の値だけ設定します。
+
+```jsonc
+{
+  "vars": {
+    "SITE_NAME": "My Avatar CDN",
+    "SITE_TAGLINE": "プロジェクト向けの高速アバター",
+    "ME_HASH": "<sha256 または md5 ハッシュ>"
+  }
+}
+```
+
+同梱の Logo、favicon、Apple アイコン、OG 画像はデフォルトで利用できます。まずデプロイしてから任意の項目を調整してください。
+
 1. `wrangler.jsonc` の `vars` セクションを更新する
    - `SITE_NAME`、`SITE_TAGLINE`、`SITE_DESCRIPTION` を設定します。
    - `/avatar/me` を使うために `ME_EMAIL` または `ME_HASH` を設定します。

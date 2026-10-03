@@ -20,6 +20,22 @@
 
 Fork 後は主に `wrangler.jsonc` でサイト名、説明、アバター設定、フッターリンク、ソースリンク、デプロイドメインを調整できます。詳しくは [`docs/CUSTOMIZATION_JP.md`](./docs/CUSTOMIZATION_JP.md) を参照してください。
 
+### クイックセットアップ
+
+多くの Fork では、次の 3 つだけ変更すれば動作します。
+
+```jsonc
+{
+  "vars": {
+    "SITE_NAME": "My Avatar CDN",
+    "SITE_TAGLINE": "プロジェクト向けの高速アバター",
+    "ME_HASH": "<sha256 または md5 ハッシュ>"
+  }
+}
+```
+
+その後 `pnpm install --frozen-lockfile` と `pnpm run deploy` を実行してください。raw email が必要でない限り `ALLOW_RAW_EMAIL=false` のままにします。ローカル専用の値は `.dev.vars.example` を `.dev.vars` にコピーし、コミットしないでください。フッター、アセット、画像サイズ、キャッシュ期間は任意で、同梱の Logo・favicon・OG 画像は追加設定なしで使えます。
+
 ## 🌐 エンドポイント（Endpoints）
 
 ### 🔹 `GET /avatar/me`

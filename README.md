@@ -20,6 +20,24 @@ Supports:
 
 See [`docs/CUSTOMIZATION.md`](./docs/CUSTOMIZATION.md) for a 5-minute after-fork checklist and detailed guidance.
 
+### Quick setup
+
+Most forks only need these three edits in `wrangler.jsonc`:
+
+```jsonc
+{
+  "vars": {
+    "SITE_NAME": "My Avatar CDN",
+    "SITE_TAGLINE": "Fast avatars for my projects",
+    "ME_HASH": "<sha256-or-md5-hash>"
+  }
+}
+```
+
+Then run `pnpm install --frozen-lockfile` and `pnpm run deploy`. Keep `ALLOW_RAW_EMAIL=false` unless you explicitly accept email addresses appearing in URLs and logs. For local-only values, copy `.dev.vars.example` to `.dev.vars`; do not commit that file.
+
+The remaining options are optional: footer links and assets change the presentation, `DEFAULT_SIZE` and `MAX_SIZE` tune image output, and the cache variables change default 200-response lifetimes. The shipped logo, favicon and social preview work without extra configuration.
+
 ### Environment Variables
 
 | Name                | Purpose                                           | Default            |
