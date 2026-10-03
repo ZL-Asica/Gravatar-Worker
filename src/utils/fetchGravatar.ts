@@ -45,12 +45,23 @@ const proxiedImageResponse = (
   config: SiteConfig,
   contentType: string,
 ) => {
+  const bodyLength = typeof data === 'string'
+    ? new TextEncoder().encode(data).byteLength
+    : data instanceof ArrayBuffer
+      ? data.byteLength
+      : ArrayBuffer.isView(data)
+        ? data.byteLength
+        : undefined
+  const headers = {
+    ...cacheHeaders(status >= 200 && status < 300, hash, config),
+    'Content-Type': contentType,
+  }
+  if (bodyLength !== undefined) {
+    headers['Content-Length'] = `${bodyLength}`
+  }
   return new Response(data, {
     status,
-    headers: {
-      ...cacheHeaders(status >= 200 && status < 300, hash, config),
-      'Content-Type': contentType,
-    },
+    headers,
   })
 }
 
