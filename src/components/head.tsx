@@ -13,7 +13,13 @@ const Head = ({ config, meta, locale }: HeadProps) => {
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="robots" content={meta.robotsMeta} />
-      <link rel="icon" href={config.branding.faviconPath} type="image/x-icon" />
+      <link rel="icon" href={config.branding.faviconPath} />
+      {config.branding.faviconPath === '/favicon.ico' && (
+        <>
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        </>
+      )}
       <title>{meta.title}</title>
       <meta name="author" content={meta.siteName} />
       <meta name="generator" content="Hono JSX" />
@@ -42,7 +48,7 @@ const Head = ({ config, meta, locale }: HeadProps) => {
       <meta name="twitter:image:alt" content={`${meta.siteName} - Modern Gravatar Proxy Service`} />
       {/* Additional SEO */}
       <link rel="canonical" href={meta.canonicalUrl} />
-      <meta name="theme-color" content="#FFFFFF" />
+      <meta name="theme-color" content="#F7FAFF" />
       <meta name="application-name" content={meta.siteName} />
       {/* Preconnect for performance */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />

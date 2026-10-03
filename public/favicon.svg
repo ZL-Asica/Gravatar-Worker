@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Abstract avatar service logo">
+  <defs>
+    <linearGradient id="backGrad" x1="0.08" y1="0.86" x2="0.90" y2="0.10">
+      <stop offset="0%" stop-color="#CFF3F2"/>
+      <stop offset="28%" stop-color="#B9D9FF"/>
+      <stop offset="58%" stop-color="#8FB8FF"/>
+      <stop offset="82%" stop-color="#B7A6F8"/>
+      <stop offset="100%" stop-color="#F4D6E8"/>
+    </linearGradient>
+    <linearGradient id="frontGrad" x1="0.06" y1="0.88" x2="0.95" y2="0.08">
+      <stop offset="0%" stop-color="#F2D5EA"/>
+      <stop offset="30%" stop-color="#CFB7FA"/>
+      <stop offset="58%" stop-color="#94B2FF"/>
+      <stop offset="78%" stop-color="#B6C8FF"/>
+      <stop offset="100%" stop-color="#F7D7E6"/>
+    </linearGradient>
+    <radialGradient id="backGlowA" cx="0.28" cy="0.72" r="0.72">
+      <stop offset="0%" stop-color="#E7FFF8" stop-opacity="0.80"/>
+      <stop offset="46%" stop-color="#9FD6FF" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#7E9EFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="backGlowB" cx="0.84" cy="0.18" r="0.64">
+      <stop offset="0%" stop-color="#FFF3F2" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#E8C6F8" stop-opacity="0.36"/>
+      <stop offset="100%" stop-color="#B596F5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="frontGlowA" cx="0.22" cy="0.80" r="0.70">
+      <stop offset="0%" stop-color="#FBE6F5" stop-opacity="0.88"/>
+      <stop offset="42%" stop-color="#C4B2FF" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#8E9EFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="frontGlowB" cx="0.83" cy="0.14" r="0.62">
+      <stop offset="0%" stop-color="#FFF0F1" stop-opacity="0.95"/>
+      <stop offset="36%" stop-color="#E2C6F9" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#B8A2F3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="overlapGrad" x1="0.12" y1="0.88" x2="0.92" y2="0.12">
+      <stop offset="0%" stop-color="#8B92F0" stop-opacity="0.42"/>
+      <stop offset="48%" stop-color="#6E8FEA" stop-opacity="0.52"/>
+      <stop offset="100%" stop-color="#B6A0F2" stop-opacity="0.30"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rear ribbon -->
+  <path id="rear" d="M118 592
+    C205 488 298 326 453 196
+    C560 107 690 96 744 130
+    C794 161 785 245 742 334
+    C697 428 621 504 527 548
+    C431 592 327 596 216 628
+    C157 645 99 647 118 592 Z" fill="url(#backGrad)"/>
+  <use href="#rear" fill="url(#backGlowA)"/>
+  <use href="#rear" fill="url(#backGlowB)"/>
+
+  <!-- front ribbon -->
+  <path id="front" d="M284 774
+    C354 658 454 553 574 471
+    C683 397 792 336 873 306
+    C912 292 936 310 924 353
+    C894 460 809 561 709 646
+    C607 733 493 802 372 831
+    C322 843 267 832 284 774 Z" fill="url(#frontGrad)"/>
+  <use href="#front" fill="url(#frontGlowA)"/>
+  <use href="#front" fill="url(#frontGlowB)"/>
+
+  <!-- soft visual overlap, intentionally asymmetric -->
+  <path d="M389 588
+    C470 506 576 450 704 398
+    C669 468 608 529 534 570
+    C482 599 432 606 389 588 Z" fill="url(#overlapGrad)"/>
+</svg>

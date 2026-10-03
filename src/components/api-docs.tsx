@@ -3,28 +3,31 @@ import { getMessages } from '../i18n'
 import { AvatarGenerator } from './avatar-generator'
 import { Documentation } from './documentation'
 import Footer from './footer'
-import { LanguageSwitcher } from './language-switcher'
+import { SiteHeader } from './site-header'
 
-interface ApiDocsProps { config: SiteConfig, currentYear: number, locale: Locale }
+interface ApiDocsProps { config: SiteConfig, currentYear: number, locale: Locale, docsOnly?: boolean }
 
-const ApiDocs = ({ config, currentYear, locale }: ApiDocsProps) => {
+const ApiDocs = ({ config, currentYear, locale, docsOnly = false }: ApiDocsProps) => {
   const messages = getMessages(locale)
   return (
-    <main className="api-docs" aria-label={`${config.branding.siteName} ${messages.apiReference}`}>
-      <header>
-        <LanguageSwitcher locale={locale} />
-        <p className="eyebrow">{messages.apiReference}</p>
-        <h1>{config.branding.siteName}</h1>
-        <p className="subtitle">{locale === 'en' ? config.branding.siteTagline : messages.subtitle}</p>
-      </header>
-      <Documentation config={config} locale={locale} endpointsOnly />
-      <section aria-labelledby="generator">
-        <h2 id="generator">{messages.eyebrow}</h2>
-        <AvatarGenerator config={config} locale={locale} />
-      </section>
-      <Documentation config={config} locale={locale} />
+    <div class="site-shell">
+      <SiteHeader config={config} locale={locale} path={docsOnly ? '/docs' : '/'} />
+      <main id="main-content" tabIndex={-1}>
+        <section class="hero" aria-labelledby="page-title">
+          <h1 id="page-title">{docsOnly ? messages.apiReference : messages.eyebrow}</h1>
+          <p class="subtitle">{docsOnly ? messages.apiIntro : messages.generatorIntro}</p>
+        </section>
+        {docsOnly
+          ? (
+              <div class="docs-grid">
+                <Documentation config={config} locale={locale} endpointsOnly />
+                <Documentation config={config} locale={locale} />
+              </div>
+            )
+          : <AvatarGenerator config={config} locale={locale} />}
+      </main>
       <Footer config={config} currentYear={currentYear} locale={locale} />
-    </main>
+    </div>
   )
 }
 export default ApiDocs

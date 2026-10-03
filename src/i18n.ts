@@ -2,6 +2,26 @@ export const LOCALES = ['en', 'ja', 'zh-CN', 'zh-TW'] as const
 export type Locale = (typeof LOCALES)[number]
 
 export interface Messages {
+  skipToContent: string
+  copyHint: string
+  demoData: string
+  reportingPeriod: string
+  periodUnknown: string
+  avatarRequests: string
+  requestDefinition: string
+  dataServedDefinition: string
+  domainPrivacy: string
+  sortedRequests: string
+  pagination: string
+  previousPage: string
+  nextPage: string
+  pageLabel: string
+  rangeLabel: string
+  range1d: string
+  range3d: string
+  range7d: string
+  range30d: string
+
   craftedBy: string
   poweredBy: string
   fallbackBlank: string
@@ -18,6 +38,13 @@ export interface Messages {
   eyebrow: string
   title: string
   subtitle: string
+  resultPlaceholder: string
+  generatorIntro: string
+  stepEmail: string
+  stepOptions: string
+  stepOutput: string
+  emailHint: string
+  fallbackHint: string
   email: string
   emailPlaceholder: string
   size: string
@@ -46,10 +73,32 @@ export interface Messages {
   cacheHitRate: string
   noData: string
   apiReference: string
+  apiIntro: string
   footerRights: string
 }
 
 const EN: Messages = {
+  skipToContent: 'Skip to content',
+  apiIntro: 'Avatar endpoints, request options, image formats, and cache lifetimes.',
+  copyHint: 'Click to copy',
+  demoData: 'Sample data · not real traffic',
+  reportingPeriod: 'Reporting period:',
+  periodUnknown: 'Not provided for this snapshot',
+  avatarRequests: 'Avatar requests',
+  requestDefinition: 'Avatar GET requests, not visitors',
+  dataServedDefinition: 'known image bytes',
+  domainPrivacy: 'Domains are shown as supplied.',
+  sortedRequests: 'sorted by requests ↓',
+  pagination: 'Leaderboard pages',
+  previousPage: 'Previous',
+  nextPage: 'Next',
+  pageLabel: 'Page',
+  rangeLabel: 'Range',
+  range1d: '1 day',
+  range3d: '3 days',
+  range7d: '7 days',
+  range30d: '1 month (30 days)',
+
   craftedBy: 'Crafted by',
   poweredBy: 'Powered by',
   fallbackBlank: 'Blank image',
@@ -66,6 +115,13 @@ const EN: Messages = {
   eyebrow: 'Avatar link generator',
   title: 'A faster link to every Gravatar.',
   subtitle: 'Hash an email in your browser, choose a fallback, and copy a production-ready avatar URL without sending the email to this Worker.',
+  resultPlaceholder: 'Your avatar preview and link will appear here.',
+  generatorIntro: 'Enter an email and your links appear instantly. Click any link to copy it; the email is hashed with SHA-256 locally and never sent to this Worker.',
+  stepEmail: '1. Enter an email',
+  stepOptions: '2. Choose options',
+  stepOutput: '3. Click a link to copy',
+  emailHint: 'Email addresses are trimmed and lowercased before hashing. Existing MD5 links still work.',
+  fallbackHint: 'Use 404 to show no image, or choose a generated fallback avatar.',
   email: 'Email address',
   emailPlaceholder: 'you@example.com',
   size: 'Size',
@@ -87,18 +143,39 @@ const EN: Messages = {
   formatNegotiation: 'Format negotiation',
   caching: 'Caching',
   leaderboard: 'Leaderboard',
-  leaderboardIntro: 'A privacy-aware snapshot of the busiest domains using this Worker.',
+  leaderboardIntro: 'Compare the sites sending the most avatar requests.',
   domain: 'Domain',
   requests: 'Requests',
   bytes: 'Data served',
   cacheHitRate: 'Cache hit rate',
-  noData: 'No leaderboard snapshot is configured yet.',
+  noData: 'Usage statistics are not available yet.',
   apiReference: 'API reference',
   footerRights: 'All rights reserved.',
 }
 
 const JA: Messages = {
   ...EN,
+  skipToContent: '本文へスキップ',
+  apiIntro: 'アバターのエンドポイント、リクエストオプション、画像形式、キャッシュ期間。',
+  copyHint: 'クリックしてコピー',
+  demoData: 'サンプルデータ · 実際の通信量ではありません',
+  reportingPeriod: '集計期間：',
+  periodUnknown: 'このスナップショットの集計期間は未提供です',
+  avatarRequests: 'アバターリクエスト数',
+  requestDefinition: 'アバター GET リクエスト数（訪問者数ではありません）',
+  dataServedDefinition: '既知の画像バイト数',
+  domainPrivacy: 'ドメインは設定値のまま表示します。',
+  sortedRequests: 'リクエスト数の降順 ↓',
+  pagination: 'ランキングのページ',
+  previousPage: '前へ',
+  nextPage: '次へ',
+  pageLabel: 'ページ',
+  rangeLabel: '期間',
+  range1d: '1日',
+  range3d: '3日',
+  range7d: '7日',
+  range30d: '1か月（30日）',
+
   craftedBy: '制作',
   poweredBy: '提供',
   fallbackBlank: '空白画像',
@@ -115,6 +192,13 @@ const JA: Messages = {
   eyebrow: 'アバターリンク生成',
   title: 'すべての Gravatar へ、より速いリンクを。',
   subtitle: 'ブラウザでメールアドレスをハッシュ化し、フォールバックを選んで、本番で使えるアバター URL をコピーできます。メールアドレスは Worker に送信されません。',
+  resultPlaceholder: 'アバターのプレビューとリンクがここに表示されます。',
+  generatorIntro: 'メールアドレスを入力するとリンクがすぐに表示されます。リンクをクリックしてコピーできます。メールアドレスはブラウザ内で SHA-256 にハッシュ化され、Worker に送信されません。',
+  stepEmail: '1. メールアドレスを入力',
+  stepOptions: '2. オプションを選択',
+  stepOutput: '3. リンクをクリックしてコピー',
+  emailHint: '前後の空白を除去し、小文字にしてからハッシュ化します。既存の MD5 リンクも利用できます。',
+  fallbackHint: '404 は画像なし、その他は生成されたフォールバック画像を表示します。',
   email: 'メールアドレス',
   emailPlaceholder: 'you@example.com',
   size: 'サイズ',
@@ -136,18 +220,39 @@ const JA: Messages = {
   formatNegotiation: '形式の自動選択',
   caching: 'キャッシュ',
   leaderboard: 'ランキング',
-  leaderboardIntro: 'この Worker を利用するドメインのアクセス状況を、プライバシーに配慮して表示します。',
+  leaderboardIntro: 'アバターリクエストの多いサイトを比較できます。',
   domain: 'ドメイン',
   requests: 'リクエスト数',
   bytes: '配信データ量',
   cacheHitRate: 'キャッシュヒット率',
-  noData: 'ランキングデータはまだ設定されていません。',
+  noData: '利用統計はまだありません。',
   apiReference: 'API リファレンス',
   footerRights: 'All rights reserved.',
 }
 
 const ZH_CN: Messages = {
   ...EN,
+  skipToContent: '跳转到主要内容',
+  apiIntro: '了解头像接口、请求参数、图片格式和缓存时间。',
+  copyHint: '点击复制',
+  demoData: '示例数据 · 非真实流量',
+  reportingPeriod: '统计范围：',
+  periodUnknown: '此快照未提供时间范围',
+  avatarRequests: '头像请求数',
+  requestDefinition: '头像 GET 请求数（不是访客数）',
+  dataServedDefinition: '已知头像响应字节数',
+  domainPrivacy: '域名按配置原样显示。',
+  sortedRequests: '按请求数降序 ↓',
+  pagination: '排行榜分页',
+  previousPage: '上一页',
+  nextPage: '下一页',
+  pageLabel: '页码',
+  rangeLabel: '范围',
+  range1d: '1 天',
+  range3d: '3 天',
+  range7d: '7 天',
+  range30d: '1 个月（30 天）',
+
   craftedBy: '作者',
   poweredBy: '技术支持',
   fallbackBlank: '空白图片',
@@ -164,6 +269,13 @@ const ZH_CN: Messages = {
   eyebrow: '头像链接生成器',
   title: '更快地生成每个 Gravatar 链接。',
   subtitle: '在浏览器中计算邮箱哈希，选择回退头像并复制可直接用于生产环境的头像 URL。邮箱不会发送到 Worker。',
+  resultPlaceholder: '头像预览和生成的链接会显示在这里。',
+  generatorIntro: '输入邮箱后链接会立即显示。点击任意链接即可复制；邮箱只在浏览器中计算 SHA-256 哈希，不会发送到 Worker。',
+  stepEmail: '1. 输入邮箱',
+  stepOptions: '2. 选择选项',
+  stepOutput: '3. 点击链接复制',
+  emailHint: '邮箱会先去除首尾空格并转为小写。已有的 MD5 链接仍然可用。',
+  fallbackHint: '404 表示不显示图片，其他选项会生成回退头像。',
   email: '邮箱地址',
   emailPlaceholder: 'you@example.com',
   size: '尺寸',
@@ -185,18 +297,39 @@ const ZH_CN: Messages = {
   formatNegotiation: '格式协商',
   caching: '缓存',
   leaderboard: '排行榜',
-  leaderboardIntro: '以保护隐私的方式展示使用此 Worker 最频繁的域名。',
+  leaderboardIntro: '比较头像请求量最高的站点。',
   domain: '域名',
   requests: '请求数',
   bytes: '数据量',
   cacheHitRate: '缓存命中率',
-  noData: '尚未配置排行榜快照。',
+  noData: '暂无访问统计。',
   apiReference: 'API 参考',
   footerRights: '保留所有权利。',
 }
 
 const ZH_TW: Messages = {
   ...ZH_CN,
+  skipToContent: '跳至主要內容',
+  apiIntro: '瞭解頭像端點、請求參數、圖片格式與快取時間。',
+  copyHint: '點擊複製',
+  demoData: '範例資料 · 非真實流量',
+  reportingPeriod: '統計範圍：',
+  periodUnknown: '此快照未提供時間範圍',
+  avatarRequests: '頭像請求數',
+  requestDefinition: '頭像 GET 請求數（不是訪客數）',
+  dataServedDefinition: '已知頭像回應位元組數',
+  domainPrivacy: '網域依設定原樣顯示。',
+  sortedRequests: '依請求數降序 ↓',
+  pagination: '排行榜分頁',
+  previousPage: '上一頁',
+  nextPage: '下一頁',
+  pageLabel: '頁碼',
+  rangeLabel: '範圍',
+  range1d: '1 天',
+  range3d: '3 天',
+  range7d: '7 天',
+  range30d: '1 個月（30 天）',
+
   craftedBy: '作者',
   poweredBy: '技術支援',
   fallbackBlank: '空白圖片',
@@ -214,6 +347,13 @@ const ZH_TW: Messages = {
   eyebrow: '頭像連結產生器',
   title: '更快產生每個 Gravatar 連結。',
   subtitle: '在瀏覽器中計算電子郵件雜湊，選擇備援頭像並複製可直接用於正式環境的頭像 URL。電子郵件不會傳送到 Worker。',
+  resultPlaceholder: '頭像預覽與產生的連結會顯示在這裡。',
+  generatorIntro: '輸入電子郵件後連結會立即顯示。點擊任一連結即可複製；電子郵件只在瀏覽器中計算 SHA-256 雜湊，不會傳送到 Worker。',
+  stepEmail: '1. 輸入電子郵件',
+  stepOptions: '2. 選擇選項',
+  stepOutput: '3. 點擊連結複製',
+  emailHint: '電子郵件會先移除前後空白並轉為小寫。既有的 MD5 連結仍然可用。',
+  fallbackHint: '404 表示不顯示圖片，其他選項會產生備援頭像。',
   email: '電子郵件地址',
   size: '尺寸',
   fallback: '備援頭像',
@@ -231,12 +371,12 @@ const ZH_TW: Messages = {
   formatNegotiation: '格式協商',
   caching: '快取',
   leaderboard: '排行榜',
-  leaderboardIntro: '以保護隱私的方式顯示最常使用此 Worker 的網域。',
+  leaderboardIntro: '比較頭像請求量最高的網站。',
   domain: '網域',
   requests: '請求數',
   bytes: '資料量',
   cacheHitRate: '快取命中率',
-  noData: '尚未設定排行榜快照。',
+  noData: '尚無使用統計。',
   apiReference: 'API 參考',
   footerRights: '保留所有權利。',
 }

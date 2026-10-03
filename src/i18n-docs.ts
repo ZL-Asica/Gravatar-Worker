@@ -16,6 +16,9 @@ const en = {
   vary: 'Negotiated formats use separate cache entries.',
   examples: 'Example requests',
   seconds: 'seconds',
+  minutes: 'minutes',
+  okCaching: 'Successful avatar responses can be reused for this period.',
+  notFoundCaching: 'Missing avatars are cached briefly to avoid repeating the lookup.',
 }
 
 const ja = {
@@ -34,6 +37,9 @@ const ja = {
   vary: '選択された形式ごとにキャッシュを分離します。',
   examples: 'リクエスト例',
   seconds: '秒',
+  minutes: '分',
+  okCaching: '正常なアバターレスポンスはこの期間再利用されます。',
+  notFoundCaching: '見つからないアバターは再取得を避けるため短時間キャッシュされます。',
 }
 
 const zhCN = {
@@ -52,6 +58,9 @@ const zhCN = {
   vary: '协商格式使用独立缓存条目。',
   examples: '请求示例',
   seconds: '秒',
+  minutes: '分钟',
+  okCaching: '正常头像响应会在此期间重复使用。',
+  notFoundCaching: '不存在的头像会短暂缓存，避免重复查询。',
 }
 
 const zhTW = {
@@ -70,6 +79,9 @@ const zhTW = {
   vary: '協商格式使用獨立快取項目。',
   examples: '請求範例',
   seconds: '秒',
+  minutes: '分鐘',
+  okCaching: '正常頭像回應會在此期間重複使用。',
+  notFoundCaching: '不存在的頭像會短暫快取，避免重複查詢。',
 }
 
 export const docsMessages = { 'en': en, 'ja': ja, 'zh-CN': zhCN, 'zh-TW': zhTW } satisfies Record<Locale, typeof en>
