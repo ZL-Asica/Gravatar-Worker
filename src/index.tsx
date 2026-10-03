@@ -12,7 +12,7 @@ import { renderer } from './renderer'
 import { fetchGravatar } from './utils'
 import { normalizeEmail, resolveLookupEmail } from './utils/avatarInput'
 
-import { parseLeaderboard } from './utils/leaderboard'
+import { loadLeaderboardSnapshot, recordLeaderboardEvent, refreshLeaderboardSnapshot } from './utils/leaderboardAnalytics'
 
 const app = new Hono<{ Bindings: CloudflareBindings }>()
 
@@ -73,11 +73,11 @@ app.get('/docs', (c) => {
   return c.render(<ApiDocs config={config} currentYear={new Date().getUTCFullYear()} locale={locale} docsOnly />)
 })
 
-app.get('/leaderboard', (c) => {
+app.get('/leaderboard', async (c) => {
   const config = loadConfig(c.env)
   const locale = resolveLocale(c.req.query('lang'), c.req.header('Accept-Language'))
   const raw = (c.env as CloudflareBindings & { LEADERBOARD_DATA?: string }).LEADERBOARD_DATA
-  const snapshot = parseLeaderboard(raw)
+  const snapshot = await loadLeaderboardSnapshot(c.env, raw)
   return c.render(<Leaderboard config={config} currentYear={new Date().getUTCFullYear()} locale={locale} snapshot={snapshot} />)
 })
 
@@ -132,7 +132,9 @@ app.get('/avatar/me', async (c) => {
   if (resolvedHash === null) {
     return c.text('Internal Server Error', 500)
   }
-  return fetchGravatar(c, resolvedHash, config, config.api.defaultSize)
+  const response = await fetchGravatar(c, resolvedHash, config, config.api.defaultSize)
+  recordLeaderboardEvent(c, response)
+  return response
 })
 
 // Hash route
@@ -140,7 +142,9 @@ app.get('/avatar/:hash', async (c) => {
   const config = loadConfig(c.env)
   const hashValue = c.req.param('hash')
 
-  return fetchGravatar(c, hashValue, config)
+  const response = await fetchGravatar(c, hashValue, config)
+  recordLeaderboardEvent(c, response)
+  return response
 })
 
 // Email as query
@@ -155,7 +159,14 @@ app.get('/avatar', async (c) => {
   if (hash === null) {
     return c.text('Internal Server Error', 500)
   }
-  return fetchGravatar(c, hash, config)
+  const response = await fetchGravatar(c, hash, config)
+  recordLeaderboardEvent(c, response)
+  return response
 })
 
-export default app
+export default {
+  fetch: app.fetch,
+  scheduled: async (_controller: ScheduledController, env: CloudflareBindings & { LEADERBOARD_KV?: KVNamespace }) => {
+    await refreshLeaderboardSnapshot(env)
+  },
+}

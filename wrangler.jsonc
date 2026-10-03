@@ -7,6 +7,15 @@
     "enabled": true,
     "head_sampling_rate": 1
   },
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "LEADERBOARD_KV",
+      "id": "2e009c6ed9e349b690276d24ab2c43e1"
+    }
+  ],
   "vars": {
     // Branding / SEO
     "SITE_NAME": "ZLA Gravatar CDN",
