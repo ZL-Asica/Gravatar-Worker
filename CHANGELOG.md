@@ -1,6 +1,27 @@
 # gravatar-worker
 
-## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0...HEAD)
+## [Unreleased](https://github.com/ZL-Asica/Gravatar-Worker/compare/v2.0.0...HEAD)
+
+## [2.0.0](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0...v2.0.0) - 2026-10-03
+
+v2 focuses on a simpler fork setup, clearer customization guidance, and a reliable automated release path.
+
+### 🚀 Features / 新功能
+- feat(ui): refine API docs utilities ([#58](https://github.com/ZL-Asica/Gravatar-Worker/pull/58)) by @ZL-Asica
+- feat(config): improve fork customization defaults ([#59](https://github.com/ZL-Asica/Gravatar-Worker/pull/59)) by @ZL-Asica
+- feat(i18n): add four locale support ([#72](https://github.com/ZL-Asica/Gravatar-Worker/pull/72)) by @ZL-Asica
+- feat(ui): clarify avatar generation and improve mobile navigation ([#73](https://github.com/ZL-Asica/Gravatar-Worker/pull/73)) by @ZL-Asica
+
+### 🛠️ Improvements / 改进
+- refactor(ui): refine avatar generator design ([#60](https://github.com/ZL-Asica/Gravatar-Worker/pull/60)) by @ZL-Asica
+- perf(avatar): cache transformed responses ([#71](https://github.com/ZL-Asica/Gravatar-Worker/pull/71)) by @ZL-Asica
+
+### 📖 Documentation / 文档更新
+- docs: reorganize contributor guides ([#61](https://github.com/ZL-Asica/Gravatar-Worker/pull/61)) by @ZL-Asica
+- docs: simplify customization and harden v2 release flow ([#74](https://github.com/ZL-Asica/Gravatar-Worker/pull/74)) by @ZL-Asica
+
+### 📦 Dependencies / 依赖更新
+- chore(deps): update dependencies ([#70](https://github.com/ZL-Asica/Gravatar-Worker/pull/70)) by @ZL-Asica
 
 ## [1.1.0](https://github.com/ZL-Asica/Gravatar-Worker/compare/v1.1.0-beta.1...v1.1.0) - 2026-06-01
 
