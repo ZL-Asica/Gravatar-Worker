@@ -20,6 +20,22 @@
 
 Fork 后主要通过 `wrangler.jsonc` 自定义站点名称、描述、头像来源、页脚链接、资源链接和部署域名。详见 [`docs/CUSTOMIZATION_ZH-CN.md`](./docs/CUSTOMIZATION_ZH-CN.md)。
 
+### 快速配置
+
+大多数 Fork 只需要修改这三个值：
+
+```jsonc
+{
+  "vars": {
+    "SITE_NAME": "我的头像 CDN",
+    "SITE_TAGLINE": "为项目提供快速头像",
+    "ME_HASH": "<sha256 或 md5 哈希>"
+  }
+}
+```
+
+然后运行 `pnpm install --frozen-lockfile` 和 `pnpm run deploy`。除非确实需要原始邮箱查询，否则保持 `ALLOW_RAW_EMAIL=false`；本地专用值请复制 `.dev.vars.example` 到 `.dev.vars`，不要提交该文件。页脚、资源、图片尺寸和缓存时间都属于可选调整，默认 Logo、favicon 和分享图无需额外配置。
+
 ## 🌐 接口（Endpoints）
 
 ### 🔹 `GET /avatar/me`

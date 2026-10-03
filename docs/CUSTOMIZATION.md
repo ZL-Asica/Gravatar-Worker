@@ -6,6 +6,22 @@ Wrangler treats `wrangler.jsonc` as the source of truth on deploy, so **don't re
 
 ## 5-minute after-fork setup
 
+### Minimal setup
+
+Start with these values in `wrangler.jsonc`:
+
+```jsonc
+{
+  "vars": {
+    "SITE_NAME": "My Avatar CDN",
+    "SITE_TAGLINE": "Fast avatars for my projects",
+    "ME_HASH": "<sha256-or-md5-hash>"
+  }
+}
+```
+
+Deploy once before changing optional settings. The bundled logo, favicon, Apple icon and social preview already work with their default paths.
+
 1. Update the `vars` section in `wrangler.jsonc`
    - Set `SITE_NAME`, `SITE_TAGLINE`, and `SITE_DESCRIPTION`.
    - Set `ME_EMAIL` or `ME_HASH` so `/avatar/me` works.

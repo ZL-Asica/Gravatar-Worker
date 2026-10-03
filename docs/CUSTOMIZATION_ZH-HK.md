@@ -6,6 +6,22 @@ Wrangler 部署時會以 `wrangler.jsonc` 作為設定來源，所以除非你�
 
 ## Fork 後 5 分鐘設定
 
+### 最小設定
+
+先在 `wrangler.jsonc` 設定以下值：
+
+```jsonc
+{
+  "vars": {
+    "SITE_NAME": "我的頭像 CDN",
+    "SITE_TAGLINE": "為專案提供快速頭像",
+    "ME_HASH": "<sha256 或 md5 雜湊>"
+  }
+}
+```
+
+內置 Logo、favicon、Apple 圖示和分享圖已可直接使用。先完成一次部署，再按需要調整其他選項。
+
 1. 更新 `wrangler.jsonc` 的 `vars` 部分
    - 設定 `SITE_NAME`、`SITE_TAGLINE` 和 `SITE_DESCRIPTION`。
    - 設定 `ME_EMAIL` 或 `ME_HASH`，令 `/avatar/me` 可用。
