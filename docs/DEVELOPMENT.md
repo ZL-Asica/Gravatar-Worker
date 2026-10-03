@@ -117,6 +117,7 @@ pnpm run deploy
 Before deploying, confirm:
 
 - required variables are in `wrangler.jsonc` or intentionally managed through the Cloudflare Dashboard
+- the production `LEADERBOARD_KV` namespace exists and its ID is configured in `wrangler.jsonc`
 - `.dev.vars` does not contain secrets or values that need to be committed
 - `pnpm run lint` passes
 - `pnpm run build` passes
