@@ -24,8 +24,9 @@ export const AvatarGenerator = ({ config, locale }: { config: SiteConfig, locale
           <legend>{messages.stepEmail}</legend>
           <label>
             {messages.email}
-            <input aria-describedby="email-hint" data-avatar-email type="email" inputMode="email" autoComplete="email" placeholder={messages.emailPlaceholder} required />
+            <input aria-describedby="email-hint email-error" data-avatar-email type="email" inputMode="email" autoComplete="email" placeholder={messages.emailPlaceholder} required />
           </label>
+          <p id="email-error" className="field-error" data-avatar-email-error role="alert" hidden />
           <p id="email-hint" className="field-hint">{messages.emailHint}</p>
         </fieldset>
         <fieldset className="generator-field generator-options-field">

@@ -16,6 +16,7 @@ const en = {
   vary: 'Negotiated formats use separate cache entries.',
   examples: 'Example requests',
   seconds: 'seconds',
+  minutes: 'minutes',
 }
 
 const ja = {
@@ -34,6 +35,7 @@ const ja = {
   vary: '選択された形式ごとにキャッシュを分離します。',
   examples: 'リクエスト例',
   seconds: '秒',
+  minutes: '分',
 }
 
 const zhCN = {
@@ -52,6 +54,7 @@ const zhCN = {
   vary: '协商格式使用独立缓存条目。',
   examples: '请求示例',
   seconds: '秒',
+  minutes: '分钟',
 }
 
 const zhTW = {
@@ -70,6 +73,7 @@ const zhTW = {
   vary: '協商格式使用獨立快取項目。',
   examples: '請求範例',
   seconds: '秒',
+  minutes: '分鐘',
 }
 
 export const docsMessages = { 'en': en, 'ja': ja, 'zh-CN': zhCN, 'zh-TW': zhTW } satisfies Record<Locale, typeof en>

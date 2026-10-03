@@ -174,6 +174,12 @@ h2 {
   color: var(--text-muted);
   margin: 8px 0 0;
 }
+.field-error {
+  margin: 6px 0 0;
+  color: #b44262;
+  font-size: 13px;
+  font-weight: 650;
+}
 [data-avatar-initials-field] {
   margin-top: 12px;
 }
@@ -431,6 +437,41 @@ td {
   background: #e8f2ff;
   color: #1d5ba7;
   font-weight: 700;
+}
+.syntax-code {
+  background: transparent;
+  padding: 0;
+}
+.endpoint .syntax-code,
+.doc-examples .syntax-code {
+  background: transparent;
+}
+.http-method {
+  color: #216c5a;
+  font-weight: 800;
+}
+.route {
+  color: #245fa8;
+}
+.route-variable {
+  color: #8e4675;
+  font-weight: 700;
+}
+.parameter-name {
+  color: #7256a3;
+}
+.syntax-punctuation {
+  color: var(--text-muted);
+}
+.header-name {
+  color: #7256a3;
+  font-weight: 700;
+}
+.status-code {
+  color: #245fa8;
+}
+.doc-examples .syntax-code {
+  display: block;
 }
 .endpoint-primary {
   border-color: #9fc5ee;

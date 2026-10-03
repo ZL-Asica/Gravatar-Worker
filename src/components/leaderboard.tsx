@@ -38,19 +38,14 @@ const Leaderboard = ({ config, currentYear, locale, snapshot, pageQuery }: Leade
       <main>
         <section class="leaderboard-hero">
           <h1>{messages.leaderboard}</h1>
-          <p class="subtitle">{messages.leaderboardIntro}</p>
         </section>
         <div class="leaderboard-meta">
           {demo && <span class="demo-badge">{messages.demoData}</span>}
-          <p>
+          <p class="leaderboard-summary">
             <strong>{messages.reportingPeriod}</strong>
             {' '}
             {periodStart !== undefined && periodEnd !== undefined ? `${formatDate(periodStart)} – ${formatDate(periodEnd)} (UTC)` : messages.periodUnknown}
           </p>
-          <p>{messages.requestDefinition}</p>
-          <p>{messages.dataServedDefinition}</p>
-          <p>{messages.domainPrivacy}</p>
-          <p>{messages.sortedRequests}</p>
         </div>
         {entries.length === 0
           ? (
@@ -64,12 +59,12 @@ const Leaderboard = ({ config, currentYear, locale, snapshot, pageQuery }: Leade
                   <thead>
                     <tr>
                       <th scope="col">{messages.domain}</th>
-                      <th scope="col" aria-sort="descending">
+                      <th scope="col" aria-sort="descending" title={`${messages.requestDefinition} · ${messages.sortedRequests}`}>
                         {messages.avatarRequests}
                         {' '}
                         <span aria-hidden="true">↓</span>
                       </th>
-                      <th scope="col">{messages.bytes}</th>
+                      <th scope="col" title={messages.dataServedDefinition}>{messages.bytes}</th>
                       <th scope="col">{messages.cacheHitRate}</th>
                     </tr>
                   </thead>

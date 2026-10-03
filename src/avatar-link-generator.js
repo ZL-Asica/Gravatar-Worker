@@ -7,6 +7,7 @@ if (form instanceof HTMLFormElement) {
   const feedback = createCopyFeedback(form)
   const placeholder = form.querySelector('[data-avatar-placeholder]')
   const emailInput = form.querySelector('[data-avatar-email]')
+  const emailError = form.querySelector('[data-avatar-email-error]')
   const sizeInput = form.querySelector('[data-avatar-size]')
   const defaultInput = form.querySelector('[data-avatar-default]')
   const initialsField = form.querySelector('[data-avatar-initials-field]')
@@ -19,6 +20,12 @@ if (form instanceof HTMLFormElement) {
   let updateSequence = 0
   let debounceTimer
   const setStatus = (message) => { if (status instanceof HTMLElement) { status.textContent = message ?? '' } }
+  const setEmailError = (message) => {
+    if (emailError instanceof HTMLElement) {
+      emailError.textContent = message ?? ''
+      emailError.hidden = !message
+    }
+  }
   const normalizeEmail = value => value.trim().toLowerCase()
   const toHex = buffer => Array.from(new Uint8Array(buffer), byte => byte.toString(16).padStart(2, '0')).join('')
   const sha256 = async (value) => {
@@ -49,8 +56,9 @@ if (form instanceof HTMLFormElement) {
     syncInitialsField()
     if (!(emailInput instanceof HTMLInputElement)) { return }
     const normalized = normalizeEmail(emailInput.value)
-    if (!normalized) { clearOutputs(); emailInput.setAttribute('aria-invalid', 'true'); setStatus(messages.avatarMessageEmpty ?? 'Enter an email address.'); return }
-    if (!emailInput.checkValidity()) { clearOutputs(); emailInput.setAttribute('aria-invalid', 'true'); setStatus(messages.avatarMessageInvalid); return }
+    if (!normalized) { clearOutputs(); emailInput.setAttribute('aria-invalid', 'true'); setEmailError(messages.avatarMessageEmpty ?? 'Enter an email address.'); setStatus(''); return }
+    if (!emailInput.checkValidity()) { clearOutputs(); emailInput.setAttribute('aria-invalid', 'true'); setEmailError(messages.avatarMessageInvalid); setStatus(''); return }
+    setEmailError('')
     emailInput.removeAttribute('aria-invalid')
     setStatus(messages.avatarMessageWorking ?? 'Generating link…')
     let result
@@ -83,7 +91,7 @@ if (form instanceof HTMLFormElement) {
     catch { if (sequence !== updateSequence) { return }; const selection = window.getSelection(); const range = document.createRange(); range.selectNodeContents(output); selection?.removeAllRanges(); selection?.addRange(range); setStatus(messages.avatarMessageClipboard ?? 'Select the field and copy manually.') }
   }
   if (preview instanceof HTMLImageElement) { preview.addEventListener('error', () => { preview.hidden = true; setStatus(messages.avatarMessagePreviewError ?? 'Preview unavailable. The link is still ready to copy.') }) }
-  form.addEventListener('input', () => { updateSequence += 1; clearOutputs(); emailInput instanceof HTMLInputElement && emailInput.removeAttribute('aria-invalid'); setStatus(''); scheduleUpdate() })
+  form.addEventListener('input', () => { updateSequence += 1; clearOutputs(); emailInput instanceof HTMLInputElement && emailInput.removeAttribute('aria-invalid'); setEmailError(''); setStatus(''); scheduleUpdate() })
   form.addEventListener('change', (event) => {
     // Text inputs already invalidate on input; their blur must not interrupt copying.
     if (!(event.target instanceof HTMLSelectElement)) {

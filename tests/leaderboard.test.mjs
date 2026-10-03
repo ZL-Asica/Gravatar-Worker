@@ -1,16 +1,18 @@
 import assert from 'node:assert/strict'
 import { it } from 'node:test'
-import { getLeaderboardPage, maskDomain, parseLeaderboard } from '../src/utils/leaderboard.ts'
+import { getLeaderboardPage, normalizeDomain, parseLeaderboard } from '../src/utils/leaderboard.ts'
 
 const entry = (domain, requests) => ({ domain, requests, bytes: 100, cacheHitRate: 0.9 })
-it('masks hostnames before rendering and fails closed on non-hostnames', () => {
-  assert.equal(maskDomain('Private.Example.COM'), 'p***.e***.com')
-  assert.equal(maskDomain('x.io'), '***.io')
-  for (const value of ['127.0.0.1', 'localhost', '<script>', 'https://private.example.com/path', 'email@example.com']) {
-    assert.equal(maskDomain(value), '***')
+it('normalizes public hostnames and fails closed on non-hostnames', () => {
+  assert.equal(normalizeDomain('Private.Example.COM.'), 'private.example.com')
+  assert.equal(normalizeDomain('x.io'), 'x.io')
+  const invalidDomains = ['127.0.0.1', 'localhost', '<script>', 'https://private.example.com/path', 'email@example.com', `${'a'.repeat(64)}.com`, `${`${'a'.repeat(63)}.`.repeat(4)}com`]
+  for (const value of invalidDomains) {
+    assert.equal(normalizeDomain(value), undefined)
+    assert.equal(parseLeaderboard(JSON.stringify([entry(value, 5)])).entries.length, 0)
   }
   const snapshot = parseLeaderboard(JSON.stringify([entry('private.example.com', 5)]))
-  assert.ok(!JSON.stringify(snapshot).includes('private.example.com'))
+  assert.equal(snapshot.entries[0].domain, 'private.example.com')
 })
 it('validates snapshots, retains legacy arrays, sorts before paging without a top-100 cutoff', () => {
   const entries = Array.from({ length: 123 }, (_, index) => entry(`site${index}.example.com`, index))
