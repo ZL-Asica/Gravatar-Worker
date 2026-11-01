@@ -48,7 +48,7 @@
     "nano-staged": "^1.0.2",
     "vite": "^8.3.1",
     "vite-ssr-components": "^0.6.1",
-    "wrangler": "^4.145.0"
+    "wrangler": "^4.155.0"
   },
   "nano-staged": {
     "**/*.{js,jsx,ts,tsx,json,yml,css,scss,less,styl,html,md,mdx}": [
